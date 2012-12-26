@@ -1,0 +1,30 @@
+-classpath
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/classes:/Users/cyrilleleclerc/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.1.2/jackson-core-2.1.2.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.1.2/jackson-databind-2.1.2.jar:/Users/cyrilleleclerc/.m2/repository/commons-pool/commons-pool/1.6/commons-pool-1.6.jar:/Users/cyrilleleclerc/.m2/repository/org/slf4j/slf4j-api/1.7.2/slf4j-api-1.7.2.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.1.1/jackson-annotations-2.1.1.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2012. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'jmxexporter 1.0.0-SNAPSHOT API'
+-link
+'http://commons.apache.org/pool/api-1.6'
+-link
+'http://fasterxml.github.com/jackson-core/javadoc/2.0.4'
+-link
+'http://fasterxml.github.com/jackson-databind/javadoc/2.0.4'
+-linkoffline
+'http://docs.oracle.com/javase/6/docs/api' '/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'jmxexporter 1.0.0-SNAPSHOT API'

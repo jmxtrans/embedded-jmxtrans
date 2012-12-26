@@ -1,0 +1,32 @@
+-classpath
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/classes:/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/test-classes:/Users/cyrilleleclerc/.m2/repository/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar:/Users/cyrilleleclerc/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar:/Users/cyrilleleclerc/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0.jar:/Users/cyrilleleclerc/.m2/repository/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar:/Users/cyrilleleclerc/.m2/repository/org/slf4j/slf4j-api/1.7.2/slf4j-api-1.7.2.jar:/Users/cyrilleleclerc/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.1.1/jackson-annotations-2.1.1.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.1.2/jackson-databind-2.1.2.jar:/Users/cyrilleleclerc/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.1.2/jackson-core-2.1.2.jar:/Users/cyrilleleclerc/.m2/repository/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar:/Users/cyrilleleclerc/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/cyrilleleclerc/.m2/repository/commons-pool/commons-pool/1.6/commons-pool-1.6.jar:/Users/cyrilleleclerc/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.2/jcl-over-slf4j-1.7.2.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/src/test/java'
+-author
+-bottom
+'Copyright &#169; 2012. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/site/testapidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'jmxexporter 1.0.0-SNAPSHOT Test API'
+-link
+'http://commons.apache.org/pool/api-1.6'
+-link
+'http://fasterxml.github.com/jackson-core/javadoc/2.0.4'
+-link
+'http://fasterxml.github.com/jackson-databind/javadoc/2.0.4'
+-link
+'../apidocs'
+-linkoffline
+'http://docs.oracle.com/javase/6/docs/api' '/Users/cyrilleleclerc/github/cyrille-leclerc/jmxexporter/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'jmxexporter 1.0.0-SNAPSHOT Test API'
