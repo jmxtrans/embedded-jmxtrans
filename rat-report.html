@@ -75,11 +75,11 @@
 *****************************************************
 Summary
 -------
-Generated at: 2012-12-27T00:42:57+01:00
+Generated at: 2012-12-27T01:28:02+01:00
 Notes: 2
-Binaries: 326
+Binaries: 406
 Archives: 0
-Standards: 83
+Standards: 86
 
 Apache Licensed: 39
 Generated Documents: 0
@@ -87,7 +87,7 @@ Generated Documents: 0
 JavaDocs are generated and so license header is optional
 Generated files do not required license headers
 
-44 Unknown Licenses
+47 Unknown Licenses
 
 *******************************
 
@@ -99,11 +99,13 @@ Unapproved licenses:
   .git/HEAD
   .git/logs/HEAD
   .git/logs/refs/heads/master
+  .git/logs/refs/remotes/origin/gh-pages
   .git/logs/refs/remotes/origin/HEAD
   .git/logs/refs/remotes/origin/master
   .git/ORIG_HEAD
   .git/packed-refs
   .git/refs/heads/master
+  .git/refs/remotes/origin/gh-pages
   .git/refs/remotes/origin/HEAD
   .git/refs/remotes/origin/master
   .git/sourcetreeconfig
@@ -118,6 +120,7 @@ Unapproved licenses:
   .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_1_1.xml
   .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_1_2.xml
   .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_1_2.xml
+  .idea/libraries/Maven__com_google_guava_guava_14_0_rc1.xml
   .idea/libraries/Maven__commons_pool_commons_pool_1_6.xml
   .idea/libraries/Maven__javax_annotation_jsr250_api_1_0.xml
   .idea/libraries/Maven__junit_junit_4_11.xml
@@ -154,26 +157,34 @@ Archives:
   B     .git/index
  !????? .git/logs/HEAD
  !????? .git/logs/refs/heads/master
+ !????? .git/logs/refs/remotes/origin/gh-pages
  !????? .git/logs/refs/remotes/origin/HEAD
  !????? .git/logs/refs/remotes/origin/master
   B     .git/objects/00/3c2a2d7c569ca3f9921868a143f9b0a4010d4a
   B     .git/objects/01/0a4c2baa11cfdfbb0fc88045e15b77c6002861
+  B     .git/objects/01/12aef1264335db11b802bc1e4a8a58175bb56b
   B     .git/objects/03/f498b8b2dd260f813758e8d2b0b1a91766b719
   B     .git/objects/04/d8dc02e4d9a04e7ffff2c8721504483d51b0db
   B     .git/objects/06/c2843df6c34eaefe6375eaa0480cbde7e874c7
   B     .git/objects/07/6ef15f450f66e839e1ce17f45342db7fb2bf1f
+  B     .git/objects/07/85d99a1e5499943262726a53eb1f782fec542e
   B     .git/objects/08/94ebb6ce1d82a15345d3117e701fa314887cf7
+  B     .git/objects/0a/2fc3f538482082e794d15fc79e11919e7b3f94
   B     .git/objects/0a/fe8a62b4b65475c53d18f70c9ac889d6aa88a3
   B     .git/objects/0b/906f518ed76161413d1b8c2c0d6a19eebff98e
   B     .git/objects/0b/efcb7305b83e7957e73346c0b8ab48ec612305
   B     .git/objects/0d/671162a274480820f5f35e88f7df175bc8abcf
+  B     .git/objects/0d/7f30e66504d18397702684e7d31271f0027439
   B     .git/objects/0d/b60dad9455b28fb3b82fb9b0ce100f6ca84c67
   B     .git/objects/0f/182a0349c4925c57f4ffbd5802b536a3e2588b
+  B     .git/objects/0f/2f946d240d65c6f83830515d95c543d1f0c405
   B     .git/objects/10/2361f65f750c5fe6442a175c5998939451dc96
   B     .git/objects/11/10b5fb1e9e89ff9fd8d8e9fb360c0c4640d51e
   B     .git/objects/11/2888e3159bfd99cbe82762bf22a319190076da
   B     .git/objects/12/0fd6caea03d700d18ba1500376e62449a6d66f
   B     .git/objects/12/a5fa184a75f807cf7673f45f813efde592491a
+  B     .git/objects/13/157cff6f861c5723b6b31fbed2e32deeb08c56
+  B     .git/objects/13/5fa2eb27f1954287b9f63596dd7f6c077ab15b
   B     .git/objects/14/a5c17c413ddb540c2bacc0c7d5cd691d0bac1d
   B     .git/objects/14/e6ad82b93c871379d969f3fa85f8de9643c81e
   B     .git/objects/15/28627123aed5fbec21c4b9951f257b0d34512f
@@ -185,6 +196,7 @@ Archives:
   B     .git/objects/17/45cff94b00659f59324cb38d5a41f1b477cb64
   B     .git/objects/17/8590204846c3abb5f8c3f8e71aa9466a6c4ffa
   B     .git/objects/17/e93c2700c110ab1cfbf6a17468b636f98c4799
+  B     .git/objects/18/a6c7624eff9a9f5627dafa3e24c5a9fc261943
   B     .git/objects/18/fd5ae8c3489fede3a488c9e278171f962aaf48
   B     .git/objects/1b/09db0b9e5cb237be5b14bdfb558249a80fd6d7
   B     .git/objects/1b/9f6e6a480f7b24467bed1f6394e293582daadb
@@ -193,6 +205,7 @@ Archives:
   B     .git/objects/1c/1de88603c1f7bbcddc730b5c34d7c4b1ba0240
   B     .git/objects/1d/81f7304bd5c8ab60da3b1e56c28885d3915c2f
   B     .git/objects/1d/b0331d1ddf44d01803662297196ad1bd2b695c
+  B     .git/objects/1e/4e9d77d87c73817c2e786ca06d900c328794f4
   B     .git/objects/1e/4f2794b97aa79d31421c3c94c7bd57e2e07517
   B     .git/objects/20/2333b0ed0ed6140099d0f7df44f2a3f3796cbf
   B     .git/objects/22/eb2dd9c56a85a61b2922d179c760c56fa97c06
@@ -200,6 +213,8 @@ Archives:
   B     .git/objects/23/c69c6de074ba7d8b70aedf53240c898e424d9d
   B     .git/objects/24/75adee3fc5c79db70bc1c19c62d754f7b51927
   B     .git/objects/24/c12f07bf1233393bbc239c280b038ff86f2c4a
+  B     .git/objects/25/c0ec3c63826add6618cd4da8e2edb39c16d263
+  B     .git/objects/25/e592c23e00c1ccdea1189e6811bb7e37d8aa39
   B     .git/objects/26/5f7f4a8f63220a720888a145559190f67816c9
   B     .git/objects/26/7fac8b5caae5a10ec47b8fa150acf824a76fb9
   B     .git/objects/26/8c70f57d63cec5df34f08f324ed84178077394
@@ -215,22 +230,30 @@ Archives:
   B     .git/objects/2a/cbe3e355281f867ec540b71d3fc326faf95da7
   B     .git/objects/2b/b24975330f12dd245f03cfb38e6b6281f6e567
   B     .git/objects/2c/bf65577ef4b10b257d95fea17d31e070a649c7
+  B     .git/objects/2e/b0a8d8b00f10c18226378ee23977fb729190cc
+  B     .git/objects/2e/dc6cf44c5fd0e3ddde197f5b230e39e4f8013d
+  B     .git/objects/2f/2f532974cb56dcdd3d5e3b92eb697c02f2f6ff
+  B     .git/objects/30/5bedef17187f59e6577895b362ed03a8bff40c
   B     .git/objects/30/6de879be9bff791ece8c06d1826b66a0a5eab5
   B     .git/objects/30/fab7c61b859459e98b49d0963ff11a022401a0
   B     .git/objects/31/9c6f2cf535271cdf28f2dbf8edb3c36528960d
   B     .git/objects/31/f77a2d8c40ef5af978610fa020cc9d85ae3fca
   B     .git/objects/32/16ea34e33720251f2229f9b3d183a338ea9a10
   B     .git/objects/32/35f3f2cc9be7af05ae5f8fdf398d700cd1ac14
+  B     .git/objects/32/5476c3329276e7a79c9ad96f51e38f19a607ed
   B     .git/objects/33/69edb876ab2e113466e210f31f7ec8d693284e
   B     .git/objects/33/c70d2ac6a5199a7423240ae218fc996a74b6f0
+  B     .git/objects/34/4ad9251968acb522ca22027156500c0a1e208a
   B     .git/objects/35/aa0b3534c3c3f43aef713675b4ec8b5440cd6b
   B     .git/objects/36/23c916e0890d14ae635db8ce7a7eab657738d2
   B     .git/objects/37/f0ce9ff6582dbd4233da40923ed76d87fd45f5
   B     .git/objects/38/7b19cdf967f9d2a77b2138ec6de1965c5f0ac1
+  B     .git/objects/39/3fbbab1ddd0b6f59ecfdd30545787f5f42eca7
   B     .git/objects/39/e2922879c001c3fb0635d16698f7e74bdc11a7
   B     .git/objects/39/e6367bdb474e017d51b036770fc52e00bb0849
   B     .git/objects/39/f0cf763b09c7a84f6e015b06f540a6fcb9f202
   B     .git/objects/3a/4412d314712d30b2c99200be5d522f5efb25a6
+  B     .git/objects/3a/f32d797911254dc2ab4868fe63fe5f03f12642
   B     .git/objects/3b/79d294c3f647ed323728e74a06fd24fb47719a
   B     .git/objects/3c/1a60424665c03b03da089d693a68d2013a13b5
   B     .git/objects/3c/980ae114f2c9acaad8b49a4c56902b94df3e90
@@ -241,10 +264,14 @@ Archives:
   B     .git/objects/41/646aaac07984d9ac0295bc8e50fe48f12f00fc
   B     .git/objects/41/7ba586bb39171d70aab89079c0bdeac89a8d37
   B     .git/objects/41/f254a81a98dfb9fd779582e4a3270aefd41512
+  B     .git/objects/43/9043698f84e8ee6e12473f4e691a0e08186b83
   B     .git/objects/43/b9dbeeb7daa06a861e998d426dfe2b44d8bd2d
   B     .git/objects/44/505436805d18ef846b1911230075e149a62208
+  B     .git/objects/44/5b72422c8f2266e13181a27b10fdbb19aa3ef2
   B     .git/objects/45/0fcc3def1859ba606b95978246464b0ba43939
   B     .git/objects/46/600ad015341a0b6afdea4c4398790b67c9c26a
+  B     .git/objects/46/9dcce345fae1224bb0069c4e874c9ea0e97007
+  B     .git/objects/47/efa65c707bc1b36c707cf39376fdade8405bd3
   B     .git/objects/48/3a57ba59616b5205449b18eb67d1517f4692c8
   B     .git/objects/49/47287f7b5ccb5d1e8b7b2d3aa5d89f322c160d
   B     .git/objects/4a/914525970d40eb5ff3d62499b7a9398e5fcf2b
@@ -252,6 +279,9 @@ Archives:
   B     .git/objects/4c/ae952ba38df2f65835b6287e1eb779aeaca91e
   B     .git/objects/4c/dead5f76851103e868be3e04f14b442bc563d1
   B     .git/objects/4d/2bff7dbb5f0870d757b5634dce7103b6afe072
+  B     .git/objects/4d/5a7f7b261936de623f70fd2a3a9534e34e494c
+  B     .git/objects/4e/fa83b2b6282cad293b567ccf26e502973f8e8e
+  B     .git/objects/4f/51fa9de0a179ec15be17b073dd2bd25077591d
   B     .git/objects/4f/650c7ead5b46f7d540b6a103955b3389a57eea
   B     .git/objects/50/611fa7641ef5a888414f24e2bff6e61ce02505
   B     .git/objects/50/fee03bd222b7a52c7409bdf4eac7bb9b2b5160
@@ -260,8 +290,11 @@ Archives:
   B     .git/objects/52/e810ae71690d49ed73aea7ff7044968a28b7ef
   B     .git/objects/53/b82fa20555af14b63becf66dd4fe2fed25426c
   B     .git/objects/54/2c0f76593c07935979c9d31bd4c863117c5178
+  B     .git/objects/54/443a363b5b326385f3ca7c5231847f3a7ab09a
   B     .git/objects/54/98add0bbaf3cdd6947dd6829d453dc2edf3754
+  B     .git/objects/57/ca20b367d678b31237b5c5ba3aa9d77d964989
   B     .git/objects/58/4f32868a18a59e42ceaec2c98557595e69ae21
+  B     .git/objects/58/502100eb1af74fd5df5ea295bfd673d4af7c27
   B     .git/objects/58/7957b8d4436ee687adf8ceb5facf5c4b584736
   B     .git/objects/59/8a31f8784e819412d83ded2ef94de4af3043cf
   B     .git/objects/59/b47689f3e9b39708e552e6e530bff185af5c5e
@@ -269,8 +302,10 @@ Archives:
   B     .git/objects/5a/543a02966308164c69feb52263ac18b83e9688
   B     .git/objects/5b/0285476290026a39eefebe06c36a8df461c64e
   B     .git/objects/5b/d8c07f031c045c2b4b6ecd69aa1ef15b4e2873
+  B     .git/objects/5d/621e5f5f1f343d550b6898c0fa619741d5a0ae
   B     .git/objects/5d/d36d531f2d833f2793369da89e86b027e1268e
   B     .git/objects/5d/d3ecc4beaf8a64a256c7461810d6fe7a185dfa
+  B     .git/objects/5e/0aa72a56164896629b9d20dec7ce879f1b55c9
   B     .git/objects/5e/14d96883bf72fac59f2e800a1e8455ac553352
   B     .git/objects/5e/a140180df0d037dd2d42b741983d389c1eb1f1
   B     .git/objects/5e/c76e52f225168ace5c6bfc6ef7af4c792138bd
@@ -280,6 +315,7 @@ Archives:
   B     .git/objects/61/24ab0eba8d2a82497eeb204b95d10472ffa9f5
   B     .git/objects/61/40a39aa5ab4959e80c7977e14a686f278ca3c2
   B     .git/objects/61/9c05729ead70ae43931775ac24a37d33d16859
+  B     .git/objects/62/51bdae69f35a805ce51426ff5d3f98eddfa88b
   B     .git/objects/62/c8df085548e2edec3cb28c0bf92e97dba53b1d
   B     .git/objects/63/5ccaade9239dcbbae695b39811dde3e804d17c
   B     .git/objects/64/c19617cc5ce7f5049c43140791e335ff116b72
@@ -290,20 +326,25 @@ Archives:
   B     .git/objects/6a/0d0fcfd6151b19cf04cfefa063a078e39d6e70
   B     .git/objects/6a/b6dfcdbcb067a39cacd015688aefc15ffc0450
   B     .git/objects/6b/ea2450b7bc7f8051db777a0a76bcccbcc1ca5c
+  B     .git/objects/6c/03ed579f239392ddf65d1603504316c0f8869b
+  B     .git/objects/6c/4e1d992b1d2c5ff93263f0a5ae7042046a9ad2
   B     .git/objects/6c/c9ec54ba98cf3ed4a4ba6606fa962991f62a36
   B     .git/objects/6d/02f74f847922eb98217b0871286bf1efbdceb8
   B     .git/objects/6e/99e229f2252c7c9b985e7289612e180c58d937
   B     .git/objects/70/1bda7d2cb1ad7601154b01069b5fae6544186e
   B     .git/objects/70/2c1ffe6315d4c0fe530fba99f1655960dad15d
   B     .git/objects/70/f0195e52ea26aa22e93176ba95d7d257669c21
+  B     .git/objects/71/6a22367e8b6a4d5ce3f6e850c1219600618fc7
   B     .git/objects/72/2159fea4c7615c136f4caefc1f85eaa7d55478
   B     .git/objects/72/84f60de9a59edd2b4bbc49d75218b898f23a21
   B     .git/objects/74/5822367f5a0ba3bf202a97dd1011a754a61390
   B     .git/objects/74/be6809c855450a83d19ae1da1cb2bc9513f15c
+  B     .git/objects/75/19aa18ae834f08ae0a5cc8e03885aad2aff555
   B     .git/objects/75/28bbf01c982931434cf83128bfa856ed50f421
   B     .git/objects/75/55f455ffff9d93bbb27970334cacb47d7a8e18
   B     .git/objects/76/b229ac1d953d72aedc49131b1586b4c5431020
   B     .git/objects/77/7e9b7e879ff4a7b369d75ed60fc25c94eea316
+  B     .git/objects/77/8049434eb9c4f164e2c782354640e78de3eb96
   B     .git/objects/77/a75f920c4c35dcf910e58fc574046e9d538f53
   B     .git/objects/79/2de33b7c4640a2bd699024bfea9d0c5fa3c517
   B     .git/objects/79/96ef87c44865c887a887c88fdedbc478ca638d
@@ -311,21 +352,29 @@ Archives:
   B     .git/objects/7a/c0f2b91f47df1fa06291657bf469191c870fdb
   B     .git/objects/7c/30f4933ace98ab7bba23d94216766b53a1bb59
   B     .git/objects/7c/322fab00aca52859ee3dbff9aae5650e20a644
+  B     .git/objects/7c/78e2dbfbd7d2cab9dd25fc059472a754fd177a
+  B     .git/objects/7c/8007e51d82eac31458559bff65db81e2612728
+  B     .git/objects/7d/d46ecfb47aecd4421ab9f3a78a8d23711cd673
   B     .git/objects/7d/e489aabd59965be7b5eaeecb144bcc94508e81
+  B     .git/objects/7e/73517db31f3c7872ff5c6b047518798107fef2
   B     .git/objects/7e/f3d9280012da7fb8faa2d88b8c0b56b6b81825
   B     .git/objects/7f/52e442c6a4c84afe8b36fc780409e0173bb3ed
+  B     .git/objects/80/73b32ba1eb374eea62e2438d2d5b11531cafbd
   B     .git/objects/80/8a61a50947abb46343289b216c9ae905d8b448
   B     .git/objects/81/311e596ac3206313db049c0f8b5d255b755b93
   B     .git/objects/82/03abcc64097156b9dc89527966601fc8665c04
   B     .git/objects/82/4264b0aa8fc1374c89d63a65589660042a9dff
   B     .git/objects/83/0868dc891fb3fb8f19b66f07a3d6aa07979ac5
   B     .git/objects/83/9d4bf435579326d73182d290731ef7fa99a805
+  B     .git/objects/83/f03b5cfd50dfb20a8b1e28ed0c78d23484bc6c
   B     .git/objects/84/0c0d663e90c3757347f729bb3955932b14b6e9
   B     .git/objects/85/1890b0dd61bb9d42d8e289bae3123a0e54f06f
   B     .git/objects/86/0676fe20a0beba44de4f31fe97c8534f53f959
+  B     .git/objects/86/0c8095c36aaefb47d617748a38ed69b1e43527
   B     .git/objects/87/191c1ac6dcc8c3b8567aec9627314ed5edc4ab
   B     .git/objects/87/3a26941ce990e104705cbdde5ead1b230e2306
   B     .git/objects/87/4a3d53697350c7a5bb9aedc85913bcc139bbaf
+  B     .git/objects/87/51b9926fe5fed643b9c2317aa74cd080437295
   B     .git/objects/89/02d3da6afd1d0bfd571415fe1a2ba717ea8a91
   B     .git/objects/8b/a1b11fc33e71d47139b0ebf6879dd0fe948358
   B     .git/objects/8b/eb5561bd51983b27e30cd0f548e32285fa0d3b
@@ -336,29 +385,40 @@ Archives:
   B     .git/objects/8c/e7f3a40dec769295106d3f4ef539c5c914b89e
   B     .git/objects/8e/a8031bdec4487fcbe5627e371657f401c43f2c
   B     .git/objects/8f/bada094afe0ee1f5bbeb1ae6a4df400edaaae5
+  B     .git/objects/91/c383b261724940297b14541f29fe5a582712d0
+  B     .git/objects/91/f535c793f170a9b63902ae66a3bc82d86ca9c1
   B     .git/objects/91/f5c4f77077621ce722379690d5b506bb301094
   B     .git/objects/93/d587e2f65718f5c4f1298c72e74acc1c2c439d
   B     .git/objects/94/06235227939e1a4d3bd59fb3f2b6781e110ea6
+  B     .git/objects/94/1388990eb6984e1950905d0f1bfc6208d5416f
   B     .git/objects/94/542d3ce7d2bbd9dd7021ad7328e408cd9c53d5
+  B     .git/objects/94/9ec8c79e296333e13a23aa5ebaf91b17e1645f
   B     .git/objects/94/e9cce58bfdc11fbf3231b334630360b67e7df0
   B     .git/objects/95/63ab13e21e71caf3b7bbba9d940f0778f2cbbe
   B     .git/objects/95/8c8c8105b4c14c343e7c05beb6a8afbd4817fa
+  B     .git/objects/96/1422df3ab071aba2b12dcd1ce3a31f2c09aeda
   B     .git/objects/96/cdced8d04d3434bda2a6ab8850088ec6a8cfc0
   B     .git/objects/99/84ff0a3b07dce0a90ed8c385c77a9634d79d68
   B     .git/objects/9a/1cffca3da22273357ce8220ee75cd8163df257
   B     .git/objects/9a/64614023db5ca818f78928be9870d7e0234cd0
   B     .git/objects/9a/a5554489e7408664921b520688ae5227b7b85a
+  B     .git/objects/9a/d26420a62665e972a04c6c14d836d9c4bdf5f1
+  B     .git/objects/9b/14a844056c05c96a12739939a2e3fa96c32f5e
   B     .git/objects/9b/a40724861a8ee519ae3561429bc5d8ca2b6924
   B     .git/objects/9b/bf6bde781fa448d09c586348472933121ae5c2
+  B     .git/objects/9d/945ed9f4452271239f09c2058d330f4e1018d2
+  B     .git/objects/9d/f41f7b568d90fb94ee9a94eb909ba7f9f9e738
   B     .git/objects/9f/2d0e6d3c167de98f6f6a8343e09082ad8f2485
   B     .git/objects/9f/49f1ef14d9f962e02664b477173b344147b77e
   B     .git/objects/a0/3d7fc5102f3646b94a4027c1f04dd796a0bee1
   B     .git/objects/a2/09cbedc65bac5a53d9e245d24d518162d2ec29
+  B     .git/objects/a2/1844373dd962f56f24868e4940f17cc4e20033
   B     .git/objects/a3/298b9ee15b4ed9181a8ca5e41c9dbea5f25856
   B     .git/objects/a3/3e29d4093568c94d5cdf8becc3cd4c8d5a4373
   B     .git/objects/a3/5aa1db5c8526a0d2d2816fd6880c0d6f39af6b
   B     .git/objects/a5/2729d70e1809565b3bffa0c4049067398d3707
   B     .git/objects/a5/5d01c44a01815bc5828cd60ad6bdd460421a98
+  B     .git/objects/a5/78846d4aba962de73cec4cc22d0648bae105a2
   B     .git/objects/a6/d5c25dec77e064be6f1ae375c3082f22c01fc6
   B     .git/objects/a7/3d63a9e24cbe872259f47c2bb3b48ad8bda97f
   B     .git/objects/a8/663628456fc72cc7777ec550360a44d4cec17e
@@ -367,6 +427,8 @@ Archives:
   B     .git/objects/ab/5b20ae4ce2e6d356bf6b24f9ad6d842a852dc1
   B     .git/objects/ab/5c8c74ecfa7f0af65f82c3d733eebf727a78c8
   B     .git/objects/ac/f33b8d4c1111c38821a465b4fba08e5c1663af
+  B     .git/objects/ae/decca9dff1c130cf29874e0c5be8be57fbf478
+  B     .git/objects/ae/fbcc1152a547d3b4e2becbce42d306c270fada
   B     .git/objects/b0/1ea3f5fc196329aeedf5c7f82d5308cdf78e88
   B     .git/objects/b2/ae9e4aa5f5d08b828e09defae07cbc5baa0f89
   B     .git/objects/b3/33fda8bc0dfb94fe2fcb199857e5d45ecdc2ca
@@ -382,11 +444,15 @@ Archives:
   B     .git/objects/b6/706f938214e654d9fd3365c119ff3e03e19a8f
   B     .git/objects/b6/810752d3d6a5f1ab57532f4cbe54c6d0de9c60
   B     .git/objects/b6/8e8632e3d3747781327bb3c32be00283620162
+  B     .git/objects/b7/2c694988cbb507de1726aa4692e4078d7aadaa
   B     .git/objects/b7/38791db37f65f93091a67b8eb30c3ccfa916a3
   B     .git/objects/b9/3c5a2df96c06d1cfde4843c5ede4729602daf9
+  B     .git/objects/b9/bd6614661ab5fabf7c23a62051a924a550c971
   B     .git/objects/ba/bb4bb18585b94ca1b24ddd52a9c69b4b9d74e3
   B     .git/objects/bb/86d1f5a011a1b78156d87d0bdd4f33344487c1
+  B     .git/objects/bc/1e08d695187c4813d64ce196b3d1188f84e819
   B     .git/objects/bc/80b0a1338d3b40bdf2eb2a7aea1b7bb3a22570
+  B     .git/objects/bd/2f9e5616afb6d126ab28993eeaabe998248998
   B     .git/objects/bd/44129f482545b5e431c31fd6f13b7b6b5b4d3f
   B     .git/objects/bd/d52d5d52bcd8945226bb996fe30a71dc37e703
   B     .git/objects/be/3154ed097204ec66c1be356d5a354f066ade6c
@@ -397,6 +463,7 @@ Archives:
   B     .git/objects/bf/a3ac2299025ae8b0a2c3d25a617ce98640c9a7
   B     .git/objects/c0/6c549b28af790bb4f65751a4afc118006864ec
   B     .git/objects/c1/2327358c9daf571ba251a947333659f8b5f8b2
+  B     .git/objects/c1/cda0aeeb932258a650551589ef8cf514ff2803
   B     .git/objects/c2/841abf375e794d01e146fa747b94c0c449687b
   B     .git/objects/c2/b8ee1140f80e4d9a806c68e17a5715d510b6ce
   B     .git/objects/c4/ae8adbe35df3ffe090f08a6c53c191bb53bb48
@@ -414,6 +481,7 @@ Archives:
   B     .git/objects/cb/aecf9cb1d6627921b75bb9a15d8f747d15333e
   B     .git/objects/cb/d55b8a066cc7d3885d199af4338b1a0f77a77d
   B     .git/objects/cc/3b0b7ccd28760753056b32477706554d83c842
+  B     .git/objects/cc/cb041d1c34659b1a0830b145d8253137cedbf3
   B     .git/objects/cd/9a6f281f3be9754fed4023160fa85c9dade818
   B     .git/objects/cf/2dfea7d02a3049b99e50320cd08b61089bc034
   B     .git/objects/cf/5d4a49cd437705fe368a5e55a64a004366f350
@@ -428,19 +496,27 @@ Archives:
   B     .git/objects/d4/a1074214cb0457a54a53f57fbccbe7f2488279
   B     .git/objects/d5/47e984abcfb3146ae91a7ec25f21eec9c5a863
   B     .git/objects/d7/da9cba9a1ffb2e172d581a7cf6e4d6ccf4fff0
+  B     .git/objects/d8/5d55792db941876f42f2116b2fc81cdcd42b9f
   B     .git/objects/d8/96edd4f2351902704c4ee93c0af218c0f154bf
   B     .git/objects/d9/34af5d450424257455d9417c740435d13b98e0
   B     .git/objects/d9/816c68a0643f7c3332367b256196bee0fa0338
   B     .git/objects/da/3d9a523f600826707d0be403566b7fd67d1863
+  B     .git/objects/da/b78b972003b0690ee16ff19f85da3b43585e13
+  B     .git/objects/db/4483ea5681dda5a56005c340ea250e4263a77f
+  B     .git/objects/dd/4266b606727fddc4356885ff209ecb9108b232
   B     .git/objects/de/f3b649cf9638083a8151d66f94faf3643e1816
   B     .git/objects/de/fc0d7992117c8f821782bf2ed301d0f43f5913
+  B     .git/objects/df/4a2d43074372f4b1cfe3732e723a428d20e3b3
+  B     .git/objects/e0/0c52f51790fb9ced1ad0c9f984876ead42d8be
   B     .git/objects/e0/2e417503128969c43a47ef06fd793b09cec5bb
   B     .git/objects/e0/510d5d94d1b7521b9075e96484f2b469e8d3f1
   B     .git/objects/e0/5dae068a182dffe4576b9bd1e130c7b44a06de
   B     .git/objects/e0/9f48bf15d26ff4390ba0bb209a508d0f5ffcef
   B     .git/objects/e1/010e32675f294103d3072b6b5dd9b245bd8e6b
   B     .git/objects/e2/2467a49248b46dbc58d6e219830863d3746734
+  B     .git/objects/e2/aafdd4b53806808c48382c92056b9fcd986a04
   B     .git/objects/e2/eb607f96a4f134e54ce08494d620f516c1fc8d
+  B     .git/objects/e3/25feb181d40b7ee8c97703f67b96e7246007b8
   B     .git/objects/e3/c3aca4a7f9015dd6c16bc0d1770e9cfcc12851
   B     .git/objects/e4/98c55c0a6118c74cc5a045ebab44ecefa8b46e
   B     .git/objects/e5/8905f04926f7e78ca60f348fdc5273d787d5d5
@@ -454,6 +530,7 @@ Archives:
   B     .git/objects/eb/2549f619deb3ec573e22c5d01b4673b6ced490
   B     .git/objects/eb/ba8e5c027305cdd7d16cec5efb29df382557ca
   B     .git/objects/ec/724fc9764c62d4144908c950ff108d43c66b68
+  B     .git/objects/ed/1d127dc10be80768aab20b4d72412841f7e4fc
   B     .git/objects/ee/0996477c98210cc8ba1d0f05023843f722b3d7
   B     .git/objects/ee/89d58e4618f003d1c9f2beb435a7500dcb471a
   B     .git/objects/ee/dee98587f5a097010dfe5f4a482c7fb14a0a9e
@@ -466,24 +543,32 @@ Archives:
   B     .git/objects/f7/7f53ce17134b3276a88438e30121d99a88cc1e
   B     .git/objects/f8/7dcc42ce53b3abc0b97f57a9b25f9208e1d665
   B     .git/objects/f8/cb205078e1fe544d9ef8282b376d08c2d51f3a
+  B     .git/objects/f9/13ae94b2afe14ac12fc28084b5ebd75d094b58
   B     .git/objects/fa/0226a7cefa81b5c860b438f475cc49f2c75788
   B     .git/objects/fa/2f294b569afc2f52f82a23b83be9642ac0b955
   B     .git/objects/fa/60eaaaf98f3f30220bc66a1c944b06aefd0b77
   B     .git/objects/fa/7897f215e1605207a60be731e6eeaeb96c9d96
+  B     .git/objects/fa/96261aefa8972354409f55741f3821ec3b8238
   B     .git/objects/fc/30c0f9adad0e070127f8bd33f513e0b4da7519
   B     .git/objects/fc/b93e96daabc115ed41c3b4b847b793eef5773f
   B     .git/objects/fc/c8e97d67f89cf8c2b955a4157d786c42c1253f
+  B     .git/objects/fc/d1c1326d5459f872bd4101063e3d3cd250a422
   B     .git/objects/fc/e77c090c2bd6a17c2a9c49551c4501c811caf2
   B     .git/objects/fd/6800427d60c28eeef9ba8dec088f705bdedb1e
   B     .git/objects/fd/7a1f5943148e023a747fda64ad7e18032d8c8a
   B     .git/objects/fd/7cb65454b01156a8225be170dedbe180a7a5a5
   B     .git/objects/fd/ef83d78a1389f15f0df0a56ee84a0d3947077e
+  B     .git/objects/fe/00c8dd1bca84e0018e94b52353f47f7aaa97a8
   B     .git/objects/ff/0069f31a0021b2225d8e1a7035459321753ceb
   B     .git/objects/ff/805615672c455ca238300704f4e09ba5a05377
+  B     .git/objects/ff/92d808e39c45b7da5f69c55021ea7711f1692f
   B     .git/objects/ff/a347f594a5ac44a4c80a84f19229588244ee24
+  B     .git/objects/pack/pack-525afe1d4b0124a50ee8755851cbac8d6f913ac6.idx
+  B     .git/objects/pack/pack-525afe1d4b0124a50ee8755851cbac8d6f913ac6.pack
  !????? .git/ORIG_HEAD
  !????? .git/packed-refs
  !????? .git/refs/heads/master
+ !????? .git/refs/remotes/origin/gh-pages
  !????? .git/refs/remotes/origin/HEAD
  !????? .git/refs/remotes/origin/master
  !????? .git/sourcetreeconfig
@@ -498,6 +583,7 @@ Archives:
  !????? .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_1_1.xml
  !????? .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_1_2.xml
  !????? .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_1_2.xml
+ !????? .idea/libraries/Maven__com_google_guava_guava_14_0_rc1.xml
  !????? .idea/libraries/Maven__commons_pool_commons_pool_1_6.xml
  !????? .idea/libraries/Maven__javax_annotation_jsr250_api_1_0.xml
  !????? .idea/libraries/Maven__junit_junit_4_11.xml
@@ -566,7 +652,7 @@ Archives:
  =======================================================================
  ==.git/COMMIT_EDITMSG
  =======================================================================
-work in progress
+javadoc
 
  =======================================================================
  ==.git/config
@@ -588,7 +674,8 @@ work in progress
  =======================================================================
  ==.git/FETCH_HEAD
  =======================================================================
-9f2d0e6d3c167de98f6f6a8343e09082ad8f2485		branch 'master' of https://github.com/cyrille-leclerc/jmxexporter
+ed1d127dc10be80768aab20b4d72412841f7e4fc		branch 'master' of https://github.com/cyrille-leclerc/jmxexporter
+964ed95daf4e2964fee14edb4fc0d97fc715ce81	not-for-merge	branch 'gh-pages' of https://github.com/cyrille-leclerc/jmxexporter
 
  =======================================================================
  ==.git/HEAD
@@ -612,6 +699,13 @@ c85027c0cbcba4c3acd4f4f78ebb2d1f31598b4e 2475adee3fc5c79db70bc1c19c62d754f7b5192
 2475adee3fc5c79db70bc1c19c62d754f7b51927 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356481982 +0100	commit: remove guava dependency
 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356484526 +0100	commit: work in progress
 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356485130 +0100	pull origin master: Fast-forward
+9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 2f2f532974cb56dcdd3d5e3b92eb697c02f2f6ff Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565952 +0100	commit: add github site-maven-plugin
+2f2f532974cb56dcdd3d5e3b92eb697c02f2f6ff 8751b9926fe5fed643b9c2317aa74cd080437295 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565970 +0100	commit: Slf4j OutputWriter
+8751b9926fe5fed643b9c2317aa74cd080437295 25e592c23e00c1ccdea1189e6811bb7e37d8aa39 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565998 +0100	commit: Configuration merge tests
+25e592c23e00c1ccdea1189e6811bb7e37d8aa39 344ad9251968acb522ca22027156500c0a1e208a Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356566012 +0100	commit: Slf4j OutputWriter
+344ad9251968acb522ca22027156500c0a1e208a 9d945ed9f4452271239f09c2058d330f4e1018d2 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356567629 +0100	commit: javadoc
+9d945ed9f4452271239f09c2058d330f4e1018d2 91f535c793f170a9b63902ae66a3bc82d86ca9c1 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356567673 +0100	commit: javadoc
+91f535c793f170a9b63902ae66a3bc82d86ca9c1 ed1d127dc10be80768aab20b4d72412841f7e4fc Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356568040 +0100	commit: javadoc
 
  =======================================================================
  ==.git/logs/refs/heads/master
@@ -628,6 +722,18 @@ c85027c0cbcba4c3acd4f4f78ebb2d1f31598b4e 2475adee3fc5c79db70bc1c19c62d754f7b5192
 2475adee3fc5c79db70bc1c19c62d754f7b51927 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356481982 +0100	commit: remove guava dependency
 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356484526 +0100	commit: work in progress
 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356485130 +0100	pull origin master: Fast-forward
+9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 2f2f532974cb56dcdd3d5e3b92eb697c02f2f6ff Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565952 +0100	commit: add github site-maven-plugin
+2f2f532974cb56dcdd3d5e3b92eb697c02f2f6ff 8751b9926fe5fed643b9c2317aa74cd080437295 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565970 +0100	commit: Slf4j OutputWriter
+8751b9926fe5fed643b9c2317aa74cd080437295 25e592c23e00c1ccdea1189e6811bb7e37d8aa39 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356565998 +0100	commit: Configuration merge tests
+25e592c23e00c1ccdea1189e6811bb7e37d8aa39 344ad9251968acb522ca22027156500c0a1e208a Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356566012 +0100	commit: Slf4j OutputWriter
+344ad9251968acb522ca22027156500c0a1e208a 9d945ed9f4452271239f09c2058d330f4e1018d2 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356567629 +0100	commit: javadoc
+9d945ed9f4452271239f09c2058d330f4e1018d2 91f535c793f170a9b63902ae66a3bc82d86ca9c1 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356567673 +0100	commit: javadoc
+91f535c793f170a9b63902ae66a3bc82d86ca9c1 ed1d127dc10be80768aab20b4d72412841f7e4fc Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356568040 +0100	commit: javadoc
+
+ =======================================================================
+ ==.git/logs/refs/remotes/origin/gh-pages
+ =======================================================================
+0000000000000000000000000000000000000000 964ed95daf4e2964fee14edb4fc0d97fc715ce81 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356565492 +0100	fetch origin: storing head
 
  =======================================================================
  ==.git/logs/refs/remotes/origin/HEAD
@@ -648,6 +754,8 @@ c85027c0cbcba4c3acd4f4f78ebb2d1f31598b4e 2475adee3fc5c79db70bc1c19c62d754f7b5192
 2475adee3fc5c79db70bc1c19c62d754f7b51927 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356481986 +0100	update by push
 fa60eaaaf98f3f30220bc66a1c944b06aefd0b77 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356484530 +0100	update by push
 a6d5c25dec77e064be6f1ae375c3082f22c01fc6 9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356485078 +0100	fetch origin: fast-forward
+9f2d0e6d3c167de98f6f6a8343e09082ad8f2485 344ad9251968acb522ca22027156500c0a1e208a Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356566020 +0100	update by push
+344ad9251968acb522ca22027156500c0a1e208a ed1d127dc10be80768aab20b4d72412841f7e4fc Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356568049 +0100	update by push
 
  =======================================================================
  ==.git/ORIG_HEAD
@@ -663,7 +771,12 @@ c8048fd23781b31ea5b4d01aa511f8cce7fcd5a3 refs/remotes/origin/master
  =======================================================================
  ==.git/refs/heads/master
  =======================================================================
-9f2d0e6d3c167de98f6f6a8343e09082ad8f2485
+ed1d127dc10be80768aab20b4d72412841f7e4fc
+
+ =======================================================================
+ ==.git/refs/remotes/origin/gh-pages
+ =======================================================================
+964ed95daf4e2964fee14edb4fc0d97fc715ce81
 
  =======================================================================
  ==.git/refs/remotes/origin/HEAD
@@ -673,7 +786,7 @@ ref: refs/remotes/origin/master
  =======================================================================
  ==.git/refs/remotes/origin/master
  =======================================================================
-9f2d0e6d3c167de98f6f6a8343e09082ad8f2485
+ed1d127dc10be80768aab20b4d72412841f7e4fc
 
  =======================================================================
  ==.git/sourcetreeconfig
@@ -681,7 +794,7 @@ ref: refs/remotes/origin/master
 lastUsedView=0
 autorefresh=1
 savedIncoming=0
-lastCheckedRemotes=2012-12-26 23:20:17 +0000
+lastCheckedRemotes=2012-12-27 00:27:59 +0000
 savedOutgoing=0
 autorefreshremotes=1
 
@@ -861,6 +974,23 @@ jmxexporter
     &lt;/JAVADOC&gt;
     &lt;SOURCES&gt;
       &lt;root url=&quot;jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.1.2/jackson-databind-2.1.2-sources.jar!/&quot; /&gt;
+    &lt;/SOURCES&gt;
+  &lt;/library&gt;
+&lt;/component&gt;
+
+ =======================================================================
+ ==.idea/libraries/Maven__com_google_guava_guava_14_0_rc1.xml
+ =======================================================================
+&lt;component name=&quot;libraryTable&quot;&gt;
+  &lt;library name=&quot;Maven: com.google.guava:guava:14.0-rc1&quot;&gt;
+    &lt;CLASSES&gt;
+      &lt;root url=&quot;jar://$MAVEN_REPOSITORY$/com/google/guava/guava/14.0-rc1/guava-14.0-rc1.jar!/&quot; /&gt;
+    &lt;/CLASSES&gt;
+    &lt;JAVADOC&gt;
+      &lt;root url=&quot;jar://$MAVEN_REPOSITORY$/com/google/guava/guava/14.0-rc1/guava-14.0-rc1-javadoc.jar!/&quot; /&gt;
+    &lt;/JAVADOC&gt;
+    &lt;SOURCES&gt;
+      &lt;root url=&quot;jar://$MAVEN_REPOSITORY$/com/google/guava/guava/14.0-rc1/guava-14.0-rc1-sources.jar!/&quot; /&gt;
     &lt;/SOURCES&gt;
   &lt;/library&gt;
 &lt;/component&gt;
@@ -1098,12 +1228,8 @@ jmxexporter
   &lt;/component&gt;
   &lt;component name=&quot;ChangeListManager&quot;&gt;
     &lt;list default=&quot;true&quot; id=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; name=&quot;Default&quot; comment=&quot;&quot;&gt;
-      &lt;change type=&quot;NEW&quot; beforePath=&quot;&quot; afterPath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/config/ConfigurationMergeTest.java&quot; /&gt;
-      &lt;change type=&quot;NEW&quot; beforePath=&quot;&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/output/Slf4jWriter.java&quot; /&gt;
-      &lt;change type=&quot;NEW&quot; beforePath=&quot;&quot; afterPath=&quot;$PROJECT_DIR$/src/test/resources/org/jmxexporter/jmxexporter-config-merge-1-test.json&quot; /&gt;
-      &lt;change type=&quot;NEW&quot; beforePath=&quot;&quot; afterPath=&quot;$PROJECT_DIR$/src/test/resources/org/jmxexporter/jmxexporter-config-merge-2-test.json&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/config/ConfigurationTest.java&quot; afterPath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/config/ConfigurationTest.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/TestUtils.java&quot; afterPath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/TestUtils.java&quot; /&gt;
+      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/QueryResult.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/QueryResult.java&quot; /&gt;
+      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/util/pool/SocketWriterPoolFactory.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/util/pool/SocketWriterPoolFactory.java&quot; /&gt;
       &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/pom.xml&quot; afterPath=&quot;$PROJECT_DIR$/pom.xml&quot; /&gt;
     &lt;/list&gt;
     &lt;ignored path=&quot;jmxexporter.iws&quot; /&gt;
@@ -1112,7 +1238,7 @@ jmxexporter
     &lt;file path=&quot;/QueryAttribute.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356475820570&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/OutputWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356355618844&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/GraphiteWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356356828118&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/pom.xml&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356565341708&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/pom.xml&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567035790&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ConfigurationTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356517078519&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/Query.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356483917844&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/fragment.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356517602919&quot; ignored=&quot;false&quot; /&gt;
@@ -1121,16 +1247,16 @@ jmxexporter
     &lt;file path=&quot;/ConfigurationParser.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356480763327&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/JmxExporterConfiguration.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356225328200&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/JmxExporter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356480849715&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/JmxExporterException.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356126875153&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/NamedThreadFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356128249482&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/JmxExporterException.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567594515&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/NamedThreadFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567147158&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/MetricCollector.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356128479799&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/AbstractOutputWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356479951661&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ConsoleWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356225293750&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SocketFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356220590756&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ManagedGenericKeyedObjectPool.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356358612587&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SelfNaming.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356216856960&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/QueryResult.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356446817133&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/JmxExporterMBean.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356228393244&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/QueryResult.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567972611&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/JmxExporterMBean.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356566870944&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/NoOpWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356286620635&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/sample1.json&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356290290607&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/JmxExporterServer.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356301549564&quot; ignored=&quot;false&quot; /&gt;
@@ -1139,8 +1265,12 @@ jmxexporter
     &lt;file path=&quot;/JmxExporterIntegrationTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356385449445&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/GraphiteWriterTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356469164654&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SocketWriterPool.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356352909687&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/SocketWriterPoolFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356356638206&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/SocketWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356353379022&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriterPoolFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567821407&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567518828&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356394313491&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolMBean.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567571111&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/PlaceholderEnabledJsonNode.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356386049894&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/jmxexporter-placeholder-test.json&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356392048530&quot; ignored=&quot;false&quot; /&gt;
 
  =======================================================================
  ==README.md
@@ -1153,6 +1283,8 @@ jmxexporter
 In process JMX metrics exporter. Inspired by JMXTrans but embedded inside your java process (e.g. Tomcat).
 
 An in process JMX Exporter will solve the problem of remote JMX access in cloud-style and elastic environments where the IP address of the Java servers is unknown and where RMI-IIOP is disabled (e.g. Amazon Elastic Beanstalk, Cloudbees, ...).
+
+[Latest JavaDocs](http://cyrille-leclerc.github.com/jmxexporter/apidocs/)
 
  =======================================================================
  ==src/test/resources/org/jmxexporter/jmxexporter-config-merge-1-test.json
