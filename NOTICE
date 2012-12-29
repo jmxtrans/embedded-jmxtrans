@@ -1,0 +1,30 @@
+This product includes/uses software, Spring Framework (http://www.springframework.org),
+developed by Spring Framework  (http://www.springframework.org/)
+License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+This product includes/uses software, Logback  (http://logback.qos.ch/),
+developed by QOS.ch (http://www.qos.ch/)
+License: Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html) 
+         or (per the licensee's choosing)  
+         GNU Lesser General Public License, version 2.1 (http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+
+This product includes/uses software, SLF4J  (http://www.slf4j.org/),
+developed by QOS.ch (http://www.qos.ch/)
+License: MIT License (http://www.slf4j.org/license.html)
+
+This product includes/uses software, JUnit (http://junit.org)
+developped by Harmcrest (www.hamcrest.org)
+
+This product includes/uses software, Amazon AWS SDK for Java (http://aws.amazon.com/sdkforjava/),
+developed by Amazon.com, Inc.  (http://www.amazon.com)
+License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+This product includes/uses software, MongoDB Java Driver (https://github.com/mongodb/mongo-java-driver),
+developed by 10Gen Inc.  (http://www.10gen.com)
+License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+This product includes/uses software, recaptcha4j (http://code.google.com/p/recaptcha4j/),
+developed by Soren Davidsen, Tanesha Networks
+License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+

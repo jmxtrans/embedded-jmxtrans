@@ -1,0 +1,6 @@
+/AwsCredentials.properties
+/smtp.properties
+/papertrail.properties
+/mongodb.properties
+/solr.properties
+/environment.properties
