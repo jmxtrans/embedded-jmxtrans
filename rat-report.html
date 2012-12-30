@@ -75,11 +75,11 @@
 *****************************************************
 Summary
 -------
-Generated at: 2012-12-30T03:09:11+01:00
+Generated at: 2012-12-30T14:50:46+01:00
 Notes: 2
-Binaries: 546
+Binaries: 584
 Archives: 0
-Standards: 99
+Standards: 101
 
 Apache Licensed: 41
 Generated Documents: 0
@@ -87,7 +87,7 @@ Generated Documents: 0
 JavaDocs are generated and so license header is optional
 Generated files do not required license headers
 
-58 Unknown Licenses
+60 Unknown Licenses
 
 *******************************
 
@@ -145,6 +145,8 @@ Unapproved licenses:
   .idea/workspace.xml
   README.md
   src/main/resources/org/jmxexporter/jmxexporter-internals.json
+  src/main/resources/org/jmxexporter/jvm-sun-hotspot.json
+  src/main/resources/org/jmxexporter/tomcat-6.json
   src/test/resources/org/jmxexporter/jmxexporter-config-merge-1-test.json
   src/test/resources/org/jmxexporter/jmxexporter-config-merge-2-test.json
   src/test/resources/org/jmxexporter/jmxexporter-config-test.json
@@ -173,6 +175,7 @@ Archives:
  !????? .git/logs/refs/remotes/origin/master
   B     .git/objects/00/37e992f3487b044dd0a5e254485fef5312f3f2
   B     .git/objects/00/3c2a2d7c569ca3f9921868a143f9b0a4010d4a
+  B     .git/objects/00/3fa156a2f23e15d6835b9c363c66d230c0b975
   B     .git/objects/00/9c594982e2226e7578a1773b6de655a7b58bab
   B     .git/objects/00/c6667dac8ac2d4bfe288e0d0d5dc80eeac45e3
   B     .git/objects/01/0a4c2baa11cfdfbb0fc88045e15b77c6002861
@@ -188,7 +191,9 @@ Archives:
   B     .git/objects/07/639ae9e10bda5d83cd862054b596d8be89d330
   B     .git/objects/07/6ef15f450f66e839e1ce17f45342db7fb2bf1f
   B     .git/objects/07/85d99a1e5499943262726a53eb1f782fec542e
+  B     .git/objects/08/1907af11e4091762c95118f4c5d927d3b5be2d
   B     .git/objects/08/94ebb6ce1d82a15345d3117e701fa314887cf7
+  B     .git/objects/09/058985b547c01df2af10da5fa35af2b17a73c3
   B     .git/objects/09/9d707a720415554c504437cb10db9f32075f7e
   B     .git/objects/0a/2fc3f538482082e794d15fc79e11919e7b3f94
   B     .git/objects/0a/9690e15c5bd7517080e76bdb1e00fac908f2ce
@@ -228,12 +233,14 @@ Archives:
   B     .git/objects/17/e93c2700c110ab1cfbf6a17468b636f98c4799
   B     .git/objects/18/a6c7624eff9a9f5627dafa3e24c5a9fc261943
   B     .git/objects/18/fd5ae8c3489fede3a488c9e278171f962aaf48
+  B     .git/objects/19/b6be97e98193178991c59c8e7368a5fac02608
   B     .git/objects/1b/09db0b9e5cb237be5b14bdfb558249a80fd6d7
   B     .git/objects/1b/9f6e6a480f7b24467bed1f6394e293582daadb
   B     .git/objects/1b/c0d4a8d0fbe76e722f6b48907982032c20d94f
   B     .git/objects/1b/e8e6da101ac9fe60c316f645b791fcc5244803
   B     .git/objects/1c/1de88603c1f7bbcddc730b5c34d7c4b1ba0240
   B     .git/objects/1c/4d0acd2ae51233929cbd47178ecbc165ff36f1
+  B     .git/objects/1c/b4c55cea05ace1188560bd126577b90f1003a6
   B     .git/objects/1d/81f7304bd5c8ab60da3b1e56c28885d3915c2f
   B     .git/objects/1d/b0331d1ddf44d01803662297196ad1bd2b695c
   B     .git/objects/1d/ce6b992dd6dab3bd8618c8600fe981069b55d3
@@ -244,6 +251,7 @@ Archives:
   B     .git/objects/20/25ab77ad693e17a0b5c14f56f1179f4b61ef30
   B     .git/objects/20/c742030bb4f5488035fa1104d855c58e90a7e6
   B     .git/objects/22/eb2dd9c56a85a61b2922d179c760c56fa97c06
+  B     .git/objects/23/584e480f7869a54abd6ff22444259cc457b9d6
   B     .git/objects/23/c09f48d3dcd7d02aa42948e60f16c400e4f0a5
   B     .git/objects/23/c69c6de074ba7d8b70aedf53240c898e424d9d
   B     .git/objects/24/75adee3fc5c79db70bc1c19c62d754f7b51927
@@ -251,6 +259,7 @@ Archives:
   B     .git/objects/25/5173f08d703d76de1768a7960ffb89c15e1b67
   B     .git/objects/25/c0ec3c63826add6618cd4da8e2edb39c16d263
   B     .git/objects/25/cffada7e03b41d3e691ad6121adfdd59cfc88d
+  B     .git/objects/25/e59025f22178af7a0a0a13a13c55485439140c
   B     .git/objects/25/e592c23e00c1ccdea1189e6811bb7e37d8aa39
   B     .git/objects/26/5f7f4a8f63220a720888a145559190f67816c9
   B     .git/objects/26/7fac8b5caae5a10ec47b8fa150acf824a76fb9
@@ -279,6 +288,7 @@ Archives:
   B     .git/objects/30/5bedef17187f59e6577895b362ed03a8bff40c
   B     .git/objects/30/6de879be9bff791ece8c06d1826b66a0a5eab5
   B     .git/objects/30/fab7c61b859459e98b49d0963ff11a022401a0
+  B     .git/objects/31/6d7ebdcfd5d42528a3a23cf2e769432bbddb8c
   B     .git/objects/31/9c6f2cf535271cdf28f2dbf8edb3c36528960d
   B     .git/objects/31/f77a2d8c40ef5af978610fa020cc9d85ae3fca
   B     .git/objects/32/16ea34e33720251f2229f9b3d183a338ea9a10
@@ -287,6 +297,7 @@ Archives:
   B     .git/objects/32/cc2026fd4485434855e0b295694f8ce3fa62ef
   B     .git/objects/33/69edb876ab2e113466e210f31f7ec8d693284e
   B     .git/objects/33/c70d2ac6a5199a7423240ae218fc996a74b6f0
+  B     .git/objects/33/f483bf90fb85b7b890a4ddaaa05e63cc65e5ee
   B     .git/objects/34/4ad9251968acb522ca22027156500c0a1e208a
   B     .git/objects/34/e4a391e67078609ce63698b519b71d731dd299
   B     .git/objects/35/4a17c47ff082bc1801ed0a629637c72885768d
@@ -310,11 +321,14 @@ Archives:
   B     .git/objects/3e/ed2553c4841dd6ab413b2eca15920f04aa6d9e
   B     .git/objects/3f/7debcf9931fea9db018848f77848154ac14864
   B     .git/objects/40/26517609afb7aa9abb975d548b1049e20ae105
+  B     .git/objects/40/39ccb980433d85bb04e29e7056c574f283df02
   B     .git/objects/40/ff324a5e0bd6ec5feeb0691faf4278bbb531d1
   B     .git/objects/41/646aaac07984d9ac0295bc8e50fe48f12f00fc
+  B     .git/objects/41/77793d347918874736616a7ca7dd3d554a1844
   B     .git/objects/41/7ba586bb39171d70aab89079c0bdeac89a8d37
   B     .git/objects/41/f254a81a98dfb9fd779582e4a3270aefd41512
   B     .git/objects/42/2197aaae909b7493650407dd74a838add607b1
+  B     .git/objects/42/e7919284c20ebe66568cfa69d9beb9a4e31326
   B     .git/objects/43/835e7fe65047e61d6dc82fd229e2ca5009e9c3
   B     .git/objects/43/9043698f84e8ee6e12473f4e691a0e08186b83
   B     .git/objects/43/b9dbeeb7daa06a861e998d426dfe2b44d8bd2d
@@ -322,6 +336,7 @@ Archives:
   B     .git/objects/44/5b72422c8f2266e13181a27b10fdbb19aa3ef2
   B     .git/objects/45/0fcc3def1859ba606b95978246464b0ba43939
   B     .git/objects/45/90f36077c77d2433911d700426a36635533afd
+  B     .git/objects/46/5ece0107e82d232a4006289625f4bcb2e02909
   B     .git/objects/46/600ad015341a0b6afdea4c4398790b67c9c26a
   B     .git/objects/46/9dcce345fae1224bb0069c4e874c9ea0e97007
   B     .git/objects/47/efa65c707bc1b36c707cf39376fdade8405bd3
@@ -348,6 +363,7 @@ Archives:
   B     .git/objects/50/9d081f72e550a73c04104cf25ece396d608942
   B     .git/objects/50/fee03bd222b7a52c7409bdf4eac7bb9b2b5160
   B     .git/objects/51/240e63de6cfbdb0315600ebb3d795aee96ae2c
+  B     .git/objects/51/b8e8c940733d5278ced49fcf268002bef624f2
   B     .git/objects/52/7f2795c7413d9d1a25c3ebd505dd86cca61963
   B     .git/objects/52/e810ae71690d49ed73aea7ff7044968a28b7ef
   B     .git/objects/53/b82fa20555af14b63becf66dd4fe2fed25426c
@@ -385,8 +401,10 @@ Archives:
   B     .git/objects/61/9c05729ead70ae43931775ac24a37d33d16859
   B     .git/objects/62/51bdae69f35a805ce51426ff5d3f98eddfa88b
   B     .git/objects/62/c8df085548e2edec3cb28c0bf92e97dba53b1d
+  B     .git/objects/63/3e257da3cbaac7405228deff3e98cc44f215a2
   B     .git/objects/63/5ccaade9239dcbbae695b39811dde3e804d17c
   B     .git/objects/64/c19617cc5ce7f5049c43140791e335ff116b72
+  B     .git/objects/66/e20c763371cca7b64b64ff0b53ac7c9ae63562
   B     .git/objects/67/cc4aaa1e34b1e3e965ffbb785ea8d83f32d99c
   B     .git/objects/67/d33b5927bfa2e035566a1136e491534dc1ce3e
   B     .git/objects/68/4c5ff34d0ae663fd7e1370fca03e4cd7a016c6
@@ -409,6 +427,7 @@ Archives:
   B     .git/objects/71/6a22367e8b6a4d5ce3f6e850c1219600618fc7
   B     .git/objects/71/8b8d9e8331acd70fe61a78f6be22c16e787295
   B     .git/objects/72/2159fea4c7615c136f4caefc1f85eaa7d55478
+  B     .git/objects/72/2f39a6cd4c51859675e1be57c4720b0d98ed85
   B     .git/objects/72/84f60de9a59edd2b4bbc49d75218b898f23a21
   B     .git/objects/73/5993b3735b8abbc74b1f984eb575c769892650
   B     .git/objects/73/ca304b6d7bce4a314fed26c89a225883249204
@@ -418,6 +437,7 @@ Archives:
   B     .git/objects/75/19aa18ae834f08ae0a5cc8e03885aad2aff555
   B     .git/objects/75/28bbf01c982931434cf83128bfa856ed50f421
   B     .git/objects/75/55f455ffff9d93bbb27970334cacb47d7a8e18
+  B     .git/objects/75/ebf3156961e9a8f840a0461ecac4e7b850eef7
   B     .git/objects/76/b229ac1d953d72aedc49131b1586b4c5431020
   B     .git/objects/77/7e9b7e879ff4a7b369d75ed60fc25c94eea316
   B     .git/objects/77/8049434eb9c4f164e2c782354640e78de3eb96
@@ -469,6 +489,7 @@ Archives:
   B     .git/objects/8c/c11436942897250dda188e2681783806c52df0
   B     .git/objects/8c/e7f3a40dec769295106d3f4ef539c5c914b89e
   B     .git/objects/8d/1f28f4d04e897d6f50f136f835cdf858d9c3dd
+  B     .git/objects/8d/ae166bb91d5a75dc256153683dd3bb9b2ae35d
   B     .git/objects/8e/5053bc70aeb85367b4c9062e1aa2960c571757
   B     .git/objects/8e/a8031bdec4487fcbe5627e371657f401c43f2c
   B     .git/objects/8f/bada094afe0ee1f5bbeb1ae6a4df400edaaae5
@@ -483,8 +504,10 @@ Archives:
   B     .git/objects/94/542d3ce7d2bbd9dd7021ad7328e408cd9c53d5
   B     .git/objects/94/9ec8c79e296333e13a23aa5ebaf91b17e1645f
   B     .git/objects/94/e9cce58bfdc11fbf3231b334630360b67e7df0
+  B     .git/objects/95/2bd801824d5c1d83cf39e92e0867d02fa7e346
   B     .git/objects/95/63ab13e21e71caf3b7bbba9d940f0778f2cbbe
   B     .git/objects/95/8c8c8105b4c14c343e7c05beb6a8afbd4817fa
+  B     .git/objects/95/cd4b7dd2b726918dbf9de4af629f340d6939a9
   B     .git/objects/96/1422df3ab071aba2b12dcd1ce3a31f2c09aeda
   B     .git/objects/96/cdced8d04d3434bda2a6ab8850088ec6a8cfc0
   B     .git/objects/98/a5cf841b622c772950a8d5a4029970294f33a4
@@ -505,8 +528,10 @@ Archives:
   B     .git/objects/9f/49f1ef14d9f962e02664b477173b344147b77e
   B     .git/objects/a0/3d7fc5102f3646b94a4027c1f04dd796a0bee1
   B     .git/objects/a0/4db394a83c906fe6b0be5ec585ffa9d069bcdc
+  B     .git/objects/a1/7392d1c12559e55d418bbf507e586df51c6c2b
   B     .git/objects/a2/09cbedc65bac5a53d9e245d24d518162d2ec29
   B     .git/objects/a2/1844373dd962f56f24868e4940f17cc4e20033
+  B     .git/objects/a2/bc19024cd391ce7fe682cdd5e93413766f53d9
   B     .git/objects/a3/298b9ee15b4ed9181a8ca5e41c9dbea5f25856
   B     .git/objects/a3/3e29d4093568c94d5cdf8becc3cd4c8d5a4373
   B     .git/objects/a3/5aa1db5c8526a0d2d2816fd6880c0d6f39af6b
@@ -514,6 +539,7 @@ Archives:
   B     .git/objects/a5/5d01c44a01815bc5828cd60ad6bdd460421a98
   B     .git/objects/a5/78846d4aba962de73cec4cc22d0648bae105a2
   B     .git/objects/a6/0552c222ceb101f8342e4e3df0088603464140
+  B     .git/objects/a6/94d0f36ec0e5d40bf8bec98db99515bc32e105
   B     .git/objects/a6/d5c25dec77e064be6f1ae375c3082f22c01fc6
   B     .git/objects/a7/3d63a9e24cbe872259f47c2bb3b48ad8bda97f
   B     .git/objects/a7/7774923f99d225fc85f1007dc48fbbcaf308f9
@@ -530,14 +556,18 @@ Archives:
   B     .git/objects/ae/decca9dff1c130cf29874e0c5be8be57fbf478
   B     .git/objects/ae/fbcc1152a547d3b4e2becbce42d306c270fada
   B     .git/objects/b0/1ea3f5fc196329aeedf5c7f82d5308cdf78e88
+  B     .git/objects/b0/ec2fecc3d1235d4d36b62b8b131a8dc02c9eca
+  B     .git/objects/b1/bbeea9d88efc4202de2873bd904cf223b5655d
   B     .git/objects/b2/5098c39b65ebd4c8c0ccc99e74235c79bb2f81
   B     .git/objects/b2/ae9e4aa5f5d08b828e09defae07cbc5baa0f89
   B     .git/objects/b3/33fda8bc0dfb94fe2fcb199857e5d45ecdc2ca
+  B     .git/objects/b3/3b68ccd2cf1cad4341515b610d506d557dbb13
   B     .git/objects/b3/552bcdccbd7c98f68cad39ea340615dfb4e0a6
   B     .git/objects/b3/6330cbfbc0b7a45f151766dc4d0bcfdbb5a848
   B     .git/objects/b3/cea6782edd8a069f5edfdcd1ac9154b18a27c5
   B     .git/objects/b3/e4ad0d32c908f57cecec81790c202cc89d43ae
   B     .git/objects/b4/2014f6a64f9021ed3beea490aada984df514f6
+  B     .git/objects/b4/42dbb406ac1ea1246d996e9cb49c9647f91dd0
   B     .git/objects/b4/a41945c7d194fd5167e9d84ded6b6e698a5c3c
   B     .git/objects/b5/59db2c31c741b1874617166bc605e2c3870bac
   B     .git/objects/b5/d168f1b2ffc2df47f2e3990c73ec2e5da8716f
@@ -556,6 +586,7 @@ Archives:
   B     .git/objects/bb/68d2ae6fc898ca7f5ffc63da04e24fdb0b600b
   B     .git/objects/bb/86d1f5a011a1b78156d87d0bdd4f33344487c1
   B     .git/objects/bb/b053976ac0ede53d4f334bae1efb755896c528
+  B     .git/objects/bb/d52671a695e9242928bef7971d7cec65b50564
   B     .git/objects/bc/1e08d695187c4813d64ce196b3d1188f84e819
   B     .git/objects/bc/2aa5c9a30c56a77994ed215ba8f584995f44e7
   B     .git/objects/bc/80b0a1338d3b40bdf2eb2a7aea1b7bb3a22570
@@ -573,6 +604,7 @@ Archives:
   B     .git/objects/bf/ba26fe7fc564a79b306b3d8000b85926e70b61
   B     .git/objects/c0/6c549b28af790bb4f65751a4afc118006864ec
   B     .git/objects/c1/2327358c9daf571ba251a947333659f8b5f8b2
+  B     .git/objects/c1/5a274ac7221c9514cfd899eed7c0ad75ff0f3e
   B     .git/objects/c1/cda0aeeb932258a650551589ef8cf514ff2803
   B     .git/objects/c2/841abf375e794d01e146fa747b94c0c449687b
   B     .git/objects/c2/b4b2928cc5cea581a9a24ba184dca590957e0a
@@ -610,6 +642,7 @@ Archives:
   B     .git/objects/d0/e97edb22926ca5f2cd7bd6eb9a7614bc26c460
   B     .git/objects/d1/09d431408f00466b02c138aa24bbefe0f045fa
   B     .git/objects/d1/3969e2d75bfc0e3fc4e5736c3278c7e556dfda
+  B     .git/objects/d2/1e59cd1a83a4a79736123bd216322b41ed09e8
   B     .git/objects/d3/25b0412021ce205621861e9fbe83595dfb8fe8
   B     .git/objects/d3/439e063679334911eb114de81ebc0ca102f09d
   B     .git/objects/d3/974c7ce88cb04e6641fb6a8232a0876da2b988
@@ -621,6 +654,7 @@ Archives:
   B     .git/objects/d8/96edd4f2351902704c4ee93c0af218c0f154bf
   B     .git/objects/d9/34af5d450424257455d9417c740435d13b98e0
   B     .git/objects/d9/816c68a0643f7c3332367b256196bee0fa0338
+  B     .git/objects/d9/ca4c5649f3e1ddadaa28ca962bf740d1b0324d
   B     .git/objects/da/3d9a523f600826707d0be403566b7fd67d1863
   B     .git/objects/da/b78b972003b0690ee16ff19f85da3b43585e13
   B     .git/objects/db/4483ea5681dda5a56005c340ea250e4263a77f
@@ -635,6 +669,7 @@ Archives:
   B     .git/objects/e0/2e417503128969c43a47ef06fd793b09cec5bb
   B     .git/objects/e0/510d5d94d1b7521b9075e96484f2b469e8d3f1
   B     .git/objects/e0/5dae068a182dffe4576b9bd1e130c7b44a06de
+  B     .git/objects/e0/763c0a027783e689f08aca664af2d023f8999a
   B     .git/objects/e0/9f48bf15d26ff4390ba0bb209a508d0f5ffcef
   B     .git/objects/e1/010e32675f294103d3072b6b5dd9b245bd8e6b
   B     .git/objects/e2/2467a49248b46dbc58d6e219830863d3746734
@@ -679,14 +714,17 @@ Archives:
   B     .git/objects/f4/6ab90efbbb8267e4f5331595cbedc72a960d7c
   B     .git/objects/f4/f2346cc722b51fc1c62bb8561d011b3af9d1b3
   B     .git/objects/f6/beaf12bea5d2b1ae902709bd6caefbd3e685ea
+  B     .git/objects/f7/0fc85f392a92b3570ddf5b1e02c907b6a5d1bf
   B     .git/objects/f7/7f53ce17134b3276a88438e30121d99a88cc1e
   B     .git/objects/f8/7dcc42ce53b3abc0b97f57a9b25f9208e1d665
   B     .git/objects/f8/cb205078e1fe544d9ef8282b376d08c2d51f3a
   B     .git/objects/f9/025c898ff69f32250b6079c1de72ce18ac8af8
   B     .git/objects/f9/13ae94b2afe14ac12fc28084b5ebd75d094b58
+  B     .git/objects/f9/f8a71620e5e66f1c0a58ee16578cdfc1cc88db
   B     .git/objects/fa/0226a7cefa81b5c860b438f475cc49f2c75788
   B     .git/objects/fa/2f294b569afc2f52f82a23b83be9642ac0b955
   B     .git/objects/fa/60eaaaf98f3f30220bc66a1c944b06aefd0b77
+  B     .git/objects/fa/74b4337fc73c7acf3b52edee96df74c5e04455
   B     .git/objects/fa/7897f215e1605207a60be731e6eeaeb96c9d96
   B     .git/objects/fa/96261aefa8972354409f55741f3821ec3b8238
   B     .git/objects/fc/30c0f9adad0e070127f8bd33f513e0b4da7519
@@ -708,6 +746,8 @@ Archives:
   B     .git/objects/pack/pack-442c65b7c4a414ee4b8f5bc42f7d2a1ec5dc066b.pack
   B     .git/objects/pack/pack-525afe1d4b0124a50ee8755851cbac8d6f913ac6.idx
   B     .git/objects/pack/pack-525afe1d4b0124a50ee8755851cbac8d6f913ac6.pack
+  B     .git/objects/pack/pack-5bb93bcdcdab47c371647035da6401e7c6f70a6e.idx
+  B     .git/objects/pack/pack-5bb93bcdcdab47c371647035da6401e7c6f70a6e.pack
   B     .git/objects/pack/pack-5ff36e3d413977b7ddcba0013c828a4c6cad07b0.idx
   B     .git/objects/pack/pack-5ff36e3d413977b7ddcba0013c828a4c6cad07b0.pack
   B     .git/objects/pack/pack-6c20bdc98f67f69101d06fb2aa965324a7e1a803.idx
@@ -787,6 +827,8 @@ Archives:
   AL    src/main/java/org/jmxexporter/util/pool/SocketWriterPoolFactory.java
   AL    src/main/java/org/jmxexporter/util/Preconditions.java
  !????? src/main/resources/org/jmxexporter/jmxexporter-internals.json
+ !????? src/main/resources/org/jmxexporter/jvm-sun-hotspot.json
+ !????? src/main/resources/org/jmxexporter/tomcat-6.json
   AL    src/test/java/org/jmxexporter/config/ConfigurationMergeTest.java
   AL    src/test/java/org/jmxexporter/config/ConfigurationTest.java
   AL    src/test/java/org/jmxexporter/JmxExporterFactoryTest.java
@@ -816,9 +858,7 @@ Archives:
  =======================================================================
  ==.git/COMMIT_EDITMSG
  =======================================================================
-* add jmxexporter MBean for health monitoring
-* export pending metrics at jmxexporter stop
-* Add shutdown hook
+Add configuration templates for JVM and Tomcat6
 
  =======================================================================
  ==.git/config
@@ -840,8 +880,8 @@ Archives:
  =======================================================================
  ==.git/FETCH_HEAD
  =======================================================================
-4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9		branch 'master' of https://github.com/cyrille-leclerc/jmxexporter
-cb5e32b40993604bbcad483b9019f007c7501eb3	not-for-merge	branch 'gh-pages' of https://github.com/cyrille-leclerc/jmxexporter
+633e257da3cbaac7405228deff3e98cc44f215a2		branch 'master' of https://github.com/cyrille-leclerc/jmxexporter
+c42a14a1e4d46ee7853ae291c72efa15bf2a0bb7	not-for-merge	branch 'gh-pages' of https://github.com/cyrille-leclerc/jmxexporter
 
  =======================================================================
  ==.git/HEAD
@@ -881,6 +921,9 @@ eb85041ba4db05992f48f4e0ee7de77a3aed2863 354a17c47ff082bc1801ed0a629637c72885768
 135387465f19c43b7a450303e711762d693722ad de82678c6c15b561c5b63f51dc7cfb665c8ab74d Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356792033 +0100	commit: cleanup
 de82678c6c15b561c5b63f51dc7cfb665c8ab74d 83f263f12d36e6566346e156897d4b76354f70c4 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356829157 +0100	commit: clean according to Intellij code analysis
 83f263f12d36e6566346e156897d4b76354f70c4 4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356829243 +0100	commit: * add jmxexporter MBean for health monitoring
+4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 633e257da3cbaac7405228deff3e98cc44f215a2 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356866597 +0100	commit: javadoc
+633e257da3cbaac7405228deff3e98cc44f215a2 b33b68ccd2cf1cad4341515b610d506d557dbb13 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356875375 +0100	commit: Add configuration templates for JVM and Tomcat6
+b33b68ccd2cf1cad4341515b610d506d557dbb13 95cd4b7dd2b726918dbf9de4af629f340d6939a9 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356875412 +0100	commit (amend): Add configuration templates for JVM and Tomcat6
 
  =======================================================================
  ==.git/logs/refs/heads/master
@@ -913,6 +956,9 @@ eb85041ba4db05992f48f4e0ee7de77a3aed2863 354a17c47ff082bc1801ed0a629637c72885768
 135387465f19c43b7a450303e711762d693722ad de82678c6c15b561c5b63f51dc7cfb665c8ab74d Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356792033 +0100	commit: cleanup
 de82678c6c15b561c5b63f51dc7cfb665c8ab74d 83f263f12d36e6566346e156897d4b76354f70c4 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356829157 +0100	commit: clean according to Intellij code analysis
 83f263f12d36e6566346e156897d4b76354f70c4 4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356829243 +0100	commit: * add jmxexporter MBean for health monitoring
+4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 633e257da3cbaac7405228deff3e98cc44f215a2 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356866597 +0100	commit: javadoc
+633e257da3cbaac7405228deff3e98cc44f215a2 b33b68ccd2cf1cad4341515b610d506d557dbb13 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356875375 +0100	commit: Add configuration templates for JVM and Tomcat6
+b33b68ccd2cf1cad4341515b610d506d557dbb13 95cd4b7dd2b726918dbf9de4af629f340d6939a9 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356875412 +0100	commit (amend): Add configuration templates for JVM and Tomcat6
 
  =======================================================================
  ==.git/logs/refs/remotes/origin/gh-pages
@@ -923,6 +969,7 @@ de82678c6c15b561c5b63f51dc7cfb665c8ab74d 83f263f12d36e6566346e156897d4b76354f70c
 275c1fad344e0f9d5a2591ff8b643ccefc7dbcf3 47c26923b464a0e1ffd663f5f31dca378eccb068 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356710663 +0100	fetch origin: fast-forward
 47c26923b464a0e1ffd663f5f31dca378eccb068 68bbd224bc165b22b192f1eff746793dcffba407 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356791949 +0100	fetch origin: fast-forward
 68bbd224bc165b22b192f1eff746793dcffba407 cb5e32b40993604bbcad483b9019f007c7501eb3 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356799605 +0100	fetch origin: fast-forward
+cb5e32b40993604bbcad483b9019f007c7501eb3 c42a14a1e4d46ee7853ae291c72efa15bf2a0bb7 Cyrille Le Clerc &lt;cyrilleleclerc@cyrille-le-clercs-macbook-pro.local&gt; 1356866325 +0100	fetch origin: fast-forward
 
  =======================================================================
  ==.git/logs/refs/remotes/origin/HEAD
@@ -951,6 +998,7 @@ bc2aa5c9a30c56a77994ed215ba8f584995f44e7 07639ae9e10bda5d83cd862054b596d8be89d33
 07639ae9e10bda5d83cd862054b596d8be89d330 eb85041ba4db05992f48f4e0ee7de77a3aed2863 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356719174 +0100	update by push
 eb85041ba4db05992f48f4e0ee7de77a3aed2863 de82678c6c15b561c5b63f51dc7cfb665c8ab74d Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356792126 +0100	update by push
 de82678c6c15b561c5b63f51dc7cfb665c8ab74d 4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356829254 +0100	update by push
+4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9 633e257da3cbaac7405228deff3e98cc44f215a2 Cyrille Le Clerc &lt;cyrille@cyrilleleclerc.com&gt; 1356866608 +0100	update by push
 
  =======================================================================
  ==.git/ORIG_HEAD
@@ -966,12 +1014,12 @@ c8048fd23781b31ea5b4d01aa511f8cce7fcd5a3 refs/remotes/origin/master
  =======================================================================
  ==.git/refs/heads/master
  =======================================================================
-4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9
+95cd4b7dd2b726918dbf9de4af629f340d6939a9
 
  =======================================================================
  ==.git/refs/remotes/origin/gh-pages
  =======================================================================
-cb5e32b40993604bbcad483b9019f007c7501eb3
+c42a14a1e4d46ee7853ae291c72efa15bf2a0bb7
 
  =======================================================================
  ==.git/refs/remotes/origin/HEAD
@@ -981,7 +1029,7 @@ ref: refs/remotes/origin/master
  =======================================================================
  ==.git/refs/remotes/origin/master
  =======================================================================
-4ec6486a07e5add1301fbaad0114a8dd5bd5c5e9
+633e257da3cbaac7405228deff3e98cc44f215a2
 
  =======================================================================
  ==.git/sourcetreeconfig
@@ -989,8 +1037,8 @@ ref: refs/remotes/origin/master
 lastUsedView=0
 autorefresh=1
 savedIncoming=0
-lastCheckedRemotes=2012-12-30 02:05:12 +0000
-savedOutgoing=0
+lastCheckedRemotes=2012-12-30 13:50:31 +0000
+savedOutgoing=1
 autorefreshremotes=1
 
  =======================================================================
@@ -1580,19 +1628,15 @@ jmxexporter
   &lt;/component&gt;
   &lt;component name=&quot;ChangeListManager&quot;&gt;
     &lt;list default=&quot;true&quot; id=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; name=&quot;Default&quot; comment=&quot;&quot;&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/config/ConfigurationParser.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/config/ConfigurationParser.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/output/ConsoleWriter.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/output/ConsoleWriter.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/JmxExporterMBean.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/JmxExporterMBean.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/output/NoOpWriter.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/output/NoOpWriter.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/util/json/PlaceholderEnabledJsonNodeFactory.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/util/json/PlaceholderEnabledJsonNodeFactory.java&quot; /&gt;
       &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/ResultNameStrategy.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/ResultNameStrategy.java&quot; /&gt;
+      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/ResultNameStrategyTest.java&quot; afterPath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/ResultNameStrategyTest.java&quot; /&gt;
     &lt;/list&gt;
     &lt;ignored path=&quot;jmxexporter.iws&quot; /&gt;
     &lt;ignored path=&quot;.idea/workspace.xml&quot; /&gt;
-    &lt;file path=&quot;/Dummy.txt&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356807092808&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/Dummy.txt&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356871327735&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/QueryAttribute.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356813974575&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/OutputWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356355618844&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/GraphiteWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356639977624&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/GraphiteWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356833762074&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/pom.xml&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356816797030&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ConfigurationTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356517078519&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/Query.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356816540485&quot; ignored=&quot;false&quot; /&gt;
@@ -1605,7 +1649,7 @@ jmxexporter
     &lt;file path=&quot;/JmxExporterException.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567594515&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/NamedThreadFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356814512899&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/MetricCollector.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356128479799&quot; ignored=&quot;false&quot; /&gt;
-    &lt;file path=&quot;/AbstractOutputWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356832930132&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/AbstractOutputWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356833814263&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ConsoleWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356832951793&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SocketFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356220590756&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/ManagedGenericKeyedObjectPool.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356358612587&quot; ignored=&quot;false&quot; /&gt;
@@ -1620,6 +1664,10 @@ jmxexporter
     &lt;file path=&quot;/JmxExporterIntegrationTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356385449445&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/GraphiteWriterTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356469164654&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SocketWriterPool.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356352909687&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriterPoolFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567821407&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567518828&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356394313491&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolMBean.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567571111&quot; ignored=&quot;false&quot; /&gt;
 
  =======================================================================
  ==README.md
@@ -1657,6 +1705,114 @@ An in process JMX Exporter will solve the problem of remote JMX access in cloud-
         }
     ]
 }
+
+ =======================================================================
+ ==src/main/resources/org/jmxexporter/jvm-sun-hotspot.json
+ =======================================================================
+{
+    &quot;queries&quot;: [
+        {
+            &quot;objectName&quot;: &quot;java.lang:type=Memory&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.memory&quot;,
+            &quot;attributes&quot;: [
+                {
+                    &quot;name&quot;: &quot;HeapMemoryUsage&quot;,
+                    &quot;keys&quot;: [&quot;committed&quot;, &quot;init&quot;, &quot;max&quot;, &quot;used&quot;]
+                },
+                {
+                    &quot;name&quot;: &quot;NonHeapMemoryUsage&quot;,
+                    &quot;keys&quot;: [&quot;committed&quot;, &quot;init&quot;, &quot;max&quot;, &quot;used&quot;]
+                }
+            ]
+
+        },
+        {
+            &quot;objectName&quot;: &quot;java.lang:type=Runtime&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.runtime&quot;,
+            &quot;attributes&quot;: [
+                &quot;Uptime&quot;
+            ]
+
+        },
+        {
+            &quot;objectName&quot;: &quot;java.lang:type=GarbageCollector,name=%name%&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.garbage-collector.%name%&quot;,
+            &quot;attributes&quot;: [
+                &quot;CollectionCount&quot;,
+                &quot;CollectionTime&quot;
+            ]
+
+        },
+        {
+            &quot;objectName&quot;: &quot;java.lang:type=Threading&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.thread&quot;,
+            &quot;attributes&quot;: [
+                &quot;ThreadCount&quot;
+            ]
+
+        },
+        {
+            &quot;objectName&quot;: &quot;java.lang:type=OperatingSystem&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.thread&quot;,
+            &quot;attributes&quot;: [
+                &quot;CommittedVirtualMemorySize&quot;,
+                &quot;FreePhysicalMemorySize&quot;,
+                &quot;FreeSwapSpaceSize&quot;,
+                &quot;OpenFileDescriptorCount&quot;,
+
+ =======================================================================
+ ==src/main/resources/org/jmxexporter/tomcat-6.json
+ =======================================================================
+{
+    &quot;queries&quot;: [
+        {
+            &quot;objectName&quot;: &quot;Catalina:type=ThreadPool,name=*&quot;,
+            &quot;resultAlias&quot;: &quot;tomcat.thread-pool.%name%&quot;,
+            &quot;attributes&quot;: [
+                &quot;currentThreadCount&quot;,
+                &quot;currentThreadsBusy&quot;
+            ]
+
+        },
+        {
+            &quot;objectName&quot;: &quot;Catalina:type=Manager,path=*,host=*&quot;,
+            &quot;resultAlias&quot;: &quot;tomcat.manager.%host%.%path%&quot;,
+            &quot;attributes&quot;: [
+                &quot;activeSessions&quot;
+            ]
+        },
+        {
+            &quot;objectName&quot;: &quot;Catalina:type=GlobalRequestProcessor,name=%name%&quot;,
+            &quot;resultAlias&quot;: &quot;tomcat.global-request-processor.%name%&quot;,
+            &quot;attributes&quot;: [
+                &quot;bytesReceived&quot;,
+                &quot;bytesSent&quot;,
+                &quot;errorCount&quot;,
+                &quot;processingTime&quot;,
+                &quot;requestCount&quot;
+
+            ]
+        },
+        {
+            &quot;objectName&quot;: &quot;Catalina:type=DataSource,path=%,host=%,class=javax.sql.DataSource,name=%&quot;,
+            &quot;resultAlias&quot;: &quot;tomcat.data-source.%host%.%path%.%name%&quot;,
+            &quot;attributes&quot;: [
+                &quot;numActive&quot;,
+                &quot;numIdle&quot;
+            ]
+        },
+        {
+            &quot;objectName&quot;: &quot;Catalina:j2eeType=Servlet,name=*,WebModule=*,J2EEApplication=none,J2EEServer=none&quot;,
+            &quot;resultAlias&quot;: &quot;tomcat.servlet.%WebModule%.%name%&quot;,
+            &quot;attributes&quot;: [
+                &quot;errorCount&quot;,
+                &quot;processingTime&quot;,
+                &quot;requestCount&quot;
+            ]
+        },
+
+
+    ]
 
  =======================================================================
  ==src/test/resources/org/jmxexporter/jmxexporter-config-merge-1-test.json
