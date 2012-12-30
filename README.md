@@ -1,5 +1,5 @@
 Samples
 
 
- * Sample [Cocktail Webapp](tree/master/jmxexporter-webapp-coktail)
+ * Sample Cocktail Webapp: jmxexporter-webapp-coktail
  * Sample batch : TODO
