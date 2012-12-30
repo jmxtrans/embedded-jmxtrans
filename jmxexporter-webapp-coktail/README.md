@@ -6,7 +6,6 @@ JMX Exporter Demo Web Application.
 ## Configuration
 
 Default configuration files are used :
-* 
 * `classpath:jmxexporter.json` see [src/main/resources/jmxexporter.json](https://github.com/cyrille-leclerc/jmxexporter-demo/blob/master/jmxexporter-webapp-coktail/src/main/resources/jmxexporter.json)
 * `classpath:org/jmxexporter/jmxexporter-internals.json` provided par jmxexporter jar. See [jmxexporter-internals.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/jmxexporter-internals.json)
 
