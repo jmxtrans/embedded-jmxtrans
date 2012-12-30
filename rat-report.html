@@ -75,7 +75,7 @@
 *****************************************************
 Summary
 -------
-Generated at: 2012-12-30T15:12:25+01:00
+Generated at: 2012-12-30T15:19:27+01:00
 Notes: 2
 Binaries: 621
 Archives: 0
@@ -1673,12 +1673,7 @@ jmxexporter
   &lt;/component&gt;
   &lt;component name=&quot;ChangeListManager&quot;&gt;
     &lt;list default=&quot;true&quot; id=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; name=&quot;Default&quot; comment=&quot;&quot;&gt;
-      &lt;change type=&quot;NEW&quot; beforePath=&quot;&quot; afterPath=&quot;$PROJECT_DIR$/src/test/java/org/jmxexporter/config/ConfigurationTemplatesTest.java&quot; /&gt;
-      &lt;change type=&quot;MOVED&quot; beforePath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/jmxexporter-internals.json&quot; afterPath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/config/jmxexporter-internals.json&quot; /&gt;
-      &lt;change type=&quot;MOVED&quot; beforePath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/jvm-sun-hotspot.json&quot; afterPath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/config/jvm-sun-hotspot.json&quot; /&gt;
-      &lt;change type=&quot;MOVED&quot; beforePath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/tomcat-6.json&quot; afterPath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/config/tomcat-6.json&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/config/ConfigurationParser.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/config/ConfigurationParser.java&quot; /&gt;
-      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/JmxExporterFactory.java&quot; afterPath=&quot;$PROJECT_DIR$/src/main/java/org/jmxexporter/JmxExporterFactory.java&quot; /&gt;
+      &lt;change type=&quot;MODIFICATION&quot; beforePath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/config/jvm-sun-hotspot.json&quot; afterPath=&quot;$PROJECT_DIR$/src/main/resources/org/jmxexporter/config/jvm-sun-hotspot.json&quot; /&gt;
     &lt;/list&gt;
     &lt;ignored path=&quot;jmxexporter.iws&quot; /&gt;
     &lt;ignored path=&quot;.idea/workspace.xml&quot; /&gt;
@@ -1713,6 +1708,11 @@ jmxexporter
     &lt;file path=&quot;/JmxExporterIntegrationTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356385449445&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/GraphiteWriterTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356469164654&quot; ignored=&quot;false&quot; /&gt;
     &lt;file path=&quot;/SocketWriterPool.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356352909687&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriterPoolFactory.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567821407&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/SocketWriter.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567518828&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolTest.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356394313491&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/ManagedGenericKeyedObjectPoolMBean.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356567571111&quot; ignored=&quot;false&quot; /&gt;
+    &lt;file path=&quot;/PlaceholderEnabledJsonNode.java&quot; changelist=&quot;b6dd5f1c-c980-44d1-9e56-9283720c2b8e&quot; time=&quot;1356386049894&quot; ignored=&quot;false&quot; /&gt;
 
  =======================================================================
  ==README.md
@@ -1781,7 +1781,7 @@ An in process JMX Exporter will solve the problem of remote JMX access in cloud-
         },
         {
             &quot;objectName&quot;: &quot;java.lang:type=GarbageCollector,name=%name%&quot;,
-            &quot;resultAlias&quot;: &quot;jvm.garbage-collector.%name%&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.gc.%name%&quot;,
             &quot;attributes&quot;: [
                 &quot;CollectionCount&quot;,
                 &quot;CollectionTime&quot;
@@ -1798,7 +1798,7 @@ An in process JMX Exporter will solve the problem of remote JMX access in cloud-
         },
         {
             &quot;objectName&quot;: &quot;java.lang:type=OperatingSystem&quot;,
-            &quot;resultAlias&quot;: &quot;jvm.thread&quot;,
+            &quot;resultAlias&quot;: &quot;jvm.os&quot;,
             &quot;attributes&quot;: [
                 &quot;CommittedVirtualMemorySize&quot;,
                 &quot;FreePhysicalMemorySize&quot;,
