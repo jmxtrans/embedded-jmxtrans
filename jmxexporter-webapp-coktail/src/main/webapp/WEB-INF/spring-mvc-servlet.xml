@@ -42,6 +42,15 @@
 
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:cocktail-app.properties"/>
 
-    <bean id="jmxExporter" class="org.jmxexporter.JmxExporterFactory" />
+    <bean id="jmxExporter" class="org.jmxexporter.JmxExporterFactory">
+        <property name="configurationUrls">
+            <list>
+                <value>classpath:jmxexporter.json</value>
+                <value>classpath:org/jmxexporter/config/jmxexporter-internals.json</value>
+                <value>classpath:org/jmxexporter/config/jvm-sun-hotspot.json</value>
+                <value>classpath:org/jmxexporter/config/tomcat-6.json</value>
+            </list>
+        </property>
+    </bean>
 
 </beans>
