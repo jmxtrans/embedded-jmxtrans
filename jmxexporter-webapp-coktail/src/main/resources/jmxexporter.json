@@ -1,54 +1,15 @@
 {
     "queries": [
         {
-            "objectName": "cocktail:type=CocktailManager,name=CocktailManager",
-            "resultAlias": "cocktail.cocktailmanager",
-            "attribute": "AddedCommentCount"
-        },
-        {
-            "objectName": "java.lang:type=GarbageCollector,name=PS MarkSweep",
-            "resultAlias": "jvm.gc.ps-marksweep",
-            "attributes": ["CollectionCount", "CollectionTime"]
-        },
-        {
-            "objectName": "java.lang:type=GarbageCollector,name=PS Scavenge",
-            "resultAlias": "jvm.gc.ps-scavenge",
-            "attributes": ["CollectionCount", "CollectionTime"]
-        },
-        {
-            "objectName": "java.lang:type=Memory",
-            "resultAlias": "jvm.memory",
+            "objectName": "java.lang:type=GarbageCollector,name=*",
+            "resultAlias": "jvm.gc.%name%",
             "attributes": [
-                {
-                    "name": "HeapMemoryUsage",
-                    "keys": ["committed", "init", "max", "used"]
-                },
-                {
-                    "name": "NonHeapMemoryUsage",
-                    "keys": ["committed", "init", "max", "used"]
-                }
+                "CollectionCount",
+                "CollectionTime"
             ]
-        },
-        {
-            "objectName": "java.lang:type=Threading",
-            "resultAlias": "jvm.thread",
-            "attributes": ["ThreadCount", "TotalStartedThreadCount", "DaemonThreadCount"]
-        },
-        {
-            "objectName": "java.lang:type=Runtime",
-            "resultAlias": "jvm.runtime",
-            "attribute": "Uptime"
-        },
-        {
-            "objectName": "java.lang:type=OperatingSystem",
-            "resultAlias": "jvm.operatingsystem",
-            "attributes": ["SystemLoadAverage", "ProcessCpuTime", "FreePhysicalMemorySize", "FreeSwapSpaceSize"]
         }
     ],
     "outputWriters": [
-        {
-            "@class": "org.jmxexporter.output.Slf4jWriter"
-        },
         {
             "@class": "org.jmxexporter.output.GraphiteWriter",
             "settings": {
@@ -57,7 +18,7 @@
             }
         }
     ],
-    "queryIntervalInSeconds": 15,
+    "queryIntervalInSeconds": 3,
     "numQueryThreads": 1,
-    "exportIntervalInSeconds": 30
+    "exportIntervalInSeconds": 5
 }
