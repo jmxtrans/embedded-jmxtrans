@@ -10,12 +10,12 @@ JMX Exporter Demo Web Application.
 This sample configuration collects a mix metrics
 
 * Application specific queries
-** `classpath:jmxexporter.json` see [src/main/resources/jmxexporter.json](https://github.com/cyrille-leclerc/jmxexporter-demo/blob/master/jmxexporter-webapp-coktail/src/main/resources/jmxexporter.json)
+ * `classpath:jmxexporter.json` see [src/main/resources/jmxexporter.json](https://github.com/cyrille-leclerc/jmxexporter-demo/blob/master/jmxexporter-webapp-coktail/src/main/resources/jmxexporter.json)
 * Jmx Exporter internals queries
-** `classpath:org/jmxexporter/config/jmxexporter-internals.json` provided par jmxexporter jar. See [jmxexporter-internals.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/jmxexporter-internals.json)
+ * `classpath:org/jmxexporter/config/jmxexporter-internals.json` provided par jmxexporter jar. See [jmxexporter-internals.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/jmxexporter-internals.json)
 * [Bundled templates](https://github.com/cyrille-leclerc/jmxexporter/wiki/Configuration-Templates) for Tomcat and Hotspot JVM
-** `classpath:org/jmxexporter/config/jvm-sun-hotspot.json` provided par jmxexporter jar. See [jvm-sun-hotspot.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/jvm-sun-hotspot.json)
-** `classpath:org/jmxexporter/config/tomcat-6.json` provided par jmxexporter jar. See [tomcat-6.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/tomcat-6.json)
+ * `classpath:org/jmxexporter/config/jvm-sun-hotspot.json` provided par jmxexporter jar. See [jvm-sun-hotspot.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/jvm-sun-hotspot.json)
+ * `classpath:org/jmxexporter/config/tomcat-6.json` provided par jmxexporter jar. See [tomcat-6.json](https://github.com/cyrille-leclerc/jmxexporter/blob/master/src/main/resources/org/jmxexporter/config/tomcat-6.json)
 
 ### Output Writers
 
