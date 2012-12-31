@@ -11,6 +11,9 @@
     ],
     "outputWriters": [
         {
+            "@class": "org.jmxexporter.output.Slf4jWriter"
+        },
+        {
             "@class": "org.jmxexporter.output.GraphiteWriter",
             "settings": {
                 "host": "${graphite.host:localhost}",
