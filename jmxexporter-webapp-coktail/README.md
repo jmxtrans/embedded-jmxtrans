@@ -57,6 +57,8 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/cyrille-l
 
 [pom.xml](https://github.com/cyrille-leclerc/jmxexporter-demo/blob/master/jmxexporter-webapp-coktail/pom.xml#L114)
 
+**Note:** jmxexporter is not yet available in Maven Central Repo, please download artifact [here](https://github.com/cyrille-leclerc/jmxexporter/downloads).
+
 ```xml
 <dependency>
     <groupId>org.jmxexporter</groupId>
