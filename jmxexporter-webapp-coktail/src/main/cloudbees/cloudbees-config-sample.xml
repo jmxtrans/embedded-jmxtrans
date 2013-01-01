@@ -17,8 +17,8 @@
 <!-- CLOUDBEES CONFIGURATION PARAMETERS -->
 <!-- http://wiki.cloudbees.com/bin/view/RUN/Configuration+Parameters -->
 <!--  -->
-<!-- bees config:update -a atelier-xebia/cocktail-web-caching cloudbees-config.xml -->
-<!-- bees config:list -a atelier-xebia/cocktail-web-caching -->
+<!-- bees config:update -a xebia-france/cocktail-app cloudbees-config.xml -->
+<!-- bees config:list -a xebia-france/cocktail-app -->
 <config>
 
    <param name="spring.profiles.active" value="prod" />
@@ -31,7 +31,11 @@
    <param name="aws_s3_bucket_base_url" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
    <param name="aws_s3_bucket_name" value="xebia-cocktail" />
    
-   <!-- CDN / CONTENT DELIVERY NETWORK -->
-   <param name="cdn_url" value="http://d1u3j4x9ltwfxi.cloudfront.net" />
+   <!-- JMX EXPORTER -->
+    <param name="graphite.host" value="carbon.hostedgraphite.com" />
+    <param name="graphite.port" value="2003" />
+    <param name="graphite.namePrefix" value="<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.#hostname#." />
+
+
 
 </config>
