@@ -18,14 +18,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.jmxexporter.sample</groupId>
-        <artifactId>jmxexporter-samples</artifactId>
+        <groupId>org.jmxtrans.embedded.samples</groupId>
+        <artifactId>embedded-jmxtrans-samples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>cocktail-app</artifactId>
     <name>cocktail-app</name>
-    <description>JMX Exporter demo based on a cocktail app</description>
+    <description>Embedded jmxtrans demo based on a cocktail app</description>
     <packaging>war</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -112,8 +112,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jmxexporter</groupId>
-            <artifactId>jmxexporter</artifactId>
+            <groupId>org.jmxtrans.embedded</groupId>
+            <artifactId>embedded-jmxtrans</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

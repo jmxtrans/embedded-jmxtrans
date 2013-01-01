@@ -22,10 +22,10 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-    <groupId>org.jmxexporter.sample</groupId>
-    <artifactId>jmxexporter-samples</artifactId>
-    <name>jmxexporter-samples</name>
-    <description>JMX Exporter samples</description>
+    <groupId>org.jmxtrans.embedded.samples</groupId>
+    <artifactId>embedded-jmxtrans-samples</artifactId>
+    <name>embedded-jmxtrans-samples</name>
+    <description>Embedded jmxtrans samples</description>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <url>https://github.com/cyrille-leclerc/jmxexporter-demo</url>
@@ -37,7 +37,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <modules>
-        <module>jmxexporter-webapp-coktail</module>
+        <module>embedded-jmxtrans-webapp-coktail</module>
     </modules>
     <developers>
         <developer>

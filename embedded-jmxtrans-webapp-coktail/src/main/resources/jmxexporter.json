@@ -11,10 +11,10 @@
     ],
     "outputWriters": [
         {
-            "@class": "org.jmxexporter.output.Slf4jWriter"
+            "@class": "org.jmxtrans.embedded.output.Slf4jWriter"
         },
         {
-            "@class": "org.jmxexporter.output.GraphiteWriter",
+            "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
             "settings": {
                 "host": "${graphite.host:localhost}",
                 "port": "${graphite.port:2003}",
