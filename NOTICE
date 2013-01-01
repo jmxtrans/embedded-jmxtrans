@@ -19,12 +19,4 @@ This product includes/uses software, Amazon AWS SDK for Java (http://aws.amazon.
 developed by Amazon.com, Inc.  (http://www.amazon.com)
 License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-This product includes/uses software, MongoDB Java Driver (https://github.com/mongodb/mongo-java-driver),
-developed by 10Gen Inc.  (http://www.10gen.com)
-License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-This product includes/uses software, recaptcha4j (http://code.google.com/p/recaptcha4j/),
-developed by Soren Davidsen, Tanesha Networks
-License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
-
 
