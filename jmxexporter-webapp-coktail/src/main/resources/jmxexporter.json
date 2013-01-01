@@ -17,11 +17,12 @@
             "@class": "org.jmxexporter.output.GraphiteWriter",
             "settings": {
                 "host": "${graphite.host:localhost}",
-                "port": "${graphite.port:2003}"
+                "port": "${graphite.port:2003}",
+                "namePrefix":"${graphite.namePrefix:servers.#hostname#.}"
             }
         }
     ],
-    "queryIntervalInSeconds": 3,
+    "queryIntervalInSeconds": 30,
     "numQueryThreads": 1,
-    "exportIntervalInSeconds": 5
+    "exportIntervalInSeconds": 10
 }
