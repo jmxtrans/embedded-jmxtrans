@@ -312,7 +312,6 @@
             PrintWriter printWriter = new PrintWriter(out);
             e.printStackTrace(printWriter);
             out.write("</pre>");
-            printWriter.close();
         }
     %>
     <h1>Thread Dump</h1>
