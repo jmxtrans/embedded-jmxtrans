@@ -217,10 +217,13 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.mortbay.jetty</groupId>
-                                    <artifactId>jetty-runner</artifactId>
-                                    <version>7.6.2.v20120308</version>
-                                    <destFileName>jetty-runner.jar</destFileName>
+                                    <!--
+                                    Heroku: https://devcenter.heroku.com/articles/java-webapp-runner
+                                    -->
+                                    <groupId>com.github.jsimone</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>7.0.30.1</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
