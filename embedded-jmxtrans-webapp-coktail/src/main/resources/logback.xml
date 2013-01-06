@@ -24,7 +24,7 @@
 
     <logger name="audit" level="TRACE" />
     <logger name="org.springframework.web" level="warn" />
-    <logger name="org.jmxexporter" level="info" />
+    <logger name="org.jmxtrans.embedded" level="info" />
 
     <root level="warn">
       <appender-ref ref="STDOUT" />
