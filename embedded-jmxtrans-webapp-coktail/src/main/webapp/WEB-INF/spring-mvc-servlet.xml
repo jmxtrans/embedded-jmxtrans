@@ -42,10 +42,10 @@
 
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:cocktail-app.properties"/>
 
-    <bean id="jmxExporter" class="org.jmxtrans.embedded.JmxExporterFactory">
+    <bean id="embedded-jmxtrans" class="org.jmxtrans.embedded.EmbeddedJmxTransFactory">
         <property name="configurationUrls">
             <list>
-                <value>classpath:jmxexporter.json</value>
+                <value>classpath:jmxtrans.json</value>
                 <value>classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json</value>
                 <value>classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json</value>
                 <value>classpath:org/jmxtrans/embedded/config/tomcat-6.json</value>
