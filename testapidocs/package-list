@@ -1,6 +1,6 @@
-org.jmxexporter
-org.jmxexporter.config
-org.jmxexporter.output
-org.jmxexporter.util.concurrent
-org.jmxexporter.util.json
-org.jmxexporter.util.pool
+org.jmxtrans.embedded
+org.jmxtrans.embedded.config
+org.jmxtrans.embedded.output
+org.jmxtrans.embedded.util.concurrent
+org.jmxtrans.embedded.util.json
+org.jmxtrans.embedded.util.pool
