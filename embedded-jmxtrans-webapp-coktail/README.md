@@ -10,7 +10,7 @@ JMX Exporter Demo Web Application.
 This sample configuration collects a mix metrics
 
 * Application specific queries
- * `classpath:jmxexporter.json` see [src/main/resources/embedded-jmxtrans.json](https://github.com/jmxtrans/embedded-jmxtrans-samples/blob/master/embedded-jmxtrans-webapp-coktail/src/main/resources/embedded-jmxtrans.json)
+ * `classpath:jmxexporter.json` see [src/main/resources/jmxtrans.json](https://github.com/jmxtrans/embedded-jmxtrans-samples/blob/master/embedded-jmxtrans-webapp-coktail/src/main/resources/jmxtrans.json)
 * Jmx Exporter internals queries
  * `classpath:org/embedded-jmxtrans/config/jmxtrans-internals.json` provided par jmxexporter jar. See [jmxexporter-internals.json](https://github.com/jmxtrans/embedded-jmxtrans/blob/master/src/main/resources/org/embedded-jmxtrans/config/jmxtrans-internals.json)
 * [Bundled templates](https://github.com/jmxtrans/embedded-jmxtrans/wiki/Configuration-Templates) for Tomcat and Hotspot JVM
