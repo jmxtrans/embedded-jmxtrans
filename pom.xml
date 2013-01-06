@@ -28,10 +28,10 @@
     <description>Embedded jmxtrans samples</description>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <url>https://github.com/cyrille-leclerc/jmxexporter-demo</url>
+    <url>https://github.com/jmxtrans/embedded-jmxtrans-samples</url>
     <scm>
-        <connection>scm:git:git@github.com:cyrille-leclerc/jmxexporter-demo.git</connection>
-        <developerConnection>scm:git:git@github.com:cyrille-leclerc/jmxexporter-demo.git</developerConnection>
+        <connection>scm:git:git@github.com:jmxtrans/embedded-jmxtrans-samples.git</connection>
+        <developerConnection>scm:git:git@github.com:jmxtrans/embedded-jmxtrans-samples.git</developerConnection>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
