@@ -41,16 +41,14 @@ By default, graphite writer connects to a graphite server on localhost:2003. An 
 
 In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/embedded-jmxtrans-samples/blob/master/embedded-jmxtrans-webapp-coktail/src/main/webapp/WEB-INF/spring-mvc-servlet.xml#L45):
 ```xml
-<bean id="embedded-jmxtrans" class="org.embedded-jmxtrans.embedded-jmxtransFactory">
-  <property name="configurationUrls">
-    <list>
-      <value>classpath:jmxtrans.json</value>
-      <value>classpath:org/embedded-jmxtrans/config/jmxtrans-internals.json</value>
-      <value>classpath:org/embedded-jmxtrans/config/jvm-sun-hotspot.json</value>
-      <value>classpath:org/embedded-jmxtrans/config/tomcat-6.json</value>
-    </list>
-  </property>
-</bean>
+<beans ...
+       xmlns:jmxtrans="http://www.jmxtrans.org/schema/embedded"
+       xsi:schemaLocation="...
+		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
+
+   <jmxtrans:jmxtrans id="embedded-jmxtrans" configuration="classpath:jmxtrans.json, ...">
+
+</beans>
 ```
 
 ## Maven Setup
@@ -61,7 +59,7 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
 
 ```xml
 <dependency>
-    <groupId>org.jmxtrans</groupId>
+    <groupId>org.jmxtrans.embedded</groupId>
     <artifactId>embedded-jmxtrans</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
