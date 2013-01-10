@@ -55,7 +55,6 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
 
 [pom.xml](https://github.com/jmxtrans/embedded-jmxtrans-samples/blob/master/embedded-jmxtrans-webapp-coktail/pom.xml#L114)
 
-**Note:** embedded-jmxtrans is not yet available in Maven Central Repo, please download artifact [here](https://github.com/jmxtrans/embedded-jmxtrans/downloads).
 
 ```xml
 <dependency>
@@ -63,4 +62,20 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
     <artifactId>embedded-jmxtrans</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
+```
+**Note:** embedded-jmxtrans is not yet available in Maven Central Repo, please download artifact from [oss.sonatype.org](https://oss.sonatype.org) snapshosts repo .
+
+```xml
+<repositories>
+    <repository>
+        <id>sonatype-nexus-snapshots</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
 ```
