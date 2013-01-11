@@ -44,6 +44,11 @@
 
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:cocktail-app.properties"/>
 
-    <jmxtrans:jmxtrans id="embedded-jmxtrans" configuration="classpath:jmxtrans.json, classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json, classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json, classpath:org/jmxtrans/embedded/config/tomcat-6.json"/>
+    <jmxtrans:jmxtrans>
+        <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/tomcat-6.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json</jmxtrans:configuration>
+    </jmxtrans:jmxtrans>
 
 </beans>
