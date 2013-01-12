@@ -46,8 +46,12 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
        xsi:schemaLocation="...
 		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
 
-   <jmxtrans:jmxtrans id="embedded-jmxtrans" configuration="classpath:jmxtrans.json, ...">
-
+    <jmxtrans:jmxtrans>
+        <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/tomcat-6.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json</jmxtrans:configuration>
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json</jmxtrans:configuration>
+    </jmxtrans:jmxtrans>
 </beans>
 ```
 
