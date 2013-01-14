@@ -42,9 +42,13 @@ By default, graphite writer connects to a graphite server on localhost:2003. An 
 In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/embedded-jmxtrans-samples/blob/master/embedded-jmxtrans-webapp-coktail/src/main/webapp/WEB-INF/spring-mvc-servlet.xml#L45):
 ```xml
 <beans ...
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jmxtrans="http://www.jmxtrans.org/schema/embedded"
        xsi:schemaLocation="...
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
+
+    <context:annotation-config/>
 
     <jmxtrans:jmxtrans>
         <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
@@ -54,6 +58,7 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
     </jmxtrans:jmxtrans>
 </beans>
 ```
+**NOTE:** Don't forget to declare `<context:annotation-config/>` to handle embedded-jmxtrans' lifecycle annotation `@PreDestroy` at shutdown.
 
 ## Maven Setup
 
