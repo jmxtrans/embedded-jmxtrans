@@ -25,6 +25,8 @@
 
     <context:component-scan base-package="fr.xebia.cocktail"/>
 
+    <context:annotation-config/>
+
     <context:mbean-export/>
 
     <mvc:annotation-driven/>
