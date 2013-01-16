@@ -76,7 +76,7 @@ public class CocktailManager {
 
     private final AtomicInteger updatedCocktailCount = new AtomicInteger();
 
-    private final AtomicInteger searchCocktailCount = new AtomicInteger();
+    private final AtomicInteger searchedCocktailCount = new AtomicInteger();
 
     @RequestMapping(value = "/cocktail/{id}/comment", method = RequestMethod.POST)
     public String addComment(@PathVariable String id, @RequestParam("comment") String comment, HttpServletRequest request) {
@@ -231,7 +231,7 @@ public class CocktailManager {
 
         Collection<Cocktail> cocktails = cocktailRepository.find(ingredient, name);
 
-        searchCocktailCount.incrementAndGet();
+        searchedCocktailCount.incrementAndGet();
         return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
     }
 
@@ -264,8 +264,8 @@ public class CocktailManager {
     }
 
     @ManagedMetric(metricType = MetricType.COUNTER)
-    public int getSearchCocktailCount() {
-        return searchCocktailCount.get();
+    public int getSearchedCocktailCount() {
+        return searchedCocktailCount.get();
     }
 
     @ManagedMetric(metricType = MetricType.COUNTER)
