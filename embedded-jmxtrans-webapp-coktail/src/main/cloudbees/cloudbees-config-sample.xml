@@ -44,7 +44,7 @@
    <!-- JMX EXPORTER -->
     <param name="graphite.host" value="carbon.hostedgraphite.com" />
     <param name="graphite.port" value="2003" />
-    <param name="graphite.namePrefix" value="<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.#hostname#." />
+    <param name="graphite.namePrefix" value="<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.cloudbees." />
 
 
 
