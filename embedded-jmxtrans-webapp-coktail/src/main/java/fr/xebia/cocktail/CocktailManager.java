@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
 import static org.springframework.util.StringUtils.hasLength;
 
 
@@ -68,6 +69,14 @@ public class CocktailManager {
     private AmazonS3RestService fileStorageService;
 
     private final AtomicInteger addedCommentCount = new AtomicInteger();
+
+    private final AtomicInteger displayedCocktailCount = new AtomicInteger();
+
+    private final AtomicInteger createdCocktailCount = new AtomicInteger();
+
+    private final AtomicInteger updatedCocktailCount = new AtomicInteger();
+
+    private final AtomicInteger searchCocktailCount = new AtomicInteger();
 
     @RequestMapping(value = "/cocktail/{id}/comment", method = RequestMethod.POST)
     public String addComment(@PathVariable String id, @RequestParam("comment") String comment, HttpServletRequest request) {
@@ -91,6 +100,8 @@ public class CocktailManager {
         }
 
         cocktailRepository.insert(cocktail);
+
+        createdCocktailCount.incrementAndGet();
 
         return "redirect:/cocktail/" + cocktail.getId();
     }
@@ -146,6 +157,8 @@ public class CocktailManager {
         cocktail.setIngredients(Lists.newArrayList(ingredients));
         cocktailRepository.update(cocktail);
 
+        updatedCocktailCount.incrementAndGet();
+
         return "redirect:/cocktail/{id}";
     }
 
@@ -170,9 +183,9 @@ public class CocktailManager {
                     long photoSize = photo.getSize();
 
                     Map metadata = new TreeMap();
-                    metadata.put("Content-Length",Arrays.asList(new String[] { ""+photoSize}));
-                    metadata.put("Content-Type", Arrays.asList(new String[] { contentType}));
-                    metadata.put("Cache-Control", Arrays.asList(new String[] {"public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS)}));
+                    metadata.put("Content-Length", Arrays.asList(new String[]{"" + photoSize}));
+                    metadata.put("Content-Type", Arrays.asList(new String[]{contentType}));
+                    metadata.put("Cache-Control", Arrays.asList(new String[]{"public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS)}));
                     
                     
 
@@ -182,7 +195,7 @@ public class CocktailManager {
                     objectMetadata.setCacheControl("public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS));*/
                     String photoUrl = fileStorageService.storeFile(photo.getBytes(), metadata);
 
-                    
+
                     Cocktail cocktail = cocktailRepository.get(id);
                     logger.info("Saved {}", photoUrl);
                     cocktail.setPhotoUrl(photoUrl);
@@ -193,8 +206,12 @@ public class CocktailManager {
                 throw Throwables.propagate(e);
             }
         }
+        updatedCocktailCount.incrementAndGet();
+
         return "redirect:/cocktail/" + id;
     }
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail/{id}")
     public String view(@PathVariable String id, Model model) {
@@ -203,6 +220,8 @@ public class CocktailManager {
             throw new ResourceNotFoundException(id);
         }
         model.addAttribute(cocktail);
+        displayedCocktailCount.incrementAndGet();
+
         return "cocktail/view";
     }
 
@@ -211,6 +230,8 @@ public class CocktailManager {
                              @RequestParam(value = "ingredient", required = false) String ingredient) {
 
         Collection<Cocktail> cocktails = cocktailRepository.find(ingredient, name);
+
+        searchCocktailCount.incrementAndGet();
         return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
     }
 
@@ -230,5 +251,25 @@ public class CocktailManager {
     @ManagedMetric(metricType = MetricType.COUNTER)
     public int getAddedCommentCount() {
         return addedCommentCount.get();
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getCreatedCocktailCount() {
+        return createdCocktailCount.get();
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getDisplayedCocktailCount() {
+        return displayedCocktailCount.get();
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getSearchCocktailCount() {
+        return searchCocktailCount.get();
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getUpdatedCocktailCount() {
+        return updatedCocktailCount.get();
     }
 }

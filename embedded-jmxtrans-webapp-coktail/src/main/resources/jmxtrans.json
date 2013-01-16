@@ -1,28 +1,28 @@
 {
     "queries": [
         {
-            "objectName": "java.lang:type=GarbageCollector,name=*",
-            "resultAlias": "jvm.gc.%name%",
+            "objectName": "cocktail:type=CocktailManager,name=CocktailManager",
+            "resultAlias": "cocktail",
             "attributes": [
-                "CollectionCount",
-                "CollectionTime"
+                "AddedCommentCount",
+                "CreatedCocktailCount",
+                "DisplayedCocktailCount",
+                "SearchCocktailCount",
+                "UpdatedCocktailCount"
             ]
+
         }
-    ],
-    "outputWriters": [
-        {
-            "@class": "org.jmxtrans.embedded.output.Slf4jWriter"
-        },
-        {
-            "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
-            "settings": {
-                "host": "${graphite.host:localhost}",
-                "port": "${graphite.port:2003}",
-                "namePrefix":"${graphite.namePrefix:servers.#hostname#.}"
-            }
+    ], "outputWriters": [
+    {
+        "@class": "org.jmxtrans.embedded.output.Slf4jWriter"
+    },
+    {
+        "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+        "settings": {
+            "host": "${graphite.host:localhost}",
+            "port": "${graphite.port:2003}",
+            "namePrefix":"${graphite.namePrefix:servers.#hostname#.}"
         }
-    ],
-    "queryIntervalInSeconds": 30,
-    "numQueryThreads": 1,
-    "exportIntervalInSeconds": 10
+    }
+]
 }
