@@ -59,7 +59,9 @@
             </snapshots>
         </repository>
         <repository>
-            <!-- jmxtrans snapshots are pushed to this repo during cloudbees jenkins builds -->
+            <!--
+            jmxtrans snapshots are pushed to this repo during cloudbees jenkins builds
+            -->
             <id>cloudbees-jmxtrans-snapshots</id>
             <url>http://repository-jmxtrans.forge.cloudbees.com/snapshot/</url>
             <releases>
