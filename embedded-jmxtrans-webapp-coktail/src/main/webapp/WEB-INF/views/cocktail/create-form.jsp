@@ -6,10 +6,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Devoxx Cocktails / Create cocktail</title>
+<title>Jmxtrans Demo / Create cocktail</title>
 
-<link rel="shortcut icon" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.ico">
-<link rel="icon" type="image/png" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.png">
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
+<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/favicon.png">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
@@ -45,8 +45,8 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='Devoxx France Logo' height='28'
-                    src='${pageContext.request.contextPath}/img/devoxx-france-logo.jpg' width='54' /> Devoxx Cocktails
+                <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
+                    src='${pageContext.request.contextPath}/img/blank-logo.png' width='28' /> Jmxtrans Demo
                 </a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>

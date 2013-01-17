@@ -31,8 +31,6 @@
 
     <mvc:annotation-driven/>
 
-    <mvc:view-controller path="/" view-name="welcome"/>
-
     <mvc:resources mapping="/css/**" location="/css/"/>
     <mvc:resources mapping="/img/**" location="/img/"/>
     <mvc:resources mapping="/js/**" location="/js/"/>

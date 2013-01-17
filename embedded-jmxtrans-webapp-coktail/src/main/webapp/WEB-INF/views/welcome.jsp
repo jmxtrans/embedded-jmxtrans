@@ -2,10 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Devoxx Cocktails</title>
+    <title>embedded-jmxtrans cocktail demo</title>
 
-    <link rel="shortcut icon" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.ico">
-    <link rel="icon" type="image/png" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.png">
+    <link rel="shortcut icon" href=${pageContext.request.contextPath}/img/favicon.ico
+    ">
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/favicon.png">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -37,9 +38,9 @@
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='Devoxx France Logo' height='28'
-                                                                              src='${pageContext.request.contextPath}/img/devoxx-france-logo.jpg'
-                                                                              width='54'/> Devoxx Cocktails
+            <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
+                                                                              src='${pageContext.request.contextPath}/img/transparent.gif'
+                                                                              width='28'/> Jmxtrans Demo
             </a>
             <ul class="nav">
                 <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
@@ -58,6 +59,15 @@
 </div>
 
 <div class="container">
+
+    <div class="row">
+        <div class="span12">
+            <div class="alert alert-info">
+                Source code available <a
+                    href="https://github.com/jmxtrans/embedded-jmxtrans-samples/tree/master/embedded-jmxtrans-webapp-coktail">here</a>!
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
@@ -90,17 +100,22 @@
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
-                <h2>Cocktails metrics</h2>
-                <img src="http://www.hostedgraphite.com/a8592969/90bf2733-71b5-4ed5-8e4c-a57236f4e3ed/graphite/render/?width=588&height=309&_salt=1358345372.907&title=Cocktails%20Total&target=alias(sumSeries(servers.*.cocktail.AddedCommentCount)%2C%22Comments%22)&target=alias(sumSeries(servers.*.cocktail.CreatedCocktailCount)%2C%22Created%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedCocktailCount)%2C%22Displayed%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.SearchedCocktailCount)%2C%22Searched%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.UpdatedCocktailCount)%2C%22Updated%20Cocktails%22)"/>
+                <h2><img src="${pageContext.request.contextPath}/img/hosted-graphite-logo-small.png" width="25px"
+                         height="28px"/>cocktails metrics</h2>
+                <img src="https://www.hostedgraphite.com/a8592969/90bf2733-71b5-4ed5-8e4c-a57236f4e3ed/graphite/render/?width=588&height=309&_salt=1358386171.081&title=Cocktails%20Total&target=alias(sumSeries(servers.*.cocktail.AddedCommentCount)%2C%22Comments%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedHomeCount)%2C%22Displayed%20Home%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedCocktailCount)%2C%22Displayed%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.SearchedCocktailCount)%2C%22Searched%20Cocktails%22)"/>
+                <em>Powered by <a href="http://www.hostedgraphite.com/">Hosted Graphite</a> </em>
             </div>
         </div>
         <div class="span6">
             <div class="hero-unit">
-                <h2>embedded-jmxtrans internal metrics</h2>
+                <h2><img src="${pageContext.request.contextPath}/img/hosted-graphite-logo-small.png" width="25px"
+                         height="28px"/>embedded-jmxtrans internal metrics</h2>
                 <img src="http://www.hostedgraphite.com/a8592969/90bf2733-71b5-4ed5-8e4c-a57236f4e3ed/graphite/render/?width=588&height=309&_salt=1358346534.26&from=-60minutes&title=embedded-jmxtrans%20internal%20metrics&target=legendValue(alias(summarize(nonNegativeDerivative(sumSeries(servers.*.jmxtrans.jmxtrans.CollectedMetricsCount))%2C%221min%22)%2C%22Collected%20Metrics%20%2Fmin%22)%2C%22last%22)&target=legendValue(alias(summarize(nonNegativeDerivative(scale(sumSeries(servers.*.jmxtrans.jmxtrans.CollectionDurationInNanos)%2C0.000001)%2C5)%2C%221min%22)%2C%22Collection%20duration%20in%20micros%20%2Fmin%22)%2C%22last%22)&target=legendValue(alias(summarize(nonNegativeDerivative(scale(sumSeries(servers.*.jmxtrans.jmxtrans.ExportDurationInNanos)%2C0.000001)%2C5)%2C%221min%22)%2C%22Export%20duration%20in%20micros%20%2Fmin%22)%2C%22last%22)">
+                <em>Powered by <a href="http://www.hostedgraphite.com/">Hosted Graphite</a> </em>
             </div>
         </div>
     </div>
+
 </div>
 
 </body>

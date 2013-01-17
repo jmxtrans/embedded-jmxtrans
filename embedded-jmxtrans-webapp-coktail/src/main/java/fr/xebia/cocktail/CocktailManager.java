@@ -78,6 +78,15 @@ public class CocktailManager {
 
     private final AtomicInteger searchedCocktailCount = new AtomicInteger();
 
+    private final AtomicInteger displayedHomeCount = new AtomicInteger();
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home() {
+        displayedHomeCount.incrementAndGet();
+        return "welcome";
+    }
+
+
     @RequestMapping(value = "/cocktail/{id}/comment", method = RequestMethod.POST)
     public String addComment(@PathVariable String id, @RequestParam("comment") String comment, HttpServletRequest request) {
 
@@ -212,7 +221,6 @@ public class CocktailManager {
     }
 
 
-
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail/{id}")
     public String view(@PathVariable String id, Model model) {
         Cocktail cocktail = cocktailRepository.get(id);
@@ -271,5 +279,10 @@ public class CocktailManager {
     @ManagedMetric(metricType = MetricType.COUNTER)
     public int getUpdatedCocktailCount() {
         return updatedCocktailCount.get();
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getDisplayedHomeCount() {
+        return displayedHomeCount.get();
     }
 }
