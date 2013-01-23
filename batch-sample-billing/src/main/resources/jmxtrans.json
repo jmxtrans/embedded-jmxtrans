@@ -1,0 +1,29 @@
+{
+    "queries": [
+        {
+            "objectName": "cocktail:type=CocktailManager,name=CocktailManager",
+            "resultAlias": "cocktail",
+            "attributes": [
+                "AddedCommentCount",
+                "CreatedCocktailCount",
+                "DisplayedCocktailCount",
+                "DisplayedHomeCount",
+                "SearchedCocktailCount",
+                "UpdatedCocktailCount"
+            ]
+
+        }
+    ], "outputWriters": [
+    {
+        "@class": "org.jmxtrans.embedded.output.Slf4jWriter"
+    },
+    {
+        "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+        "settings": {
+            "host": "${graphite.host:localhost}",
+            "port": "${graphite.port:2003}",
+            "namePrefix":"${graphite.namePrefix:servers.#hostname#.}"
+        }
+    }
+]
+}
