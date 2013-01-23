@@ -34,7 +34,7 @@
     <artifactId>batch-sample-billing</artifactId>
     <name>batch-sample-billing</name>
     <description>Embedded jmxtrans batch demo based on a billing batch</description>
-    <packaging>bundle</packaging>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
