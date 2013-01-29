@@ -30,17 +30,6 @@
  ~ bees config:list -a jmxtrans/demo-cocktail
  -->
 <config>
-
-   <param name="spring.profiles.active" value="prod" />
-
-   <!-- AMAZON -->
-   <!-- see http://aws.amazon.com/security-credentials -->
-   <!-- xebia-cocktail amazon user -->
-   <param name="AWS_ACCESS_KEY_ID" value="#AWS_ACCESS_KEY#" />
-   <param name="AWS_SECRET_KEY" value="#AWS_SECRET_KEY#" />
-   <param name="aws_s3_bucket_base_url" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
-   <param name="aws_s3_bucket_name" value="xebia-cocktail" />
-   
    <!-- JMX EXPORTER -->
     <param name="graphite.host" value="carbon.hostedgraphite.com" />
     <param name="graphite.port" value="2003" />

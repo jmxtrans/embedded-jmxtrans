@@ -40,7 +40,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
-                    src='${pageContext.request.contextPath}/img/blank-logo.png' width='28' /> Jmxtrans Demo
+                    src='${pageContext.request.contextPath}/img/jmxtrans-logo-28x109.gif' width='109' /> Jmxtrans Demo
                 </a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>

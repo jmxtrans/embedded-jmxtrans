@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.jmxtrans.embedded</groupId>
             <artifactId>embedded-jmxtrans</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1</version>
         </dependency>
 
         <!-- Spring -->
@@ -76,13 +76,6 @@
             <version>1.6.12</version>
         </dependency>
 
-        <!-- RSS -->
-        <dependency>
-            <groupId>net.java.dev.rome</groupId>
-            <artifactId>rome</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -95,47 +88,19 @@
             <version>1.7.2</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- Don't trick log4j-over-slf4j dur to NoClassDefFoundError: o.a.log4j.AppenderSkeleton in at com.staxnet.appserver.jmx.AppManagementContext.hookLog4JEvents(AppManagementContext.java:61) -->
+        <!-- Don't trick log4j-over-slf4j due to
+        NoClassDefFoundError: o.a.log4j.AppenderSkeleton in
+        at com.staxnet.appserver.jmx.AppManagementContext.hookLog4JEvents(AppManagementContext.java:61)
+        -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.9</version>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- @Inject -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>14.0-rc1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-
-
-        <!-- File Upload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
             <version>2.0.1</version>
         </dependency>
 
@@ -174,12 +139,6 @@
             <artifactId>jstl-impl</artifactId>
             <version>1.2</version>
         </dependency>
-        <!-- amazon aws
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.3.10</version>
-        </dependency> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -232,7 +191,7 @@
                                     -->
                                     <groupId>com.github.jsimone</groupId>
                                     <artifactId>webapp-runner</artifactId>
-                                    <version>7.0.30.1</version>
+                                    <version>7.0.34.1</version>
                                     <destFileName>webapp-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
