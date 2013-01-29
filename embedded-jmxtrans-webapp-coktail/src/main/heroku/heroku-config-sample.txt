@@ -4,4 +4,4 @@ $ heroku config:set GRAPHITE_HOST=carbon.hostedgraphite.com GRAPHITE_PORT=2003 G
 
 DEPLOYMENT
 
-$ $ heroku deploy:war --war target/cocktail-app-1.0.0-SNAPSHOT.war
+$ heroku deploy:war --war target/cocktail-app-1.0.0-SNAPSHOT.war

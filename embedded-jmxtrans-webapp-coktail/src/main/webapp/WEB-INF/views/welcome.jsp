@@ -39,8 +39,8 @@
     <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
-                                                                              src='${pageContext.request.contextPath}/img/transparent.gif'
-                                                                              width='28'/> Jmxtrans Demo
+                                                                              src='${pageContext.request.contextPath}/img/jmxtrans-logo-28x109.gif'
+                                                                              width='109'/> Jmxtrans Demo
             </a>
             <ul class="nav">
                 <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
@@ -83,15 +83,10 @@
         </div>
         <div class="span6">
             <div class="hero-unit">
-                <h2>Add your cocktail</h2>
-
-                <p>Add you cocktail recipe.</p>
-
-                <p>
-                    <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/create-form">
-                        Write your
-                        cocktail recipe </a>
-                </p>
+                <h2><img src="${pageContext.request.contextPath}/img/hosted-graphite-logo-small.png" width="25px"
+                         height="28px"/>cocktails metrics</h2>
+                <img src="https://www.hostedgraphite.com/a8592969/90bf2733-71b5-4ed5-8e4c-a57236f4e3ed/graphite/render/?width=588&height=309&_salt=1358386171.081&title=Cocktails%20Total&target=alias(sumSeries(servers.*.cocktail.AddedCommentCount)%2C%22Comments%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedHomeCount)%2C%22Displayed%20Home%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedCocktailCount)%2C%22Displayed%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.SearchedCocktailCount)%2C%22Searched%20Cocktails%22)"/>
+                <em>Powered by <a href="http://www.hostedgraphite.com/">Hosted Graphite</a> </em>
             </div>
         </div>
     </div>
@@ -100,10 +95,6 @@
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
-                <h2><img src="${pageContext.request.contextPath}/img/hosted-graphite-logo-small.png" width="25px"
-                         height="28px"/>cocktails metrics</h2>
-                <img src="https://www.hostedgraphite.com/a8592969/90bf2733-71b5-4ed5-8e4c-a57236f4e3ed/graphite/render/?width=588&height=309&_salt=1358386171.081&title=Cocktails%20Total&target=alias(sumSeries(servers.*.cocktail.AddedCommentCount)%2C%22Comments%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedHomeCount)%2C%22Displayed%20Home%22)&target=alias(sumSeries(servers.*.cocktail.DisplayedCocktailCount)%2C%22Displayed%20Cocktails%22)&target=alias(sumSeries(servers.*.cocktail.SearchedCocktailCount)%2C%22Searched%20Cocktails%22)"/>
-                <em>Powered by <a href="http://www.hostedgraphite.com/">Hosted Graphite</a> </em>
             </div>
         </div>
         <div class="span6">

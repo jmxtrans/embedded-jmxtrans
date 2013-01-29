@@ -15,7 +15,10 @@
         }
     ], "outputWriters": [
     {
-        "@class": "org.jmxtrans.embedded.output.Slf4jWriter"
+        "@class": "org.jmxtrans.embedded.output.Slf4jWriter",
+        "settings": {
+            "enabled": "${jmxtrans.writer.slf4j.enabled:true}"
+        }
     },
     {
         "@class": "org.jmxtrans.embedded.output.GraphiteWriter",

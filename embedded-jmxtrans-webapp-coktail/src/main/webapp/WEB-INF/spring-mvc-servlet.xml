@@ -23,7 +23,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
 
-    <context:component-scan base-package="fr.xebia.cocktail"/>
+    <context:component-scan base-package="org.jmxtrans.embedded.samples.cocktail"/>
 
     <context:mbean-export/>
 
@@ -38,9 +38,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-
-    <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:cocktail-app.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE"/>
 
     <jmxtrans:jmxtrans>
         <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
