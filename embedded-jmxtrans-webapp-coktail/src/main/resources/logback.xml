@@ -32,7 +32,9 @@
 
     <logger name="audit" level="TRACE" />
     <logger name="org.springframework.web" level="warn" />
-    <logger name="org.jmxtrans.embedded" level="info" />
+    <logger name="org.jmxtrans.embedded" level="warn" />
+    <logger name="org.jmxtrans.embedded.output.Slf4jWriter" level="debug" />
+
 
     <root level="warn">
       <appender-ref ref="STDOUT" />
