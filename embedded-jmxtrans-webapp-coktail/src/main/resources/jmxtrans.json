@@ -1,7 +1,7 @@
 {
     "queries": [
         {
-            "objectName": "cocktail:type=CocktailManager,name=CocktailManager",
+            "objectName": "cocktail:type=CocktailController,name=CocktailController",
             "resultAlias": "cocktail",
             "attributes": [
                 "AddedCommentCount",
