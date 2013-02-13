@@ -45,7 +45,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ManagedResource("cocktail:type=CocktailController,name=CocktailController")
 @Controller
 public class CocktailController {
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AtomicInteger addedCommentCount = new AtomicInteger();
     private final AtomicInteger displayedCocktailCount = new AtomicInteger();
@@ -53,6 +52,8 @@ public class CocktailController {
     private final AtomicInteger updatedCocktailCount = new AtomicInteger();
     private final AtomicInteger searchedCocktailCount = new AtomicInteger();
     private final AtomicInteger displayedHomeCount = new AtomicInteger();
+
+
     @Autowired
     private CocktailRepository cocktailRepository;
 
@@ -113,6 +114,12 @@ public class CocktailController {
 
         searchedCocktailCount.incrementAndGet();
         return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/book/buy")
+    public ModelAndView buy(@RequestParam(value = "editionType") String editionType) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @ManagedMetric(metricType = MetricType.COUNTER)
