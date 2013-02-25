@@ -27,6 +27,7 @@ import org.jmxtrans.embedded.samples.cocktail.Cocktail;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -37,7 +38,7 @@ import java.util.TreeMap;
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
 
     /**
      * Number of added cocktails by Cock
@@ -82,7 +83,7 @@ public class ShoppingCart {
         return itemsCount;
     }
 
-    public static class ShoppingCartItem implements Comparable<ShoppingCartItem> {
+    public static class ShoppingCartItem implements Comparable<ShoppingCartItem>, Serializable {
 
         @Nonnull
         private final Cocktail cocktail;

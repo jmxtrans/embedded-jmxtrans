@@ -24,6 +24,7 @@
 package org.jmxtrans.embedded.samples.cocktail;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.*;
@@ -31,7 +32,7 @@ import java.util.*;
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class Cocktail implements Comparable<Cocktail> {
+public class Cocktail implements Comparable<Cocktail>, Serializable {
 
     private List<Ingredient> ingredients = new ArrayList<Ingredient>();
     private String instructions;
@@ -193,7 +194,7 @@ public class Cocktail implements Comparable<Cocktail> {
     /**
      * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
      */
-    public static class Ingredient {
+    public static class Ingredient implements Serializable {
 
         private String name;
         private String quantity;
