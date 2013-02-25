@@ -26,6 +26,7 @@ package org.jmxtrans.embedded.samples.cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jmx.export.annotation.ManagedMetric;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.jmx.support.MetricType;
@@ -116,12 +117,6 @@ public class CocktailController {
         return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/book/buy")
-    public ModelAndView buy(@RequestParam(value = "editionType") String editionType) {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     @ManagedMetric(metricType = MetricType.COUNTER)
     public int getAddedCommentCount() {
         return addedCommentCount.get();
@@ -150,5 +145,23 @@ public class CocktailController {
     @ManagedMetric(metricType = MetricType.COUNTER)
     public int getDisplayedHomeCount() {
         return displayedHomeCount.get();
+    }
+
+    /**
+     * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+     */
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public static class CocktailNotFoundException extends RuntimeException {
+
+        private long id;
+
+        public CocktailNotFoundException(long id) {
+            super("Resource: " + id);
+            this.id = id;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 }

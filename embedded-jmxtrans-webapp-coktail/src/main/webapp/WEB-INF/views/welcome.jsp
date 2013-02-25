@@ -17,15 +17,13 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css" media="screen"
-          rel="stylesheet" type="text/css"/>
-    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css" rel="Stylesheet"
-          type="text/css"/>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css"/>
 
-    <!-- Le javascript -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
-    <script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.1/jquery-ui.js" type="text/javascript"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("input#searchCocktailByName").autocomplete({
@@ -42,36 +40,38 @@
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
-                                                                              src='${pageContext.request.contextPath}/img/jmxtrans-logo-28x109.gif'
-                                                                              width='109'/> Jmxtrans Demo
-            </a>
-            <ul class="nav">
-                <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
-            </ul>
-            <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
-                <input id="searchCocktailByName" name="name" type="text" class="search-query input-medium"
-                       placeholder="Search by name">
-            </form>
-            <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
-                <input id="searchCocktailByIngredient" name="ingredient" type="text" class="search-query input-medium"
-                       placeholder="Search by ingredient">
-            </form>
+            <div class="span9">
+                <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
+                                                                                  src='${pageContext.request.contextPath}/img/jmxtrans-logo-28x109.gif'
+                                                                                  width='109'/> SOS Cocktail
+                </a>
+                <ul class="nav">
+                    <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
+                </ul>
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByName" name="name" type="text" class="search-query input-medium"
+                           placeholder="Search by name">
+                </form>
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByIngredient" name="ingredient" type="text"
+                           class="search-query input-medium"
+                           placeholder="Search by ingredient">
+                </form>
+            </div>
+            <div class="span3 pull-right">
+                <p class="nav">
+                    <i class="icon-shopping-cart"></i>
+                    ${shoppingCart.itemsCount} items
+                    ${shoppingCart.prettyPrice}
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="container">
 
-    <div class="row">
-        <div class="span12">
-            <div class="alert alert-info">
-                Source code available <a
-                    href="https://github.com/jmxtrans/embedded-jmxtrans-samples/tree/master/embedded-jmxtrans-webapp-coktail">here</a>!
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
@@ -99,22 +99,7 @@
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
-                <h2>Buy the book!</h2>
-                <p>More than 123 recipes just for you.</p>
-                <form:form id="form" action="${pageContext.request.contextPath}/book/buy" method="post">
-                    <fieldset>
 
-                        <select id="editionType">
-                            <option value="basic">Basic edition ($10)</option>
-                            <option value="deluxe">Deluxe edition ($20)</option>
-                        </select>
-
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-primary btn-large">Buy</button>
-                        </div>
-                    </fieldset>
-
-                </form:form>
             </div>
         </div>
         <div class="span6">
@@ -128,6 +113,8 @@
     </div>
 
 </div>
-
+<a href="https://github.com/jmxtrans/embedded-jmxtrans-samples/tree/master/embedded-jmxtrans-webapp-coktail"><img
+        style="position: absolute; top: 0; right: 0; border: 0;"
+        src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 </body>
 </html>

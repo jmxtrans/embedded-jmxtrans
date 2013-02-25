@@ -24,6 +24,8 @@
 package org.jmxtrans.embedded.samples.cocktail;
 
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -41,6 +43,8 @@ public class Cocktail implements Comparable<Cocktail> {
      */
     private String recipeUrl;
     private Deque<String> comments = new LinkedList<String>();
+
+    private int priceInCents;
 
     public String getInstructionsAsHtml() {
         return instructions == null ? "" : instructions.replace("\n", "<br />\n");
@@ -146,5 +150,80 @@ public class Cocktail implements Comparable<Cocktail> {
     public Cocktail withRecipeUrl(String recipeUrl) {
         setRecipeUrl(recipeUrl);
         return this;
+    }
+
+    public int getPriceInCents() {
+        return priceInCents;
+    }
+
+    /**
+     * Price in dollars
+     */
+    public String getPrettyPrice(){
+        BigDecimal priceInDollars = new BigDecimal(getPriceInCents()).movePointLeft(2);
+        return NumberFormat.getCurrencyInstance(Locale.US).format(priceInDollars);
+    }
+
+    public void setPriceInCents(int priceInCents) {
+        this.priceInCents = priceInCents;
+    }
+
+    public Cocktail withPriceInCents(int priceInCents) {
+        this.priceInCents = priceInCents;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cocktail)) return false;
+
+        Cocktail cocktail = (Cocktail) o;
+
+        if (id != cocktail.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    /**
+     * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+     */
+    public static class Ingredient {
+
+        private String name;
+        private String quantity;
+
+        public Ingredient(String quantity, String name) {
+            this.quantity = quantity;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(String quantity) {
+            this.quantity = quantity;
+        }
+
+        @Override
+        public String toString() {
+            return "Ingredient{" +
+                    "quantity='" + quantity + '\'' +
+                    '}';
+        }
     }
 }
