@@ -5,11 +5,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Shopping Cart</title>
 
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/favicon.png">
 
-    <title>Cocktails</title>
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -73,21 +73,82 @@
 </div>
 
 <div class="container">
-    <c:forEach items="${cocktails}" var="cocktail">
-        <div class="row">
-            <div class="span1">
-                &nbsp;
-                <c:if test="${not empty cocktail.photoUrl}">
-                    <img src="${cocktail.photoUrl}" width="50"/>
-                </c:if>
-            </div>
-            <div class="span11">
-                <h2><a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}">${cocktail.name}</a></h2>
-                <br/>
-                <blockquote>${cocktail.instructionsAsHtml}</blockquote>
+    <div class="page-header">
+        <h1>Shopping Cart</h1>
+    </div>
+
+    <div class="row">
+        <div class="span10">
+            <form:form id="form" action="${pageContext.request.contextPath}/cart/buy" method="post">
+
+                <div class="control-group">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="span1">&nbsp;</th>
+                            <th class="span7">Item</th>
+                            <th class="span1">Unit Price</th>
+                            <th class="span1">Quantity</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${shoppingCart.items}" var="item" varStatus="status">
+                            <c:set var="cocktail" value="${item.cocktail}"/>
+
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                    <c:if test="${not empty cocktail.photoUrl}">
+                                        <img src="${cocktail.photoUrl}" width="50"/>
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}">${cocktail.name}</a>
+                                    </strong>
+                                    <br/>
+                                    <blockquote>${cocktail.instructionsAsHtml}</blockquote>
+                                </td>
+                                <td>${cocktail.prettyPrice}</td>
+                                <td>
+                                    <div class="controls"><input id="quantity-${status.count}"
+                                                                 readonly="true"
+                                                                 name="quantity-${status.count}"
+                                                                 class="span1" type="text"
+                                                                 value="${item.quantity}"/></div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td><strong>Price</strong></td>
+                            <td>${shoppingCart.prettyPrice}</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <button type="submit" class="btn js-btn btn-primary">
+                                    <i class="icon-shopping-cart"></i> Buy!
+                                </button>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form:form>
+        </div>
+        <div class="span2">
+            <div class="well">
+
             </div>
         </div>
-    </c:forEach>
+    </div>
+
 </div>
 </body>
 </html>

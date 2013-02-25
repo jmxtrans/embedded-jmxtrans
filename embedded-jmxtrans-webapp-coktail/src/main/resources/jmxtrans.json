@@ -1,6 +1,17 @@
 {
     "queries": [
         {
+            "objectName": "cocktail:type=ShoppingCartController,name=ShoppingCartController",
+            "resultAlias": "shopping-cart",
+            "attributes": [
+                "OrdersCount",
+                "OrderItemsCount",
+                "OrdersPriceInCents",
+                "ShoppingCartsPriceInCents"
+            ]
+
+        },
+        {
             "objectName": "cocktail:type=CocktailController,name=CocktailController",
             "resultAlias": "cocktail",
             "attributes": [
@@ -25,7 +36,7 @@
         "settings": {
             "host": "${graphite.host:localhost}",
             "port": "${graphite.port:2003}",
-            "namePrefix":"${graphite.namePrefix:servers.#hostname#.}"
+            "namePrefix": "${graphite.namePrefix:servers.#hostname#.}"
         }
     }
 ]
