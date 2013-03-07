@@ -23,6 +23,20 @@
                 "UpdatedCocktailCount"
             ]
 
+        },
+        {
+            "objectName": "Catalina:type=Manager,context=/,host=localhost",
+            "resultAlias": "website",
+            "attributes": [
+                {
+                    "name": "activeSessions",
+                    "resultAlias": "activeVisitors"
+                },
+                {
+                    "name": "sessionCounter",
+                    "resultAlias": "visitorCount"
+                }
+            ]
         }
     ], "outputWriters": [
     {
@@ -32,11 +46,21 @@
         }
     },
     {
-        "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+        "@class": "org.jmxtrans.embedded.output.GraphitePickleWriter",
         "settings": {
             "host": "${graphite.host:localhost}",
-            "port": "${graphite.port:2003}",
+            "port": "${graphite.port:2004}",
+            "enabled": "${graphite.enabled:true}",
             "namePrefix": "${graphite.namePrefix:servers.#hostname#.}"
+        }
+    },
+    {
+        "@class": "org.jmxtrans.embedded.output.LibratoWriter",
+        "settings": {
+            "source": "${librato.source:#hostname#}",
+            "username": "${librato.username:}",
+            "token": "${librato.token:}",
+            "enabled": "${librato.enabled:false}"
         }
     }
 ]

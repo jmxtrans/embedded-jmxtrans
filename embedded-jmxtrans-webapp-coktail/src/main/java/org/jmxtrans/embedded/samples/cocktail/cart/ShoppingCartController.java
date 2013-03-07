@@ -23,8 +23,8 @@
  */
 package org.jmxtrans.embedded.samples.cocktail.cart;
 
-import org.jmxtrans.embedded.samples.cocktail.Cocktail;
-import org.jmxtrans.embedded.samples.cocktail.CocktailRepository;
+import org.jmxtrans.embedded.samples.cocktail.cocktail.Cocktail;
+import org.jmxtrans.embedded.samples.cocktail.cocktail.CocktailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +46,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ShoppingCartController {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-    private final AtomicInteger shoppingCartsPriceInCents = new AtomicInteger();
-    private final AtomicInteger ordersPriceInCents = new AtomicInteger();
-    private final AtomicInteger orderItemsCount = new AtomicInteger();
-    private final AtomicInteger ordersCount = new AtomicInteger();
+    protected final AtomicInteger shoppingCartsPriceInCents = new AtomicInteger();
+    protected final AtomicInteger ordersPriceInCents = new AtomicInteger();
+    protected final AtomicInteger orderItemsCount = new AtomicInteger();
+    protected final AtomicInteger ordersCount = new AtomicInteger();
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
     @Autowired

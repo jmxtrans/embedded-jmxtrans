@@ -24,6 +24,9 @@
 -->
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
 
+    <contextName>cocktail-app</contextName>
+    <jmxConfigurator/>
+
    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
       <encoder>
          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %ex{0}%n</pattern>
