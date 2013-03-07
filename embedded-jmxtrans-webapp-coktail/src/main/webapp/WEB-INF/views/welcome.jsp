@@ -41,7 +41,7 @@
     <div class="navbar-inner">
         <div class="container">
             <div class="span9">
-                <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
+                <a class="brand" style="padding: 0; padding-top: 10px; padding-right: 5px" href="${pageContext.request.contextPath}/"> <img alt='jmxtrans logo' height='28'
                                                                                   src='${pageContext.request.contextPath}/img/jmxtrans-logo-28x109.gif'
                                                                                   width='109'/> SOS Cocktail
                 </a>
@@ -60,11 +60,11 @@
                 </form>
             </div>
             <div class="span3 pull-right">
-                <p class="nav">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/cart/" title="Shopping Cart">
                     <i class="icon-shopping-cart"></i>
                     ${shoppingCart.itemsCount} items
                     ${shoppingCart.prettyPrice}
-                </p>
+                </a>
             </div>
         </div>
     </div>

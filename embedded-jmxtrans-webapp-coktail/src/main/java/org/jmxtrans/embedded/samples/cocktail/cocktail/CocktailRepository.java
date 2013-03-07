@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.embedded.samples.cocktail;
+package org.jmxtrans.embedded.samples.cocktail.cocktail;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;

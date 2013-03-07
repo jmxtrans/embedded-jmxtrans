@@ -30,11 +30,14 @@
  ~ bees config:list -a jmxtrans/demo-cocktail
  -->
 <config>
-   <!-- JMX EXPORTER -->
+    <!-- EMBEDDED JMXTRANS -->
     <param name="graphite.host" value="carbon.hostedgraphite.com" />
-    <param name="graphite.port" value="2003" />
+    <param name="graphite.port" value="2004" />
     <param name="graphite.namePrefix" value="<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.cloudbees." />
 
-
+    <param name="librato.username" value="<<YOUR_LIBRATO_USERNAME>>" />
+    <param name="librato.token" value="<<YOUR_LIBRATO_API_KEY>>"/>
+    <param name="librato.namePrefix" value="servers.cloudbees." />
+    <param name="librato.enabled" value="true" />
 
 </config>

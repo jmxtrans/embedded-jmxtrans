@@ -23,7 +23,7 @@
  */
 package org.jmxtrans.embedded.samples.cocktail.cart;
 
-import org.jmxtrans.embedded.samples.cocktail.Cocktail;
+import org.jmxtrans.embedded.samples.cocktail.cocktail.Cocktail;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
