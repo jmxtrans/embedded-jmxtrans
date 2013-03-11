@@ -47,9 +47,9 @@ public class ShoppingCartController {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     protected final AtomicInteger shoppingCartsPriceInCents = new AtomicInteger();
-    protected final AtomicInteger ordersPriceInCents = new AtomicInteger();
-    protected final AtomicInteger orderItemsCount = new AtomicInteger();
-    protected final AtomicInteger ordersCount = new AtomicInteger();
+    protected final AtomicInteger salesRevenueInCentsCounter = new AtomicInteger();
+    protected final AtomicInteger salesItemsCounter = new AtomicInteger();
+    protected final AtomicInteger salesOrdersCounter = new AtomicInteger();
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
     @Autowired
@@ -80,9 +80,9 @@ public class ShoppingCartController {
     public String buy(HttpServletRequest request) {
         ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
 
-        ordersPriceInCents.addAndGet(shoppingCart.getPriceInCents());
-        orderItemsCount.addAndGet(shoppingCart.getItemsCount());
-        ordersCount.incrementAndGet();
+        salesRevenueInCentsCounter.addAndGet(shoppingCart.getPriceInCents());
+        salesItemsCounter.addAndGet(shoppingCart.getItemsCount());
+        salesOrdersCounter.incrementAndGet();
 
         shoppingCartRepository.resetCurrentShoppingCart(request);
         return "redirect:/";
@@ -94,17 +94,17 @@ public class ShoppingCartController {
     }
 
     @ManagedMetric
-    public int getOrdersPriceInCents() {
-        return ordersPriceInCents.get();
+    public int getSalesRevenueInCentsCounter() {
+        return salesRevenueInCentsCounter.get();
     }
 
     @ManagedMetric
-    public int getOrderItemsCount() {
-        return orderItemsCount.get();
+    public int getSalesItemsCounter() {
+        return salesItemsCounter.get();
     }
 
     @ManagedMetric
-    public int getOrdersCount() {
-        return ordersCount.get();
+    public int getSalesOrdersCounter() {
+        return salesOrdersCounter.get();
     }
 }
