@@ -25,6 +25,7 @@ package org.jmxtrans.embedded.samples.graphite;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Flushables;
+import com.google.common.io.Resources;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.jfree.chart.ChartFactory;
@@ -49,6 +50,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +69,6 @@ public class GraphiteDataInjector {
     private int batchSize = 50;
     private boolean debug = false;
     private boolean generateDataPointsFile = true;
-
 
     public GraphiteDataInjector() {
         weeklyDistribution[DateTimeConstants.MONDAY] = 2;
@@ -111,7 +112,8 @@ public class GraphiteDataInjector {
         boolean useHostedGraphite = true;
         if (useHostedGraphite) {
             // TODO DEFINE YOUR_HOSTED_GRAPHITE_KEY
-            graphiteDataInjector.graphiteMetricPrefix = "<<YOUR_HOSTED_GRAPHITE_KEY>>.edu.servers.";
+            String hostedGraphiteKey = Resources.toString(Resources.getResource("hosted-graphite.credentials"), Charset.defaultCharset());
+            graphiteDataInjector.graphiteMetricPrefix = hostedGraphiteKey + ".edu.servers.";
             graphiteDataInjector.graphiteHost = "carbon.hostedgraphite.com";
             graphiteDataInjector.setMaxGraphiteDataPointsPerSecond(100);
             graphiteDataInjector.batchSize = 50;
@@ -122,12 +124,11 @@ public class GraphiteDataInjector {
             graphiteDataInjector.batchSize = 200;
         }
 
-
         graphiteDataInjector.generateLoad();
     }
 
     public void generateLoad() throws Exception {
-        System.out.println("Inject data on Graphite server " + this.graphiteHost);
+        System.out.println("Inject data on Graphite server '" + this.graphiteHost + "' with prefix '" + this.graphiteMetricPrefix + "'");
 
         TimeSeries rawIntegratedTimeSeries = new TimeSeries("sales.integrated.raw");
         TimeSeries rawTimeSeries = new TimeSeries("sales.raw");
@@ -318,7 +319,12 @@ public class GraphiteDataInjector {
 
         Flushables.flushQuietly(outputStream);
         Closeables.close(outputStream, true);
-        Closeables.close(socket, true);
+        try {
+            socket.close();
+        } catch (Exception e) {
+            // swallow exception
+            e.printStackTrace();
+        }
 
         System.out.println();
         System.out.println("Exported " + timeSeries.getKey() + ": " + timeSeries.getItemCount() + " items");
