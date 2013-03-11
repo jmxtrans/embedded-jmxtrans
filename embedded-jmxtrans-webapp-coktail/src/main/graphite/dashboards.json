@@ -1,0 +1,24 @@
+{
+    "dashboards": [
+        {
+            "title": "Active Visitors",
+            "targets": [
+                "alias(sumSeries(edu.servers.*.website.visitors.activeGauge),\"Active Visitors\")",
+                "alias(sumSeries(timeShift(edu.servers.*.website.visitors.activeGauge,\"7d\")),\"Active Visitors -7days\")"
+            ],
+            "url": "/render/?width=847&height=493&_salt=1362845917.731&from=-7days&target=alias(sumSeries(edu.servers.*.website.visitors.activeGauge)%2C%22Active%20Visitors%22)&target=alias(sumSeries(timeShift(edu.servers.*.website.visitors.activeGauge%2C%227d%22))%2C%22Active%20Visitors%20-7days%22)&xFormat=%25a%20%25H%25p&title=Active%20Visitors"
+        },
+        {
+            "title": "Revenue per hour",
+            "targets": [
+                "alias(scale(summarize(nonNegativeDerivative(sumSeries(edu.servers.*.sales.revenueInCentsCounter)),\"1h\"),0.01),\"Revenue in USD per hour\")",
+                "alias(scale(summarize(nonNegativeDerivative(sumSeries(timeShift(edu.servers.srv1.sales.revenueInCentsCounter,\"7d\"))),\"1h\"),0.01),\"Revenue in USD per hour -7days\")"
+            ],
+            "xFormat":"%a %H%p %d",
+            "url":"http://localhost:8081/render/?width=1132&height=633&_salt=1362925155.375&from=-14days&target=alias(scale(summarize(nonNegativeDerivative(sumSeries(edu.servers.*.sales.revenueInCentsCounter))%2C%221h%22)%2C0.01)%2C%22Revenue%20in%20USD%20per%20hour%22)&target=alias(scale(summarize(nonNegativeDerivative(sumSeries(timeShift(edu.servers.srv1.sales.revenueInCentsCounter%2C%227d%22)))%2C%221h%22)%2C0.01)%2C%22Revenue%20in%20USD%20per%20hour%20-7days%22)&vtitle=USD&title=Revenue%20per%20hour&xFormat=%25a%20%25H%25p%20%25d"
+        },
+        {
+            "title":""
+        }
+    ]
+}

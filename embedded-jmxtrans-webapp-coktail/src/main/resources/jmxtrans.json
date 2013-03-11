@@ -2,12 +2,20 @@
     "queries": [
         {
             "objectName": "cocktail:type=ShoppingCartController,name=ShoppingCartController",
-            "resultAlias": "shopping-cart",
+            "resultAlias": "",
             "attributes": [
-                "OrdersCount",
-                "OrderItemsCount",
-                "OrdersPriceInCents",
-                "ShoppingCartsPriceInCents"
+                {
+                    "name": "SalesOrdersCounter",
+                    "resultAlias": "sales.ordersCounter"
+                },
+                {
+                    "name": "SalesItemsCounter",
+                    "resultAlias": "sales.itemsCounter"
+                },
+                {
+                    "name": "SalesRevenueInCentsCounter",
+                    "resultAlias": "sales.revenueInCentsCounter"
+                }
             ]
 
         },
@@ -30,11 +38,11 @@
             "attributes": [
                 {
                     "name": "activeSessions",
-                    "resultAlias": "activeVisitors"
+                    "resultAlias": "visitors.activeGauge"
                 },
                 {
                     "name": "sessionCounter",
-                    "resultAlias": "visitorCount"
+                    "resultAlias": "visitors.newVisitorsCounter"
                 }
             ]
         }
