@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2010-2013 the original author or authors
+ ~
+ ~ Permission is hereby granted, free of charge, to any person obtaining
+ ~ a copy of this software and associated documentation files (the
+ ~ "Software"), to deal in the Software without restriction, including
+ ~ without limitation the rights to use, copy, modify, merge, publish,
+ ~ distribute, sublicense, and/or sell copies of the Software, and to
+ ~ permit persons to whom the Software is furnished to do so, subject to
+ ~ the following conditions:
+ ~
+ ~ The above copyright notice and this permission notice shall be
+ ~ included in all copies or substantial portions of the Software.
+ ~
+ ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ ~ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ ~ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ ~ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ ~ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ ~
+-->
+<!--
+ ~ CLOUDBEES CONFIGURATION PARAMETERS
+ ~ http://wiki.cloudbees.com/bin/view/RUN/Configuration+Parameters
+ ~
+ ~ bees config:update -a jmxtrans/seyren cloudbees-seyren-config.xml
+ ~ bees config:list -a jmxtrans/seyren
+ -->
+<config>
+    <!--  The location of your graphite server. Default: `http://localhost:80` -->
+    <param name="GRAPHITE_URL" value="" />
+    <!--  The Http Basic auth username for the graphite server. Default: `` -->
+    <param name="GRAPHITE_USERNAME" value="" />
+    <!--  The Http Basic auth password for the graphite server. Default: `` -->
+    <param name="GRAPHITE_PASSWORD" value="" />
+    <!--  The mongo connection string. Default: `mongodb://localhost:27017/seyren` -->
+    <param name="MONGO_URL" value="" />
+    <!--  The hipchat api auth token. Default: `` -->
+    <param name="HIPCHAT_AUTH_TOKEN" value="" />
+    <!--  The username that messages will be sent from to a hipchat room. Default: `Seyren Alert` -->
+    <param name="HIPCHAT_USER_NAME" value="" />
+    <!--  The PagerDuty domain to be notified. Default: `` -->
+    <param name="PAGERDUTY_DOMAIN" value="" />
+    <!--  The location of your seyren instance. Default: `http://localhost:8080/seyren` -->
+    <param name="SEYREN_URL" value="" />
+    <!--  The from email address for sending out notifications. Default: `alert@seyren` -->
+    <param name="SEYREN_FROM_EMAIL" value="" />
+    <!--  The smtp server to send email notifications from. Default: `localhost` -->
+    <param name="SMTP_HOST" value="" />
+    <!--  The smtp server port. Default: `25` -->
+    <param name="SMTP_PORT" value="" />
+    <!--  The smtp server username if authenticated SMTP is used. Default: `` -->
+    <param name="SMTP_USERNAME" value="" />
+    <!--  The smtp server password if authenticated SMTP is used. Default: `` -->
+    <param name="SMTP_PASSWORD" value="" />
+    <!--  The smtp server protocol if authenticated SMTP is used. Default: `smtp` -->
+    <param name="SMTP_PROTOCOL" value="" />
+    <!--  The location where Hubot is running. Default `` -->
+    <param name="SEYREN_HUBOT_URL" value="" />
+
+</config>
