@@ -45,6 +45,7 @@
     </properties>
     <modules>
         <module>embedded-jmxtrans-webapp-coktail</module>
+        <module>infrastructure</module>
         <!--
         <module>batch-sample-billing</module>
         -->
