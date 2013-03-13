@@ -30,7 +30,10 @@
 
     <jmxtrans:jmxtrans>
         <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
+        <!-- for deployments on Tomcat -->
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/tomcat-6.json</jmxtrans:configuration>
+        <!-- for deployments on CloudBees -->
+        <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/cloudbees-tomcat.json</jmxtrans:configuration>
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json</jmxtrans:configuration>
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json</jmxtrans:configuration>
     </jmxtrans:jmxtrans>
