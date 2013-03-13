@@ -23,7 +23,7 @@
                 "alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter)),\"1h\"),\"Cocktails sold per Hour\")",
                 "alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter,\"7d\"))),\"1h\"),\"Cocktails sold per Hour -7days\")"
             ],
-            "url":"http://www.hostedgraphite.com/f74333af/graphite/render/?width=1086&height=668&title=Cocktail%20Sales&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter%2C%227d%22)))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%20-7days%22)"
+            "url":"/render/?width=1086&height=668&title=Cocktail%20Sales&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter%2C%227d%22)))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%20-7days%22)"
         },
         {
             "title": "New Visitors",
