@@ -1,0 +1,10 @@
+{
+    "environment":"PROD",
+    "graphite": {
+        "baseUrl": "https://www.hostedgraphite.com/f74333af/5d5e150f-ab89-4b1d-801a-da65e6670544/graphite",
+        "host": "carbon.hostedgraphite.com",
+        "plainTextPort": "2003",
+        "picklePort": "2004",
+        "metricPrefix":"<<YOUR_HOSTED_GRAPHITE_KEY>>.servers.cloudbees."
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "environment":"LOCALHOST",
+    "graphite": {
+        "baseUrl": "http://localhost:8081",
+        "host": "localhost",
+        "plainTextPort": "2003",
+        "picklePort": "2004",
+        "metricPrefix":"servers.localhost."
+    }
+}
