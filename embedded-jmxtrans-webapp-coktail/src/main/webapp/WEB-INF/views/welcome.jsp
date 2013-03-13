@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>embedded-jmxtrans cocktail demo</title>
+    <title>embedded-jmxtrans sos cocktail demo</title>
 
     <link rel="shortcut icon" href=${pageContext.request.contextPath}/img/favicon.ico
     ">
@@ -75,12 +75,12 @@
     <div class="row">
         <div class="span6">
             <div class="hero-unit">
-                <h2>A to Z cocktails list</h2>
+                <h2>Enter the cocktail zone!</h2>
 
-                <p>Discover our recipes.</p>
+                <p>The best recipes just for you.</p>
 
                 <p>
-                    <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/"> Visit our
+                    <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/"> Choose your
                         cocktails! </a>
                 </p>
             </div>
