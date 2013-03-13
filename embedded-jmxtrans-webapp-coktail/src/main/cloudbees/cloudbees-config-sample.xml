@@ -31,6 +31,8 @@
  -->
 <config>
     <!-- EMBEDDED JMXTRANS -->
+    <param name="tomcat.jmxDomain" value="localEngine" />
+
     <param name="graphite.host" value="carbon.hostedgraphite.com" />
     <param name="graphite.port" value="2004" />
     <param name="graphite.namePrefix" value="<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.cloudbees." />

@@ -33,7 +33,7 @@
 
         },
         {
-            "objectName": "Catalina:type=Manager,context=/,host=localhost",
+            "objectName": "${tomcat.jmxDomain:Catalina}:type=Manager,context=/,host=localhost",
             "resultAlias": "website",
             "attributes": [
                 {
