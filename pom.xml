@@ -43,6 +43,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
     <modules>
         <module>embedded-jmxtrans-webapp-coktail</module>
         <module>infrastructure</module>
