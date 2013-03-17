@@ -116,6 +116,27 @@
                             <source>${project.basedir}/src/main/groovy/graphite-markdown-dashboard-generator.groovy</source>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>generate-dashboard-devoxxfr2013</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <infrastructureFile>
+                                    ${project.basedir}/etc/devoxxfr2013/cocktail-app-infrastructure-devoxxfr2013.json
+                                </infrastructureFile>
+                                <dashboardTemplateFile>
+                                    ${project.basedir}/../embedded-jmxtrans-webapp-coktail/src/main/graphite/dashboard.template.md
+                                </dashboardTemplateFile>
+                                <generatedDashboardFile>
+                                    Dashboard-DEVOXXFR2013.md
+                                </generatedDashboardFile>
+                            </properties>
+                            <source>${project.basedir}/src/main/groovy/graphite-markdown-dashboard-generator.groovy</source>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
