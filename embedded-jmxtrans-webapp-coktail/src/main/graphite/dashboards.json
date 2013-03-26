@@ -18,12 +18,12 @@
             "url": "/render/?width=1132&height=633&from=-14days&target=alias(scale(summarize(nonNegativeDerivative(sumSeries(edu.servers.*.sales.revenueInCentsCounter))%2C%221h%22)%2C0.01)%2C%22Revenue%20in%20USD%20per%20hour%22)&target=alias(scale(summarize(nonNegativeDerivative(sumSeries(timeShift(edu.servers.srv1.sales.revenueInCentsCounter%2C%227d%22)))%2C%221h%22)%2C0.01)%2C%22Revenue%20in%20USD%20per%20hour%20-7days%22)&vtitle=USD&title=Revenue%20per%20hour&xFormat=%25a%20%25H%25p%20%25d"
         },
         {
-          "title":"Cocktails sales",
-            "targets":[
+            "title": "Cocktails sales",
+            "targets": [
                 "alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter)),\"1h\"),\"Cocktails sold per Hour\")",
                 "alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter,\"7d\"))),\"1h\"),\"Cocktails sold per Hour -7days\")"
             ],
-            "url":"/render/?width=1086&height=668&title=Cocktail%20Sales&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter%2C%227d%22)))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%20-7days%22)"
+            "url": "/render/?width=1086&height=668&title=Cocktail%20Sales&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.sales.itemsCounter))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.sales.itemsCounter%2C%227d%22)))%2C%221h%22)%2C%22Cocktails%20sold%20per%20Hour%20-7days%22)"
         },
         {
             "title": "New Visitors",
@@ -31,7 +31,13 @@
                 "alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.website.visitors.newVisitorsCounter)),\"1h\"),\"New visitors per Hour\")",
                 "alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.website.visitors.newVisitorsCounter,\"7d\"))),\"1h\"),\"New visitors per Hour -7days\")",
             ],
-            "url":"/render/?width=1086&height=668&title=New%20Visitors&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.website.visitors.newVisitorsCounter))%2C%221h%22)%2C%22New%20visitors%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.website.visitors.newVisitorsCounter%2C%227d%22)))%2C%221h%22)%2C%22New%20visitors%20per%20Hour%20-7days%22)"
+            "url": "/render/?width=1086&height=668&title=New%20Visitors&xFormat=%25a%20%25d%25p&vtitle=&lineWidth=3&from=-5days&target=alias(summarize(sumSeries(nonNegativeDerivative(edu.servers.*.website.visitors.newVisitorsCounter))%2C%221h%22)%2C%22New%20visitors%20per%20Hour%22)&target=alias(summarize(sumSeries(nonNegativeDerivative(timeShift(edu.servers.*.website.visitors.newVisitorsCounter%2C%227d%22)))%2C%221h%22)%2C%22New%20visitors%20per%20Hour%20-7days%22)"
+        },
+        {
+            "title": "Tomcat HTTP Threads",
+            "targets": [
+                "alias(sumSeries(servers.*.tomcat.thread-pool.*.currentThreadsBusy),\"HTTP Thread Busy\")"]
         }
+
     ]
 }

@@ -41,3 +41,44 @@ Cocktail App Dashboards - ${environment} - ${version}
     </td>
 <tr>
 </table>
+
+# Tomcat
+
+<table>
+<tr>
+    <td>
+        <img src="${graphite.baseUrl}/render/?width=400&height=300&title=Tomcat%20Threads&xFormat=%25a%20%25d%25p&vtitle=USD&lineWidth=3&from=-5days&target=alias(sumSeries(servers.*.tomcat.thread-pool.*.currentThreadsBusy),%22HTTP%20Thread%20Busy%22)">
+    </td>
+    <td>
+        &nbsp;
+    </td>
+<tr>
+</table>
+
+# JVM
+
+<table>
+<tr>
+    <td>
+        <img src="${graphite.baseUrl}/render/?width=400&height=300&title=JVM%20GC%20Count&xFormat=%25a%20%25d%25p&lineWidth=3&from=-5days&target=servers.*.jvm.gc.*.CollectionCount">
+    </td>
+    <td>
+        <img src="${graphite.baseUrl}/render/?width=400&height=300&title=JVM%20GC%20Duration%20in%20millis&xFormat=%25a%20%25d%25p&lineWidth=3&from=-5days&target=servers.*.jvm.gc.*.CollectionTime">
+    </td>
+<tr>
+</table>
+
+servers.cyrille-leclerc-mbp_local.jvm.gc.PS_Scavenge.CollectionCount
+
+# OS
+
+<table>
+<tr>
+    <td>
+        <img src="${graphite.baseUrl}/render/?width=400&height=300&title=OS%20System%20Load&xFormat=%25a%20%25d%25p&lineWidth=3&from=-5days&target=servers.*.jvm.os.SystemLoadAverage">
+    </td>
+    <td>
+        &nbsp;
+    </td>
+<tr>
+</table>
