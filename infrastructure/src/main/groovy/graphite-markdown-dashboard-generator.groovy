@@ -50,7 +50,7 @@ def engine = new GStringTemplateEngine()
 def template = engine.createTemplate(dashboardTemplateFile).make(infrastructure)
 // println template.toString()
 
-outputFile.withWriter('unicode') { w ->
+outputFile.withWriter('utf-8') { w ->
     w << template.toString()
 }
 
