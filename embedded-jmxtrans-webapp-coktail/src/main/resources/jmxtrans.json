@@ -33,7 +33,7 @@
 
         },
         {
-            "comment":"tomcat7",
+            "comment": "tomcat7",
             "objectName": "Catalina:type=Manager,path=/,host=localhost",
             "resultAlias": "website",
             "attributes": [
@@ -48,7 +48,7 @@
             ]
         },
         {
-            "comment":"tomcat6",
+            "comment": "tomcat6",
             "objectName": "Catalina:type=Manager,context=/,host=localhost",
             "resultAlias": "website",
             "attributes": [
@@ -63,7 +63,7 @@
             ]
         },
         {
-            "comment":"cloudbees-tomcat6",
+            "comment": "cloudbees-tomcat6",
             "objectName": "localEngine:type=Manager,path=/,host=localhost",
             "resultAlias": "website",
             "attributes": [
