@@ -102,5 +102,10 @@
             "enabled": "${librato.enabled:false}"
         }
     }
-]
+],
+    "queryIntervalInSeconds": "${jmxtrans.queryIntervalInSeconds:31}",
+    "numQueryThreads": "${jmxtrans.numQueryThreads:7}",
+    "numExportThreads": "${jmxtrans.numExportThreads:3}",
+    "exportIntervalInSeconds": "${jmxtrans.exportIntervalInSeconds:9}",
+    "exportBatchSize": "${jmxtrans.exportBatchSize:51}"
 }
