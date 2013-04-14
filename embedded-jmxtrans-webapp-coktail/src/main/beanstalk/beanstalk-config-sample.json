@@ -1,0 +1,37 @@
+[
+    {
+        "Namespace": "aws:elasticbeanstalk:container:tomcat:jvmoptions",
+        "OptionName": "Xms",
+        "Value": "128m"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:container:tomcat:jvmoptions",
+        "OptionName": "Xmx",
+        "Value": "256m"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:container:tomcat:jvmoptions",
+        "OptionName": "XX:MaxPermSize",
+        "Value": "64m"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "GRAPHITE_HOST",
+        "Value": "carbon.hostedgraphite.com"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "GRAPHITE_PORT",
+        "Value": "2004"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "GRAPHITE_NAMEPREFIX",
+        "Value": "<<YOUR_HOSTED_GRAPHITE_API_KEY>>.servers.beanstalk."
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:hostmanager",
+        "OptionName": "LogPublicationControl",
+        "Value": "false"
+    }
+]

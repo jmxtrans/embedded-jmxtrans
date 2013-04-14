@@ -1,0 +1,10 @@
+vmc set-env demo-cocktail-jmxtrans TOMCAT_JMXDOMAIN localEngine
+
+vmc set-env demo-cocktail-jmxtrans GRAPHITE_HOST carbon.hostedgraphite.com
+vmc set-env demo-cocktail-jmxtrans GRAPHITE_PORT 2004
+vmc set-env demo-cocktail-jmxtrans GRAPHITE_NAMEPREFIX <<YOUR_HOSTED_GRAPHITE_API_KEY>>.cloudfoundry.
+
+vmc set-env demo-cocktail-jmxtrans LIBRATO_USERNAME <<YOUR_LIBRATO_USERNAME>>
+vmc set-env demo-cocktail-jmxtrans LIBRATO_TOKEN <<YOUR_LIBRATO_API_KEY>>
+vmc set-env demo-cocktail-jmxtrans LIBRATO_SOURCE cloudfoundry.#hostname#
+vmc set-env demo-cocktail-jmxtrans LIBRATO_ENABLED false
