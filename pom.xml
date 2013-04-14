@@ -34,7 +34,7 @@
     <name>embedded-jmxtrans-samples</name>
     <description>Embedded jmxtrans samples</description>
     <packaging>pom</packaging>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
     <url>https://github.com/jmxtrans/embedded-jmxtrans-samples</url>
     <scm>
         <connection>scm:git:git@github.com:jmxtrans/embedded-jmxtrans-samples.git</connection>
