@@ -1,0 +1,4 @@
+COMMAND LINE
+------------
+
+aws elasticbeanstalk update-environment -e prod -f beanstalk-config.json
