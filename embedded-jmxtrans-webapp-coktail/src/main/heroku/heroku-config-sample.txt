@@ -1,7 +1,7 @@
 ENVIRONMENT
 
-$ heroku config:set GRAPHITE_HOST=carbon.hostedgraphite.com GRAPHITE_PORT=2003 GRAPHITE_NAMEPREFIX=<<YOUR-API-KEY>>.servers.#hostname#.
+$ heroku config:set GRAPHITE_HOST=carbon.hostedgraphite.com GRAPHITE_PORT=2004 GRAPHITE_NAMEPREFIX=<<YOUR-API-KEY>>.servers.heroku.
 
 DEPLOYMENT
 
-$ heroku deploy:war --war target/cocktail-app-1.0.0-SNAPSHOT.war
+$ heroku deploy:war --war target/cocktail-app-1.0.6-SNAPSHOT.war
