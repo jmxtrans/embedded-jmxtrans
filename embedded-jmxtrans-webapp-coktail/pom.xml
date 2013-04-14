@@ -22,7 +22,8 @@
  ~ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ~
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jmxtrans.embedded.samples</groupId>
@@ -42,7 +43,7 @@
         <dependency>
             <groupId>org.jmxtrans.embedded</groupId>
             <artifactId>embedded-jmxtrans</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <!-- jython required by the GraphitePickleWriter -->
@@ -231,12 +232,34 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.cloudfoundry</groupId>
+                <artifactId>cf-maven-plugin</artifactId>
+                <version>1.0.0.M4</version>
+                <configuration>
+                    <server>mycloudfoundry-instance</server>
+                    <target>http://api.cloudfoundry.com</target>
+                    <appname>demo-cocktail-jmxtrans</appname>
+                    <memory>256</memory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <pluginRepositories>
         <pluginRepository>
             <id>bees-plugins-snapshots</id>
             <url>http://repository-cloudbees.forge.cloudbees.com/public-release/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>repository.springframework.maven.milestone</id>
+            <name>Spring Framework Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
