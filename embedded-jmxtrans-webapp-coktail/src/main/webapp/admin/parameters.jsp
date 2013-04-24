@@ -353,10 +353,6 @@
 <br>
 
 <h1>InitialContext</h1>
-<%
-    try {
-        InitialContext initialContext = new InitialContext(new Properties());
-%>
 <table border="1">
     <tr>
         <th>Name</th>
@@ -364,19 +360,22 @@
     </tr>
     <tr>
         <td>initialContext.nameInNamespace</td>
-        <td><%=initialContext.getNameInNamespace()%>
+        <td><%
+            try {
+                InitialContext initialContext = new InitialContext(new Properties());
+                out.print(initialContext.getNameInNamespace());
+            } catch (Throwable e) {
+                out.write("<pre>");
+                PrintWriter printWriter = new PrintWriter(out);
+                e.printStackTrace(printWriter);
+                out.write("</pre>");
+                printWriter.flush();
+            }
+        %>
         </td>
     </tr>
 </table>
-<%
-    } catch (Throwable e) {
-        out.write("<pre>");
-        PrintWriter printWriter = new PrintWriter(out);
-        e.printStackTrace(printWriter);
-        out.write("</pre>");
-        printWriter.flush();
-    }
-%>
+
 <h1>System information</h1>
 <table border="1">
     <tr>
