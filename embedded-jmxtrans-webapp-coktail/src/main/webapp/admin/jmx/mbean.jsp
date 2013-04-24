@@ -1,8 +1,55 @@
-<%@ page import="java.lang.management.ManagementFactory" %>
 <%@ page import="javax.management.*" %>
 <%@ page import="java.io.*,java.util.*" %>
-
 <%@page import="java.net.InetAddress" %>
+<%@ page import="java.lang.reflect.Array" %>
+<%!
+    String formatValue(String name, Object rawValue) {
+        String value;
+        try {
+            if (name.indexOf("classpath") >= 0 ||
+                    name.indexOf("java.library.path") >= 0 ||
+                    name.indexOf("ws.ext.dirs") >= 0 ||
+                    name.indexOf("java.class.path") >= 0 ||
+                    name.indexOf("sun.boot.class.path") >= 0) {
+                value = "";
+
+                String classpath = rawValue == null ? "" : rawValue.toString();
+                String[] arrClasspath = classpath.split(System.getProperty("path.separator"));
+                for (int i = 0; i < arrClasspath.length; i++) {
+                    value += arrClasspath[i] + System.getProperty("path.separator") + "<br/>\n";
+                }
+                value += "";
+            } else if (
+                    (name.toLowerCase().indexOf("password") >= 0) ||
+                            (name.toLowerCase().indexOf("secret") >= 0)) {
+                value = "***";
+            } else if (rawValue == null) {
+                value = "";
+            } else if (rawValue.getClass().isArray()) {
+                value = "[";
+                for (int i = 0; i < Array.getLength(rawValue); i++) {
+                    value += Array.get(rawValue, i) + ",<br/>\n";
+                }
+                value += "]";
+            } else if (rawValue instanceof Iterable) {
+                value = "[";
+                for (Object o : (Iterable) rawValue) {
+                    value += o + ",<br/>\n";
+                }
+                value += "]";
+            } else {
+                value = rawValue == null ? "" : rawValue.toString();
+            }
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            pw.flush();
+            value = "Exception formatting <code>" + rawValue.getClass() + "</code><br/><pre>" + sw + "</pre>";
+        }
+        return value;
+    }
+%>
 <html>
 <head>
     <title>MBean</title>
@@ -43,7 +90,8 @@
                         out.println("<td>");
                         if (attributeInfo.isReadable()) {
                             try {
-                                out.println(mbeanServer.getAttribute(objectName, attributeInfo.getName()));
+                                Object value = mbeanServer.getAttribute(objectName, attributeInfo.getName());
+                                out.println(formatValue(attributeInfo.getName(), value));
                             } catch (Exception e) {
                                 out.println("#" + e.toString() + "#");
                             }
