@@ -426,7 +426,7 @@
     %>
     <tr>
         <td>InetAddress.getLocalHost()</td>
-        <td><%=localhost.getHostName() + ", " + localhost.getCanonicalHostName() + ", " + localhost.getHostAddress()%>
+        <td><%= "hostName=" + localhost.getHostName() + ", canonicalHostName=" + localhost.getCanonicalHostName() + ", hostAddress=" + localhost.getHostAddress()%>
         </td>
     </tr>
     <tr>
@@ -434,7 +434,7 @@
         <td>
             <%
                 for (InetAddress address : InetAddress.getAllByName(null)) {
-                    out.println(address.getHostName() + ", " + address.getCanonicalHostName() + ", " + address.getHostAddress() + "<br/>");
+                    out.println("hostname=" + address.getHostName() + ", canonicalHostname=" + address.getCanonicalHostName() + ", hostAddress=" + address.getHostAddress() + "<br/>");
                 }
             %>
         </td>
