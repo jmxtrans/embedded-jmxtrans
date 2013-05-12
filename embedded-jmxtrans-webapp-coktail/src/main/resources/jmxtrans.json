@@ -103,9 +103,9 @@
         }
     }
 ],
-    "queryIntervalInSeconds": "${jmxtrans.queryIntervalInSeconds:31}",
-    "numQueryThreads": "${jmxtrans.numQueryThreads:7}",
-    "numExportThreads": "${jmxtrans.numExportThreads:3}",
-    "exportIntervalInSeconds": "${jmxtrans.exportIntervalInSeconds:9}",
-    "exportBatchSize": "${jmxtrans.exportBatchSize:51}"
+    "queryIntervalInSeconds": "${jmxtrans.queryIntervalInSeconds:30}",
+    "numQueryThreads": "${jmxtrans.numQueryThreads:2}",
+    "numExportThreads": "${jmxtrans.numExportThreads:2}",
+    "exportIntervalInSeconds": "${jmxtrans.exportIntervalInSeconds:5}",
+    "exportBatchSize": "${jmxtrans.exportBatchSize:50}"
 }

@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.jmxtrans.embedded</groupId>
             <artifactId>embedded-jmxtrans</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <!-- jython required by the GraphitePickleWriter -->
