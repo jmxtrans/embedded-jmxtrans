@@ -91,6 +91,6 @@ In [src/main/webapp/WEB-INF/spring-mvc-servlet.xml](https://github.com/jmxtrans/
 <dependency>
     <groupId>org.jmxtrans.embedded</groupId>
     <artifactId>embedded-jmxtrans</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.8</version>
 </dependency>
 ```
