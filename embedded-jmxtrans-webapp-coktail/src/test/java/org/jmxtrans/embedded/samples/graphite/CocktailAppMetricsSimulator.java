@@ -82,7 +82,7 @@ public class CocktailAppMetricsSimulator {
         if (useHostedGraphite) {
             graphiteDataInjector = GraphiteDataInjector.newHostedGraphiteDataInjector();
         } else {
-            graphiteDataInjector = GraphiteDataInjector.newHostedGraphiteDataInjector();
+            graphiteDataInjector = GraphiteDataInjector.newLocalhostGraphiteDataInjector();
         }
 
 
@@ -95,9 +95,9 @@ public class CocktailAppMetricsSimulator {
         TimeSeries rawTimeSeries = new TimeSeries("sales.raw");
 
         DateTime now = new DateTime();
-        DateTime end = now.plusDays(2);
+        DateTime end = now.plusDays(3);
 
-        DateTime date = now.minusDays(1);
+        DateTime date = now.minusDays(15);
         DateTime twoDaysAfterBegin = date.plusDays(2);
         double serverFairness = 1.05;
 
@@ -222,7 +222,6 @@ public class CocktailAppMetricsSimulator {
         }
 
         graphiteDataInjector.exportMetrics(newVisitorsCounterSrv1, newVisitorsCounterSrv2, activeVisitorsGaugeSrv1, activeVisitorsGaugeSrv2);
-
 
     }
 }
