@@ -97,6 +97,7 @@ public class CocktailController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail/{id}")
     public String view(@PathVariable long id, Model model) {
+        logger.trace("View {}", id);
         Cocktail cocktail = cocktailRepository.get(id);
         if (cocktail == null) {
             throw new CocktailNotFoundException(id);
@@ -110,6 +111,8 @@ public class CocktailController {
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail")
     public ModelAndView find(@RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "ingredient", required = false) String ingredient) {
+
+        logger.trace("find(name:{},ingredient:{})", name, ingredient);
 
         Collection<Cocktail> cocktails = cocktailRepository.find(ingredient, name);
 
