@@ -23,7 +23,7 @@ public class StackdriverWriterTest {
                 new QueryResult("metric4", "gauge", 12.12, System.currentTimeMillis())
 
         );
-        
+
         StackdriverWriter writer = new StackdriverWriter();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
