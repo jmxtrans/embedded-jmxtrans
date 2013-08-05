@@ -98,6 +98,7 @@ public class StackdriverWriter extends AbstractOutputWriter implements OutputWri
     /**
      * AWS instance ID, populated on startup
      */
+    @Nullable
     private String instanceId;
 
     /**
@@ -208,13 +209,14 @@ public class StackdriverWriter extends AbstractOutputWriter implements OutputWri
      *
      * @return String containing an AWS instance id, or null if none is found
      */
+    @Nullable
     private String getLocalAwsInstanceId() {
         String detectedInstanceId = null;
         try {
-            String inputLine = null;
             final URL metadataUrl = new URL("http://169.254.169.254/latest/meta-data/instance-id");
             URLConnection metadataConnection = metadataUrl.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(metadataConnection.getInputStream(), "UTF-8"));
+            String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 detectedInstanceId = inputLine;
             }
@@ -228,8 +230,7 @@ public class StackdriverWriter extends AbstractOutputWriter implements OutputWri
     /**
      * Put the values into the JSON format expected by the Stackdriver custom metrics gateway
      *
-     * @param counters collection of values that are counters
-     * @param gauges   collection of values that are gauges
+     * @param results collection of results (gauges and counters)
      * @param out      OutputStream to write JSON to
      * @throws IOException
      */
