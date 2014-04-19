@@ -24,12 +24,9 @@
             ObjectName objectName = objectInstance.getObjectName();
     %>
     <tr>
-        <td><%=mbeanServer.getAttribute(objectName, "SalesRevenueInCentsCounter")%>
-        </td>
-        <td><%=mbeanServer.getAttribute(objectName, "SalesItemsCounter")%>
-        </td>
-        <td><%=mbeanServer.getAttribute(objectName, "SalesOrdersCounter")%>
-        </td>
+        <td><%=mbeanServer.getAttribute(objectName, "SalesRevenueInCentsCounter")%></td>
+        <td><%=mbeanServer.getAttribute(objectName, "SalesItemsCounter")%></td>
+        <td><%=mbeanServer.getAttribute(objectName, "SalesOrdersCounter")%></td>
     </tr>
     <%
         }
