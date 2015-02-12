@@ -37,6 +37,7 @@
     <logger name="org.springframework.web" level="warn" />
     <logger name="org.jmxtrans.embedded" level="warn" />
     <logger name="org.jmxtrans.embedded.output.Slf4jWriter" level="debug" />
+    <logger name="org.jmxtrans.embedded.spring.EmbeddedJmxTransFactory" level="trace" />
 
 
     <root level="warn">

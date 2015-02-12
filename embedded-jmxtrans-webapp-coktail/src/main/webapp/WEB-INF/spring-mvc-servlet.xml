@@ -20,7 +20,7 @@
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
+		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.1.xsd">
 
     <context:component-scan base-package="org.jmxtrans.embedded.samples.cocktail"/>
 
@@ -28,7 +28,7 @@
 
     <context:property-placeholder system-properties-mode="OVERRIDE"/>
 
-    <jmxtrans:jmxtrans>
+    <jmxtrans:jmxtrans configuration-scan-period-in-seconds="5">
         <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
         <!-- for deployments on Tomcat -->
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/tomcat-7.json</jmxtrans:configuration>
