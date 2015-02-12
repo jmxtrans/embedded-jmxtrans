@@ -35,9 +35,9 @@ Declare `<jmxtrans:jmxtrans>` in your Spring configuration :
 <beans ...
        xmlns:jmxtrans="http://www.jmxtrans.org/schema/embedded"
        xsi:schemaLocation="...
-		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.0.xsd">
+		http://www.jmxtrans.org/schema/embedded http://www.jmxtrans.org/schema/embedded/jmxtrans-1.1.xsd">
 
-    <jmxtrans:jmxtrans>
+    <jmxtrans:jmxtrans configuration-scan-period-in-seconds="30">
         <jmxtrans:configuration>classpath:jmxtrans.json</jmxtrans:configuration>
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/tomcat-6.json</jmxtrans:configuration>
         <jmxtrans:configuration>classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json</jmxtrans:configuration>
