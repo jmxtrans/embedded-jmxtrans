@@ -166,7 +166,12 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
 	}
 
 
-    @Autowired
+    /**
+     * A default constructor is required
+     */
+    public EmbeddedJmxTransFactory() {
+    }
+
     public EmbeddedJmxTransFactory(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
@@ -279,4 +284,10 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
 	public void setConfigurationScanPeriodInSeconds(int configurationScanPeriodInSeconds) {
 		this.configurationScanPeriodInSeconds = configurationScanPeriodInSeconds;
 	}
+
+    @Autowired
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
 }
