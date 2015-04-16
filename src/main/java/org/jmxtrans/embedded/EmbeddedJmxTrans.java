@@ -133,7 +133,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         }
 
         public void registerToRuntime() {
-            Runtime.getRuntime().addShutdownHook(shutdownHook);
+            Runtime.getRuntime().addShutdownHook(this);
         }
 
         public void unregisterFromRuntime() {
