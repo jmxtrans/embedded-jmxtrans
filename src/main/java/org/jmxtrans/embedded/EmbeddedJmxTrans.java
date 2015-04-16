@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p/>
@@ -87,13 +88,80 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     private class EmbeddedJmxTransShutdownHook extends Thread {
 
+        private final AtomicBoolean alreadyExecuted = new AtomicBoolean(false);
+
+        public EmbeddedJmxTransShutdownHook() {
+            setName(getClass().getSimpleName() + "-" + getName());
+        }
+
         @Override
         public void run() {
-            super.run();
-            collectMetrics();
-            exportCollectedMetrics();
-            logger.info("EmbeddedJmxTransShutdownHook collected and exported metrics");
+            // this method will be executed by the Runtime as a Shutdown Hook
+            execute("EmbeddedJmxTransShutdownHook");
         }
+
+        private void execute(String invokerName) {
+            if (alreadyExecuted.compareAndSet(false, true)) {
+                try {
+                    collectMetrics();
+                    exportCollectedMetrics();
+                    logger.info("{} successfully collected and exported metrics one last time", invokerName);
+                } catch (RuntimeException e) {
+                    logger.warn("{} failed to collect and export metrics one last time", invokerName);
+                }
+
+                try {
+                    for (Query query : queries) {
+                        query.stop();
+                    }
+                } catch (Exception e) {
+                    logger.warn("Failure while stopping queries", e);
+                }
+
+                try {
+                    for (OutputWriter outputWriter : outputWriters) {
+                        outputWriter.stop();
+                    }
+                } catch (Exception e) {
+                    logger.warn("Failure while stopping outputWriters", e);
+                }
+            }
+        }
+
+        public boolean isAlreadyExecuted() {
+            return alreadyExecuted.get();
+        }
+
+        public void registerToRuntime() {
+            Runtime.getRuntime().addShutdownHook(shutdownHook);
+        }
+
+        public void unregisterFromRuntime() {
+            try {
+                boolean shutdownHookRemoved = Runtime.getRuntime().removeShutdownHook(this);
+                if (shutdownHookRemoved) {
+                    logger.debug("ShutdownHook successfully removed");
+                } else {
+                    logger.warn("Failure to remove ShutdownHook");
+                }
+            } catch (RuntimeException e) {
+                logger.warn("Failure to remove ShutdownHook", e);
+            }
+        }
+
+        public void onStop() {
+            // if the shutdown hook was already executed by the Runtime
+            // then we should not try to remove it from the Runtime otherwise we would get an IllegalStateException: Shutdown in progress
+
+            if (!shutdownHook.isAlreadyExecuted()) {
+                shutdownHook.unregisterFromRuntime();
+
+                // as the shutdownHook was not already executed
+                // we want to execute it in order to trigger the last collection and export
+                shutdownHook.execute("EmbeddedJmxTrans Stop Handler");
+            }
+        }
+
     }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -125,7 +193,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     private int exportBatchSize = 50;
 
-    private EmbeddedJmxTransShutdownHook shutdownHook = new EmbeddedJmxTransShutdownHook();
+    private EmbeddedJmxTransShutdownHook shutdownHook;
 
     /**
      * Start the exporter: initialize underlying queries, start scheduled executors, register shutdown hook
@@ -163,7 +231,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             }, getQueryIntervalInSeconds() + 1, getExportIntervalInSeconds(), TimeUnit.SECONDS);
         }
 
-        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        shutdownHook = new EmbeddedJmxTransShutdownHook();
+        shutdownHook.registerToRuntime();
         running = true;
         logger.info("EmbeddedJmxTrans started");
     }
@@ -178,34 +247,23 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             logger.debug("Ignore stop() command for not running instance");
             return;
         }
-        collectScheduledExecutor.shutdown();
         try {
-            collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            logger.warn("Ignore InterruptedException stopping", e);
+            collectScheduledExecutor.shutdown();
+            try {
+                collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                logger.warn("Ignore InterruptedException stopping", e);
+            }
+            exportScheduledExecutor.shutdown();
+            try {
+                exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                logger.warn("Ignore InterruptedException stopping", e);
+            }
+        } catch (RuntimeException e) {
+            logger.warn("Failure while shutting down ExecutorServices", e);
         }
-        exportScheduledExecutor.shutdown();
-        try {
-            exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            logger.warn("Ignore InterruptedException stopping", e);
-        }
-
-        collectMetrics();
-        exportCollectedMetrics();
-        for (Query query : queries) {
-            query.stop();
-        }
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.stop();
-        }
-        logger.info("EmbeddedJmxTrans stopped. Metrics have been collected and exported one last time.");
-        boolean shutdownHookRemoved = Runtime.getRuntime().removeShutdownHook(shutdownHook);
-        if (shutdownHookRemoved) {
-            logger.debug("ShutdownHook successfully removed");
-        } else {
-            logger.warn("Failure to remove ShutdownHook");
-        }
+        shutdownHook.onStop();
         running = false;
     }
 
