@@ -153,12 +153,12 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             // if the shutdown hook was already executed by the Runtime
             // then we should not try to remove it from the Runtime otherwise we would get an IllegalStateException: Shutdown in progress
 
-            if (!shutdownHook.isAlreadyExecuted()) {
-                shutdownHook.unregisterFromRuntime();
+            if (!isAlreadyExecuted()) {
+                unregisterFromRuntime();
 
                 // as the shutdownHook was not already executed
                 // we want to execute it in order to trigger the last collection and export
-                shutdownHook.execute("EmbeddedJmxTrans Stop Handler");
+                execute("EmbeddedJmxTrans Stop Handler");
             }
         }
 
