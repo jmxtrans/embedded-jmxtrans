@@ -50,4 +50,25 @@ public class EmbeddedJmxTransFactoryTest {
         embeddedJmxTrans.stop();
 
     }
+
+    @Test
+    public void testGetObjectMultipleTimes() throws Exception {
+        String configuration = "classpath:org/jmxtrans/embedded/jmxtrans-factory-test.json";
+        EmbeddedJmxTransFactory factory = new EmbeddedJmxTransFactory(new DefaultResourceLoader());
+        factory.setConfigurationUrl(configuration);
+
+        EmbeddedJmxTrans embeddedJmxTrans = factory.getObject();
+        assertThat(embeddedJmxTrans, notNullValue());
+        assertThat(embeddedJmxTrans.getQueries().size(), is(8));
+        assertThat(embeddedJmxTrans.getOutputWriters().size(), is(1));
+
+        embeddedJmxTrans.stop();
+
+        embeddedJmxTrans.start();
+        embeddedJmxTrans.stop();
+
+        embeddedJmxTrans.start();
+        embeddedJmxTrans.stop();
+    }
+
 }
