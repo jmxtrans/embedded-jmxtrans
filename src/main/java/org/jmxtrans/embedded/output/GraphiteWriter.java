@@ -27,6 +27,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
+import org.jmxtrans.embedded.util.net.ProtocolType;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
@@ -57,12 +58,15 @@ import java.util.concurrent.TimeUnit;
  * </ul>
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  */
 public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final int DEFAULT_GRAPHITE_SERVER_PORT = 2003;
 
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";
+
+    public static final String DEFAULT_PROTOCOL = "TCP";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -96,6 +100,16 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             metricPathPrefix = metricPathPrefix + ".";
         }
 
+        String protocol = getStringSetting(SETTING_PROTOCOL, null);
+        ProtocolType protocolType = SocketWriterPoolFactory.DEFAULT_SOCKET_PROTOCOL_TYPE;
+        if (protocol != null) {
+            if (protocol.equalsIgnoreCase("UDP")) {
+                protocolType = ProtocolType.UDP;
+            } else if (protocol.equalsIgnoreCase("TCP")) {
+                protocolType = ProtocolType.TCP;
+            }
+        }
+
         GenericKeyedObjectPool.Config config = new GenericKeyedObjectPool.Config();
         config.testOnBorrow = getBooleanSetting("pool.testOnBorrow", true);
         config.testWhileIdle = getBooleanSetting("pool.testWhileIdle", true);
@@ -106,7 +120,11 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
-        socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+        if (protocolType == ProtocolType.TCP) {
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+        } else {
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", protocolType), config);
+        }
 
         socketPoolObjectName = JmxUtils2.registerObject(
                 socketWriterPool,

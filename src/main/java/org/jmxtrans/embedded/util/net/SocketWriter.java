@@ -27,6 +27,7 @@ import java.io.BufferedWriter;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
@@ -35,10 +36,12 @@ import java.nio.charset.Charset;
  * Convenience class for writing characters to a {@linkplain Socket}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  */
 public class SocketWriter extends FilterWriter {
 
     private final Socket socket;
+    private final DatagramSocket datagramSocket;
 
     /**
      * @param inetSocketAddress host and port of the underlying {@linkplain Socket}
@@ -52,6 +55,13 @@ public class SocketWriter extends FilterWriter {
     public SocketWriter(Socket socket, Charset charset) throws IOException {
         super(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset)));
         this.socket = socket;
+        this.datagramSocket = null;
+    }
+
+    public SocketWriter(DatagramSocket datagramSocket, Charset charset) throws IOException {
+        super(new UDPDatagramWriter(datagramSocket, charset));
+        this.datagramSocket = datagramSocket;
+        this.socket = null;
     }
 
     /**
@@ -61,10 +71,17 @@ public class SocketWriter extends FilterWriter {
         return socket;
     }
 
+    /**
+     * Return the underlying {@linkplain java.net.DatagramSocket}
+     */
+    public DatagramSocket getDatagramSocket() {
+        return datagramSocket;
+    }
+
     @Override
     public String toString() {
         return "SocketWriter{" +
-                "socket=" + socket +
+                "socket=" + ((socket != null) ? socket : datagramSocket) +
                 '}';
     }
 }
