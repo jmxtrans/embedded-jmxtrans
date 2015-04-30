@@ -30,6 +30,7 @@ import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
+import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +58,14 @@ import java.util.concurrent.TimeUnit;
  * </ul>
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  */
 public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final int DEFAULT_GRAPHITE_SERVER_PORT = 2003;
+
+    private static final String PROTOCOL_TCP = "TCP";
+    private static final String PROTOCOL_UDP = "UDP";
 
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";
 
@@ -106,7 +111,19 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
-        socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+        String protocol = getStringSetting(SETTING_PROTOCOL, null);
+        if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory("UTF-8"), config);
+        } else {
+            if (protocol == null) {
+                // protocol not specified, use default one
+                logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
+            } else if (PROTOCOL_TCP.equalsIgnoreCase(protocol) == false) {
+                // unknown or protocol, use default one
+                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
+            }
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+        }
 
         socketPoolObjectName = JmxUtils2.registerObject(
                 socketWriterPool,

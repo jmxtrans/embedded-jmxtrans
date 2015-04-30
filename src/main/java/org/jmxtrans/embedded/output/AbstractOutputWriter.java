@@ -35,6 +35,7 @@ import java.util.Map;
  * Convenience abstract class to implement an {@link OutputWriter}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  */
 public abstract class AbstractOutputWriter implements OutputWriter {
 
@@ -46,6 +47,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     public final static String SETTING_PROXY_PORT = "proxyPort";
     public final static String SETTING_PROXY_HOST = "proxyHost";
     public final static String SETTING_NAME_PREFIX = "namePrefix";
+    public final static String SETTING_PROTOCOL = "protocol";
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
