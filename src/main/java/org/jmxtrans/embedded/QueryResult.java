@@ -100,6 +100,7 @@ public class QueryResult {
                 " epoch=" + new Timestamp(epochInMillis) +
                 ", name='" + name + '\'' +
                 ", value=" + value +
+                ", type=" + type +
                 '}';
     }
 }

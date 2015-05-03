@@ -25,6 +25,8 @@ package org.jmxtrans.embedded.output;
 
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.ResultNameStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +46,9 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     public final static String SETTING_PROXY_PORT = "proxyPort";
     public final static String SETTING_PROXY_HOST = "proxyHost";
     public final static String SETTING_NAME_PREFIX = "namePrefix";
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
     private ResultNameStrategy strategy = new ResultNameStrategy();
     private Map<String, Object> settings = new HashMap<String, Object>();
     private boolean enabled = true;

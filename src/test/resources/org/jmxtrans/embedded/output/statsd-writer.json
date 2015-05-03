@@ -1,0 +1,14 @@
+{
+  "outputWriters": [
+    {
+      "@class": "org.jmxtrans.embedded.output.ConsoleWriter"
+    },
+    {
+      "@class": "org.jmxtrans.embedded.output.StatsDWriter",
+      "settings": {
+        "host": "${statsd.host:localhost}",
+        "port": "${statsd.port:8125}"
+      }
+    }
+  ]
+}
