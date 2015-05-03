@@ -107,6 +107,9 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 protocolType = ProtocolType.UDP;
             } else if (protocol.equalsIgnoreCase("TCP")) {
                 protocolType = ProtocolType.TCP;
+            } else {
+                // unknown protocol, use default one
+                logger.warn("Unknown specified protocol '{}', default protocol '{}' will be used instead.",protocol, protocolType.toString()); 
             }
         }
 
