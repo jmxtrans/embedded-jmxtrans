@@ -64,6 +64,9 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     public static final int DEFAULT_GRAPHITE_SERVER_PORT = 2003;
 
+    private static final String PROTOCOL_TCP = "TCP";
+    private static final String PROTOCOL_UDP = "UDP";
+
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -109,12 +112,15 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
         String protocol = getStringSetting(SETTING_PROTOCOL, null);
-        if (protocol != null && protocol.equalsIgnoreCase("UDP")) {
+        if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
             socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory("UTF-8"), config);
         } else {
-            if ("TCP".equalsIgnoreCase(protocol) == false) {
-                // unknown or unset protocol, use default one
-                logger.warn("Unknown or unspecified protocol '{}', default protocol 'TCP' will be used instead.",protocol);
+            if (protocol == null) {
+                // protocol not specified, use default one
+                logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
+            } else if (PROTOCOL_TCP.equalsIgnoreCase(protocol) == false) {
+                // unknown or protocol, use default one
+                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
             }
             socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
         }
