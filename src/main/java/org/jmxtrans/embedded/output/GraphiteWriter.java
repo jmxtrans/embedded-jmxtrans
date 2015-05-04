@@ -27,10 +27,10 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
-import org.jmxtrans.embedded.util.net.ProtocolType;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
+import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +66,6 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";
 
-    public static final String DEFAULT_PROTOCOL = "TCP";
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -100,19 +98,6 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             metricPathPrefix = metricPathPrefix + ".";
         }
 
-        String protocol = getStringSetting(SETTING_PROTOCOL, null);
-        ProtocolType protocolType = SocketWriterPoolFactory.DEFAULT_SOCKET_PROTOCOL_TYPE;
-        if (protocol != null) {
-            if (protocol.equalsIgnoreCase("UDP")) {
-                protocolType = ProtocolType.UDP;
-            } else if (protocol.equalsIgnoreCase("TCP")) {
-                protocolType = ProtocolType.TCP;
-            } else {
-                // unknown protocol, use default one
-                logger.warn("Unknown specified protocol '{}', default protocol '{}' will be used instead.",protocol, protocolType.toString()); 
-            }
-        }
-
         GenericKeyedObjectPool.Config config = new GenericKeyedObjectPool.Config();
         config.testOnBorrow = getBooleanSetting("pool.testOnBorrow", true);
         config.testWhileIdle = getBooleanSetting("pool.testWhileIdle", true);
@@ -123,10 +108,15 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
-        if (protocolType == ProtocolType.TCP) {
-            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+        String protocol = getStringSetting(SETTING_PROTOCOL, null);
+        if (protocol != null && protocol.equalsIgnoreCase("UDP")) {
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory("UTF-8"), config);
         } else {
-            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", protocolType), config);
+            if ("TCP".equalsIgnoreCase(protocol) == false) {
+                // unknown or unset protocol, use default one
+                logger.warn("Unknown or unspecified protocol '{}', default protocol 'TCP' will be used instead.",protocol);
+            }
+            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
         }
 
         socketPoolObjectName = JmxUtils2.registerObject(
