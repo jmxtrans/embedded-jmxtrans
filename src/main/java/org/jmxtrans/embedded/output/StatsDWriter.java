@@ -75,7 +75,8 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     public synchronized void write(Iterable<QueryResult> results) {
         logger.debug("Export to {} results {}", addressReference.get(), results);
         for (QueryResult result : results) {
-            String stat = metricPathPrefix + result.getName() + ":" + result.getValue() + "|c\n";
+
+            String stat = metricPathPrefix + result.getName() + ":" + result.getValue() + "|" + getStatsdMetricType(result) + "\n";
 
             logger.debug("Export '{}'", stat);
             final byte[] data = stat.getBytes(StandardCharsets.UTF_8);
@@ -123,6 +124,30 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             addressReference.purge();
             logger.warn("Could not send stat {} to host {}:{}", sendBuffer, address.getHostName(), address.getPort(), e);
         }
+    }
+
+    /**
+     * See <a href="https://github.com/etsy/statsd/blob/master/docs/metric_types.md">StatsD Metric Types</a>.
+     *
+     * @param result
+     * @return StatsD metric type such as 'c', 'g' or 's'. Default to 'c' if not known, return the metric type itself if its length == 1
+     */
+    protected char getStatsdMetricType(@Nonnull QueryResult result) {
+        String metricType = result.getType();
+        char statsBucketType;
+        if(metricType == null || metricType.equalsIgnoreCase("counter")) {
+            statsBucketType = 'c';
+        } else if(metricType.equalsIgnoreCase("gauge")) {
+            statsBucketType = 'g';
+        } else if (metricType.equalsIgnoreCase("set")) {
+            statsBucketType = 's';
+        } else if(metricType.length() == 1) {
+            statsBucketType = metricType.charAt(0);
+        } else {
+            logger.warn("Unknown metric type for {}, default to 'c'", result);
+            statsBucketType = 'c';
+        }
+        return statsBucketType;
     }
 
     @Override
