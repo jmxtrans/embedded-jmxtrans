@@ -23,7 +23,11 @@
  */
 package org.jmxtrans.embedded.util.pool;
 
-import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
+import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.junit.Test;
 
 import javax.management.MBeanServer;
@@ -41,17 +45,24 @@ public class ManagedGenericKeyedObjectPoolTest {
 
     @Test
     public void testMbeanAttributeAccess() throws Exception {
-        BaseKeyedPoolableObjectFactory<String, String> factory = new BaseKeyedPoolableObjectFactory<String, String>() {
+        BaseKeyedPooledObjectFactory<String, String> factory = new BaseKeyedPooledObjectFactory<String, String>() {
             @Override
-            public String makeObject(String key) throws Exception {
+            public String create(String key) throws Exception {
                 return key;
             }
-        };
-        ManagedGenericKeyedObjectPool<String, String> objectPool = new ManagedGenericKeyedObjectPool<String, String>(factory);
 
-        ObjectName objectName = new ObjectName("org.jmxtrans.embedded:Type=TestPool,Name=TestPool@" + System.identityHashCode(this));
+            @Override
+            public PooledObject<String> wrap(String value) {
+                return new DefaultPooledObject<String>(value);
+            }
+        };
+        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+        config.setJmxNameBase("org.jmxtrans.embedded:type=GenericKeyedObjectPool,writer=MyWriter,name=");
+        config.setJmxNamePrefix("my-host_1234");
+        GenericKeyedObjectPool<String, String> objectPool = new GenericKeyedObjectPool<String, String>(factory, config);
+
+        ObjectName objectName = new ObjectName("org.jmxtrans.embedded:type=GenericKeyedObjectPool,writer=MyWriter,name=my-host_1234");
         MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
-        objectName = mbeanServer.registerMBean(objectPool, objectName).getObjectName();
         try {
             Object numIdle = mbeanServer.getAttribute(objectName, "NumIdle");
             assertThat(numIdle, instanceOf(Number.class));
@@ -59,8 +70,5 @@ public class ManagedGenericKeyedObjectPoolTest {
         } finally {
             mbeanServer.unregisterMBean(objectName);
         }
-
-
-
     }
 }

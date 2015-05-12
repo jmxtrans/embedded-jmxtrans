@@ -23,8 +23,10 @@
  */
 package org.jmxtrans.embedded.util.pool;
 
-import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
+import org.apache.commons.pool2.KeyedPooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 
@@ -37,7 +39,7 @@ import java.nio.charset.Charset;
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class SocketWriterPoolFactory extends BaseKeyedPoolableObjectFactory<HostAndPort, SocketWriter> implements KeyedPoolableObjectFactory<HostAndPort, SocketWriter> {
+public class SocketWriterPoolFactory extends BaseKeyedPooledObjectFactory<HostAndPort, SocketWriter> implements KeyedPooledObjectFactory<HostAndPort, SocketWriter> {
 
     public static final int DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS = 500;
     private final Charset charset;
@@ -53,32 +55,37 @@ public class SocketWriterPoolFactory extends BaseKeyedPoolableObjectFactory<Host
     }
 
     @Override
-    public SocketWriter makeObject(HostAndPort HostAndPort) throws Exception {
+    public SocketWriter create(HostAndPort hostAndPort) throws Exception {
         Socket socket = new Socket();
         socket.setKeepAlive(true);
-        socket.connect(new InetSocketAddress(HostAndPort.getHost(), HostAndPort.getPort()), socketConnectTimeoutInMillis);
+        socket.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), socketConnectTimeoutInMillis);
 
         return new SocketWriter(socket, charset);
     }
 
     @Override
-    public void destroyObject(HostAndPort HostAndPort, SocketWriter socketWriter) throws Exception {
-        super.destroyObject(HostAndPort, socketWriter);
+    public void destroyObject(HostAndPort hostAndPort, PooledObject<SocketWriter> socketWriterRef) throws Exception {
+        super.destroyObject(hostAndPort, socketWriterRef);
+        SocketWriter socketWriter = socketWriterRef.getObject();
         socketWriter.close();
         socketWriter.getSocket().close();
+    }
+
+    @Override
+    public PooledObject<SocketWriter> wrap(SocketWriter socketWriter) {
+        return new DefaultPooledObject<SocketWriter>(socketWriter);
     }
 
     /**
      * Defensive approach: we test all the "<code>Socket.isXXX()</code>" flags.
      */
     @Override
-    public boolean validateObject(HostAndPort HostAndPort, SocketWriter socketWriter) {
-        Socket socket = socketWriter.getSocket();
+    public boolean validateObject(HostAndPort hostAndPort, PooledObject<SocketWriter> socketWriterRef) {
+        Socket socket = socketWriterRef.getObject().getSocket();
         return socket.isConnected()
                 && socket.isBound()
                 && !socket.isClosed()
                 && !socket.isInputShutdown()
                 && !socket.isOutputShutdown();
     }
-
 }

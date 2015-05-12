@@ -1,7 +1,9 @@
 package org.jmxtrans.embedded.util.pool;
 
-import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
+import org.apache.commons.pool2.KeyedPooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 
@@ -15,7 +17,7 @@ import java.nio.charset.Charset;
  * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  *
  */
-public class UDPSocketWriterPoolFactory extends BaseKeyedPoolableObjectFactory<HostAndPort, SocketWriter> implements KeyedPoolableObjectFactory<HostAndPort, SocketWriter> {
+public class UDPSocketWriterPoolFactory extends BaseKeyedPooledObjectFactory<HostAndPort, SocketWriter> implements KeyedPooledObjectFactory<HostAndPort, SocketWriter> {
 
     private final Charset charset;
 
@@ -28,27 +30,29 @@ public class UDPSocketWriterPoolFactory extends BaseKeyedPoolableObjectFactory<H
     }
 
     @Override
-    public SocketWriter makeObject(HostAndPort HostAndPort) throws Exception {
+    public SocketWriter create(HostAndPort hostAndPort) throws Exception {
         DatagramSocket datagramSocket = new DatagramSocket(null);
-        datagramSocket.connect(new InetSocketAddress(HostAndPort.getHost(), HostAndPort.getPort()));
+        datagramSocket.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()));
         return new SocketWriter(datagramSocket, charset);
     }
 
     @Override
-    public void destroyObject(HostAndPort HostAndPort, SocketWriter socketWriter) throws Exception {
-        super.destroyObject(HostAndPort, socketWriter);
-        socketWriter.close();
-        socketWriter.getDatagramSocket().close();
+    public PooledObject<SocketWriter> wrap(SocketWriter socketWriter) {
+        return new DefaultPooledObject<SocketWriter>(socketWriter);
     }
 
-    /**
-     * Defensive approach: we test all the "<code>Socket.isXXX()</code>" flags.
-     */
     @Override
-    public boolean validateObject(HostAndPort HostAndPort, SocketWriter socketWriter) {
-        DatagramSocket datagramSocket = socketWriter.getDatagramSocket();
+    public boolean validateObject(HostAndPort hostAndPort, PooledObject<SocketWriter> socketWriterRef) {
+        DatagramSocket datagramSocket = socketWriterRef.getObject().getDatagramSocket();
         return datagramSocket.isConnected()
                 && !datagramSocket.isClosed();
     }
 
+    @Override
+    public void destroyObject(HostAndPort hostAndPort, PooledObject<SocketWriter> socketWriterRef) throws Exception {
+        super.destroyObject(hostAndPort, socketWriterRef);
+        SocketWriter socketWriter = socketWriterRef.getObject();
+        socketWriter.close();
+        socketWriter.getDatagramSocket().close();
+    }
 }

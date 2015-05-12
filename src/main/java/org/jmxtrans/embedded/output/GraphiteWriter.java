@@ -23,12 +23,12 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
-import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,9 +79,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     private HostAndPort graphiteServerHostAndPort;
 
-    private ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter> socketWriterPool;
-
-    private ObjectName socketPoolObjectName;
+    private GenericKeyedObjectPool<HostAndPort, SocketWriter> socketWriterPool;
 
     /**
      * Load settings, initialize the {@link SocketWriter} pool and test the connection to the graphite server.
@@ -101,19 +100,21 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             metricPathPrefix = metricPathPrefix + ".";
         }
 
-        GenericKeyedObjectPool.Config config = new GenericKeyedObjectPool.Config();
-        config.testOnBorrow = getBooleanSetting("pool.testOnBorrow", true);
-        config.testWhileIdle = getBooleanSetting("pool.testWhileIdle", true);
-        config.maxActive = getIntSetting("pool.maxActive", -1);
-        config.maxIdle = getIntSetting("pool.maxIdle", -1);
-        config.minEvictableIdleTimeMillis = getLongSetting("pool.minEvictableIdleTimeMillis", TimeUnit.MINUTES.toMillis(5));
-        config.timeBetweenEvictionRunsMillis = getLongSetting("pool.timeBetweenEvictionRunsMillis", TimeUnit.MINUTES.toMillis(5));
+        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+        config.setTestOnBorrow(getBooleanSetting("pool.testOnBorrow", true));
+        config.setTestWhileIdle(getBooleanSetting("pool.testWhileIdle", true));
+        config.setMaxTotal(getIntSetting("pool.maxActive", -1));
+        config.setMaxIdlePerKey(getIntSetting("pool.maxIdle", -1));
+        config.setMinEvictableIdleTimeMillis(getLongSetting("pool.minEvictableIdleTimeMillis", TimeUnit.MINUTES.toMillis(5)));
+        config.setTimeBetweenEvictionRunsMillis(getLongSetting("pool.timeBetweenEvictionRunsMillis", TimeUnit.MINUTES.toMillis(5)));
+        config.setJmxNameBase("org.jmxtrans.embedded:type=GenericKeyedObjectPool,writer=GraphiteWriter,name=");
+        config.setJmxNamePrefix(graphiteServerHostAndPort.getHost() + "_" + graphiteServerHostAndPort.getPort());
 
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
         String protocol = getStringSetting(SETTING_PROTOCOL, null);
         if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
-            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory("UTF-8"), config);
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory(StandardCharsets.UTF_8), config);
         } else {
             if (protocol == null) {
                 // protocol not specified, use default one
@@ -122,13 +123,8 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 // unknown or protocol, use default one
                 logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
             }
-            socketWriterPool = new ManagedGenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory("UTF-8", socketConnectTimeoutInMillis), config);
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(StandardCharsets.UTF_8, socketConnectTimeoutInMillis), config);
         }
-
-        socketPoolObjectName = JmxUtils2.registerObject(
-                socketWriterPool,
-                "org.jmxtrans.embedded:Type=SocketPool,Host=" + host + ",Port=" + port + ",Name=GraphiteSocketPool@" + System.identityHashCode(this),
-                ManagementFactory.getPlatformMBeanServer());
 
         if (isEnabled()) {
             try {
@@ -176,6 +172,5 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
         logger.info("Stop GraphiteWriter connected to '{}' ...", graphiteServerHostAndPort);
         super.stop();
         socketWriterPool.close();
-        JmxUtils2.unregisterObject(socketPoolObjectName, ManagementFactory.getPlatformMBeanServer());
     }
 }

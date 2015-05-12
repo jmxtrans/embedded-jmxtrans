@@ -85,4 +85,16 @@ public class Preconditions {
         }
         return reference;
     }
+
+    /**
+     * Check the given {@code state}.
+     *
+     * @param state the state top check
+     * @param message   exception message, can be <code>null</code>
+     * @throws IllegalStateException if the given {@code state} is {@code false}
+     */
+    public static void checkState(boolean state, @Nullable String message) throws IllegalStateException {
+        if (!state)
+            throw new IllegalStateException(message);
+    }
 }
