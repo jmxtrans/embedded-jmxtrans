@@ -30,7 +30,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.io.IoUtils2;
-import org.python.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,16 +48,18 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * <a href="https://metrics.librato.com//">Librato Metrics</a> implementation of the {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
- * <p/>
+ *
  * This implementation uses <a href="http://dev.librato.com/v1/post/metrics">
  * POST {@code /v1/metrics}</a> HTTP API.
- * <p/>
+ *
  * {@link LibratoWriter} uses the "{@code query.attribute.type}" configuration parameter (via
- * {@link org.jmxtrans.embedded.QueryResult#getType()}) to publish the metrics.<br/>
- * Supported types are {@value #METRIC_TYPE_COUNTER} and {@value #METRIC_TYPE_GAUGE}.<br/>
+ * {@link org.jmxtrans.embedded.QueryResult#getType()}) to publish the metrics.
+ *
+ * Supported types are {@value #METRIC_TYPE_COUNTER} and {@value #METRIC_TYPE_GAUGE}.
+ *
  * If the type is <code>null</code> or unsupported, metric is exported
  * as {@value #METRIC_TYPE_COUNTER}.
- * <p/>
+ *
  * Settings:
  * <ul>
  * <li>"{@code url}": Librato server URL.
@@ -67,7 +68,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * <li>"{@code token}": Librato token. Mandatory</li>
  * <li>"{@code libratoApiTimeoutInMillis}": read timeout of the calls to Librato HTTP API.
  * Optional, default value: {@value #DEFAULT_LIBRATO_API_TIMEOUT_IN_MILLIS}.</li>
- * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: <code>true</code>.</li>
+ * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: {$code true}.</li>
  * <li>"{@code source}": Librato . Optional, default value: {@value #DEFAULT_SOURCE} (the hostname of the server).</li>
  * </ul>
  *
@@ -92,7 +93,6 @@ public class LibratoWriter extends AbstractOutputWriter implements OutputWriter 
      *     TODO discover embedded-jmxtrans' version from maven's embedded pom.xml instead of hardcoding "1"
      * </p>
      */
-    @VisibleForTesting
     protected final String httpUserAgent =
             "embedded-jmxtrans/1 " + "(" +
                     System.getProperty("java.vm.name") + "/" + System.getProperty("java.version") + "; " +
@@ -126,7 +126,7 @@ public class LibratoWriter extends AbstractOutputWriter implements OutputWriter 
     private String source;
 
     /**
-     * Load settings<p/>
+     * Load settings
      */
     @Override
     public void start() {

@@ -71,7 +71,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Convert value of this setting to a Java <b>int</b>.
-     * <p/>
+     *
      * If the setting is not found or is not an int, an exception is thrown.
      *
      * @param name name of the setting / property
@@ -89,7 +89,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Convert value of this setting to a Java <b>int</b>.
-     * <p/>
+     *
      * If the property is not found, the <code>defaultValue</code> is returned. If the property is not an int, an exception is thrown.
      *
      * @param name         name of the property
@@ -113,7 +113,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Convert value of this setting to a Java <b>long</b>.
-     * <p/>
+     *
      * If the property is not found, the <code>defaultValue</code> is returned. If the property is not a long, an exception is thrown.
      *
      * @param name         name of the property
@@ -137,7 +137,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Convert value of this setting to a Java <b>boolean</b> (via {@link Boolean#parseBoolean(String)}).
-     * <p/>
+     *
      * If the property is not found, the <code>defaultValue</code> is returned.
      *
      * @param name         name of the property
@@ -157,7 +157,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Convert value of this setting to a Java <b>int</b>.
-     * <p/>
+     *
      * If the setting is not found, an exception is thrown.
      *
      * @param name name of the property
@@ -173,7 +173,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
      * Return the value of the given property.
-     * <p/>
+     *
      * If the property is not found, the <code>defaultValue</code> is returned.
      *
      * @param name         name of the property

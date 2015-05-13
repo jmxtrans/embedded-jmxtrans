@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Basic {@linkplain ThreadFactory} to redefine the name of the created thread.
- * <p/>
- * Inspired by Google Guava's {@link com.google.common.util.concurrent.ThreadFactoryBuilder}
+ *
+ * Inspired by Google Guava's {@code com.google.common.util.concurrent.ThreadFactoryBuilder}
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

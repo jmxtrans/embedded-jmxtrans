@@ -26,7 +26,6 @@ package org.jmxtrans.embedded.output;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
-import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
@@ -34,17 +33,15 @@ import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <a href="http://graphite.readthedocs.org/">Graphite</a> implementation of the {@linkplain OutputWriter}.
- * <p/>
+ *
  * This implementation uses <a href="http://graphite.readthedocs.org/en/0.9.10/feeding-carbon.html#the-plaintext-protocol">
  * Carbon Plan Text protocol</a> over TCP/IP.
- * <p/>
+ *
  * Settings:
  * <ul>
  * <li>"host": hostname or ip address of the Graphite server. Mandatory</li>
@@ -52,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * Optional, default value: {@value #DEFAULT_GRAPHITE_SERVER_PORT}.</li>
  * <li>"namePrefix": prefix append to the metrics name.
  * Optional, default value: {@value #DEFAULT_NAME_PREFIX}.</li>
- * <li>"enabled": flag to enable/disable the writer. Optional, default value: <code>true</code>.</li>
+ * <li>"enabled": flag to enable/disable the writer. Optional, default value: {$code true}.</li>
  * <li>"graphite.socketConnectTimeoutInMillis": timeout for the socketConnect in millis.
  * Optional, default value: {@link SocketWriterPoolFactory#DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS}
  * </li>
@@ -83,7 +80,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     /**
      * Load settings, initialize the {@link SocketWriter} pool and test the connection to the graphite server.
-     * <p/>
+     *
      * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
      */
     @Override

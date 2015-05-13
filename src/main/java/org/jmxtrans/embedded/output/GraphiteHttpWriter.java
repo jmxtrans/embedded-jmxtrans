@@ -40,12 +40,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <a href="http://graphite.readthedocs.org/">Graphite</a> implementation of the {@linkplain OutputWriter}.
- * <p/>
+ *
  * This implementation uses <a href="http://graphite.readthedocs.org/en/0.9.10/feeding-carbon.html#the-plaintext-protocol">
  * Carbon Plan Text protocol</a> over HTTP.
+ *
  * Read <a href="https://answers.launchpad.net/graphite/+question/213436">this thread</a> in order to implement a HTTP
  * listener in front of Carbon backend.
- * <p/>
+ *
  * Settings:
  * <ul>
  * <li>"url": complete url of the Graphite proxy server. Mandatory</li>
@@ -68,11 +69,6 @@ public class GraphiteHttpWriter extends AbstractOutputWriter implements OutputWr
 
     private URL graphiteHttpUrl;
 
-    /**
-     * Load settings, initialize the {@link org.apache.commons.httpclient .HttpClient.HttpClient} client and test the connection to the graphite server.
-     * <p/>
-     * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
-     */
     @Override
     public void start() {
         String url = getStringSetting(SETTING_URL);

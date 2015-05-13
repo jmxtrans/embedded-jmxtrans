@@ -100,7 +100,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * removing elements if necessary (ie if the queue is full).
      *
      * @param e the element to add to the queue
-     * @return <code>true</code>
+     * @return {$code true}
      */
     @Override
     public boolean add(E e) {
@@ -113,7 +113,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * removing elements if necessary (ie if the queue is full).
      *
      * @param e the element to add to the queue
-     * @return <code>true</code>
+     * @return {$code true}
      */
     @Override
     public boolean offer(E e) {
@@ -137,7 +137,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * removing elements if necessary (ie if the queue is full).
      *
      * @param e the element to add to the queue
-     * @return <code>true</code>
+     * @return {$code true}
      */
     @Override
     public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
@@ -150,7 +150,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * removing elements if necessary (ie if the queue is full).
      *
      * @param c the element to add to the queue
-     * @return <code>true</code> if the given elements collection is not empty
+     * @return {$code true} if the given elements collection is not empty
      */
     @Override
     public boolean addAll(Collection<? extends E> c) {

@@ -63,7 +63,7 @@ public class StringUtils2 {
 
     /**
      * Join given {@code tokens} with given {@code delimiter}.
-     * <p/>
+     *
      * Sample: tokens <code>"com", "mycompany, "ecommerce", "server1"</code> with delimiter <code>"."</code>
      * returns <code>"com.mycompany.ecommerce.server1"</code>.
      *

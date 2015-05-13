@@ -35,14 +35,14 @@ import java.util.concurrent.Callable;
 
 /**
  * Build a {@linkplain QueryResult#name} from a collected metric ({@linkplain QueryAttribute}, {@linkplain Query}).
- * <p/>
+ *
  * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
  * The approach is to escape non alpha-numeric chars.
- * <p/>
+ *
  * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.
- * <p/>
- * Supported '#' based 'functions':
+ *
  * <table>
+ * <caption>Supported '#' based 'functions'</caption>
  * <tr>
  * <th>Function</th>
  * <th>Description</th>
@@ -259,8 +259,8 @@ public class ResultNameStrategy {
     }
 
     /**
-     * Transforms an {@linkplain ObjectName} into a plain {@linkplain String} only composed of (a->Z, A-Z, '_').
-     * <p/>
+     * Transforms an {@linkplain ObjectName} into a plain {@linkplain String} only composed of (a-z, A-Z, '_').
+     *
      * '_' is the escape char for not compliant chars.
      */
     protected String escapeObjectName(ObjectName objectName) {
@@ -283,7 +283,7 @@ public class ResultNameStrategy {
     }
 
     /**
-     * Escape all non a->z,A->Z, 0->9 and '-' with a '_'.
+     * Escape all non a-z,A-Z, 0-9 and '-' with a '_'.
      *
      * @param str    the string to escape
      * @param result the {@linkplain StringBuilder} in which the escaped string is appended
@@ -293,9 +293,9 @@ public class ResultNameStrategy {
     }
 
     /**
-     * Escape all non a->z,A->Z, 0->9 and '-' with a '_'.
-     * <p/>
-     * '.' is escaped with a '_' if {@code escapeDot} is <code>true</code>.
+     * Escape all non a-z,A-Z, 0-9 and '-' with a '_'.
+     *
+     * '.' is escaped with a '_' if {@code escapeDot} is {$code true}.
      *
      * @param str       the string to escape
      * @param escapeDot indicates whether '.' should be escaped into '_' or not.

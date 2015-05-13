@@ -39,13 +39,13 @@ import java.util.List;
 
 /**
  * Bootstrap listener to start up and shut down {@link EmbeddedJmxTrans}.
- * <p/>
+ *
  * {@code embedded-jmxtrans} configuration files are specified by a coma/line-break
  * delimited list of jmxtrans json configuration file declared in the {@code web.xml}
  * {@code &lt;context-param&gt;} element named "{@value #CONFIG_LOCATION_PARAM}".
- * <p/>
+ *
  * Sample:
- * <code><pre>
+ * <pre><code>
  * &lt;web-app ...&gt;
  *   &lt;context-param&gt;
  *     &lt;param-name&gt;jmxtrans.config&lt;/param-name&gt;
@@ -60,8 +60,8 @@ import java.util.List;
  *     &lt;listener-class&gt;org.jmxtrans.embedded.servlet.EmbeddedJmxTransLoaderListener&lt;/listener-class&gt;
  *   &lt;/listener&gt;
  * &lt;/web-app&gt;
- * </pre>
  * </code>
+ * </pre>
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

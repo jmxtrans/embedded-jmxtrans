@@ -35,7 +35,7 @@ import java.util.*;
 
 /**
  * Describe a JMX MBean attribute to collect and hold the attribute collection logic.
- * <p/>
+ *
  * Collected values are sent to a {@linkplain java.util.concurrent.BlockingQueue}
  * for later export to the target monitoring systems
  * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue)}).
@@ -57,7 +57,7 @@ public class QueryAttribute {
     private String name;
     /**
      * Used to build the name of the {@link QueryResult} that will be exported.
-     * <p/>
+     *
      * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain QueryResult}
      *
      * @see org.jmxtrans.embedded.QueryResult#getName()

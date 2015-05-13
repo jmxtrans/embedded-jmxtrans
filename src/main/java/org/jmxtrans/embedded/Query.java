@@ -182,7 +182,7 @@ public class Query implements QueryMBean {
     /**
      * Export the collected metrics to the {@linkplain OutputWriter}s associated with this {@linkplain Query}
      * (see {@link #getEffectiveOutputWriters()}).
-     * <p/>
+     *
      * Metrics are batched according to {@link EmbeddedJmxTrans#getExportBatchSize()}
      *
      * @return the number of exported {@linkplain QueryResult}

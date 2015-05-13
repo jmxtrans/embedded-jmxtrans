@@ -26,7 +26,7 @@ package org.jmxtrans.embedded.util;
 import javax.annotation.Nullable;
 
 /**
- * Inspired by {@link com.google.common.base.Preconditions}
+ * Inspired by {@code com.google.common.base.Preconditions}
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

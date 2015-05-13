@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
  * output writer configuration because this aggregates all of the different
  * attributes returned by the query into a single line in a csv file, using the
  * {@link org.jmxtrans.embedded.QueryResult#getName()} as the value of the
- * header.<p/>
+ * header.
  *
  * The query can contain multiple MBeans by pattern matched ObjectName
- * <p/>
+ *
  * Example query configuration:
- * <code><pre>
+ * <pre><code>
  *  "queries": [
  *  {
  *     "outputWriters": [
@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  *      ]
  *  }
  *]
- * </pre></code>
+ * </code></pre>
  *
  * See <a href="https://github.com/jmxtrans/embedded-jmxtrans/wiki/Configuration">embedded-jmxtrans configuration</a> for more details.
  *

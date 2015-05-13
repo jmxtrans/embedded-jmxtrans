@@ -47,7 +47,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * {@link org.jmxtrans.embedded.EmbeddedJmxTrans} factory for Spring Framework integration.
- * <p/>
+ *
  * Default {@linkplain #configurationUrls} :
  * <ul>
  * <li><code>classpath:jmxtrans.json</code>: expected to be provided by the application</li>
@@ -222,14 +222,14 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
 
     /**
      * <p>
-     * See <a href="http://spring.io/blog/2011/08/09/what-s-a-factorybean">Josh Long: What's a FactoryBean?</a>
+     * See <a href="http://spring.io/blog/2011/08/09/what-s-a-factorybean">Josh Long: What's a FactoryBean?:</a>
      * </p>
-     * <quote>
+     * <p>
      * One important takeaway here is that it is the <code>FactoryBean</code>, <i>not</i> the factoried object itself,
      * that lives in the Spring container and enjoys the lifecycle hooks and container services. The returned instance
      * is transient - Spring knows nothing about what you’ve returned from <code>getObject()</code>, and will make
      * no attempt to exercise any lifecycle hooks or anything else on it.
-     * </quote>
+     * </p>
      *
      * @throws Exception
      */

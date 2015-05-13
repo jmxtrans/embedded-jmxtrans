@@ -53,10 +53,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 /**
  * <a href="https://www.stackdriver.com//">Stackdriver</a> implementation of the
  * {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
- * <p/>
+ *
  * This implementation uses <a href="https://custom-gateway.stackdriver.com/v1/custom"> POST {@code /v1/metrics}</a>
  * HTTP API.
- * <p/>
+ *
  * Settings:
  * <ul>
  * <li>"{@code url}": Stackdriver server URL. Optional, default value: {@value #DEFAULT_STACKDRIVER_API_URL}.</li>
@@ -65,7 +65,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
  * <li>"{@code detectInstance}": Set to "AWS" if you want to detect the local AWS instance ID on startup.  Optional. 
  * <li>"{@code stackdriverApiTimeoutInMillis}": read timeout of the calls to Stackdriver HTTP API. Optional, default
  * value: {@value #DEFAULT_STACKDRIVER_API_TIMEOUT_IN_MILLIS}.</li>
- * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: <code>true</code>.</li>
+ * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: {$code true}.</li>
  * </ul>
  * 
  * @author <a href="mailto:eric@stackdriver.com">Eric Kilby</a>

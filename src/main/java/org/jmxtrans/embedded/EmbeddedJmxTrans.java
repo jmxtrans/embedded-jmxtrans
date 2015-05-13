@@ -43,29 +43,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <p/>
+ *
  * <strong>JMX Queries</strong>
- * <p/>
+ *
  * If the JMX query returns several mbeans (thanks to '*' or '?' wildcards),
  * then the configured attributes are collected on all the returned mbeans.
- * <p/>
- * <p/>
+ *
+ *
  * <strong>Output Writers</strong>
- * <p/>
+ *
  * {@linkplain OutputWriter}s can be defined at the query level or globally at the {@link EmbeddedJmxTrans} level.
  * The {@linkplain OutputWriter}s that are effective for a {@linkplain Query} are accessible
  * via {@link Query#getEffectiveOutputWriters()}
- * <p/>
- * <p/>
+ *
+ *
  * <strong>Collected Metrics / Query Results</strong>
- * <p/>
+ *
  * Default behavior is to store the query results at the query level (see {@linkplain Query#queryResults}) to resolve the
  * effective {@linkplain OutputWriter}s at result export time ({@linkplain org.jmxtrans.embedded.Query#getEffectiveOutputWriters()}).
- * <br/>
+ *
  * The drawback is to limit the benefits of batching result
  * to a backend (see {@link org.jmxtrans.embedded.Query#exportCollectedMetrics()}) and the size limit of the results list to prevent
  * {@linkplain OutOfMemoryError} in case of export slowness.
- * <p/>
+ *
  * An optimization would be, if only one {@linkplain OutputWriter} is defined in the whole {@linkplain EmbeddedJmxTrans}, to
  * replace all the query-local result queues by one global result-queue.
  *

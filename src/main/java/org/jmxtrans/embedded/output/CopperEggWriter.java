@@ -75,20 +75,20 @@ import javax.annotation.Nullable;
 import java.lang.management.ManagementFactory;
 
 /**
- * <a href="https://copperegg.com//">CopperEgg Metrics</a> implementation of the {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
- * <p/>
- * This implementation uses v2 of the CopperEgg API <a href="http://dev.copperegg.com/">
- * <p/>
+ * <a href="https://copperegg.com/">CopperEgg Metrics</a> implementation of the {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
+ *
+ * This implementation uses v2 of the <a href="http://dev.copperegg.com/">CopperEgg API</a>
+ *
  * Settings:
  * <ul>
  * <li>"{@code url}": CopperEgg API server URL.
- * Optional, default value: {@value #DEFAULT_COPPEREGG_API_URL}.</li>
+ * Optional, default value: {@link #DEFAULT_COPPEREGG_API_URL}.</li>
  * <li>"{@code user}": CopperEgg user. Mandatory</li>
  * <li>"{@code token}": CopperEgg APIKEY. Mandatory</li>
  * <li>"{@code coppereggApiTimeoutInMillis}": read timeout of the calls to CopperEgg HTTP API.
- * Optional, default value: {@value #DEFAULT_COPPEREGG_API_TIMEOUT_IN_MILLIS}.</li>
- * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: <code>true</code>.</li>
- * <li>"{@code source}": CopperEgg . Optional, default value: {@value #DEFAULT_SOURCE} (the hostname of the server).</li>
+ * Optional, default value: {@link #DEFAULT_COPPEREGG_API_TIMEOUT_IN_MILLIS}.</li>
+ * <li>"{@code enabled}": flag to enable/disable the writer. Optional, default value: {$code true}.</li>
+ * <li>"{@code source}": CopperEgg . Optional, default value: {@link #DEFAULT_SOURCE} (the hostname of the server).</li>
  * </ul>
  * LibratoWriter.java author:
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -161,7 +161,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
     private String source;
 
     /**
-     * Load settings<p/>
+     * Load settings
      */
     @Override
     public void start() {

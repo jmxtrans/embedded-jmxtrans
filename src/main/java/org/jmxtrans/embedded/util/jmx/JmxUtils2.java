@@ -44,7 +44,7 @@ public class JmxUtils2 {
 
     /**
      * Try to register given <code>object</code> with <code>objectName</code>.
-     * <p/>
+     *
      * If registration fails, a {@link Logger#warn(String)} message is emitted and <code>null</code> is returned.
      *
      * @param object
@@ -64,7 +64,7 @@ public class JmxUtils2 {
 
     /**
      * Try to unregister given <code>objectName</code>.
-     * <p/>
+     *
      * If given <code>objectName</code> is <code>null</code>, nothing is done.
      * If registration fails, a {@link Logger#warn(String)} message is emitted and <code>null</code> is returned.
      *
