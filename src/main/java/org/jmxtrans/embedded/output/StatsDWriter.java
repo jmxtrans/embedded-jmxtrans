@@ -15,8 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@linkplain OutputWriter} for [StatsD](https://github.com/etsy/statsd).
+ *
  * @author Fabiano Vicente
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ * @since 1.0.15
  */
 public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
 
