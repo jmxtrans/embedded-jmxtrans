@@ -248,25 +248,14 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             return;
         }
         try {
-            collectScheduledExecutor.shutdown();
-            try {
-                collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                logger.warn("Ignore InterruptedException stopping", e);
-            }
-            exportScheduledExecutor.shutdown();
-            try {
-                exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                logger.warn("Ignore InterruptedException stopping", e);
-            }
+            collectScheduledExecutor.shutdownNow();
+            exportScheduledExecutor.shutdownNow();
         } catch (RuntimeException e) {
             logger.warn("Failure while shutting down ExecutorServices", e);
         }
         shutdownHook.onStop();
         running = false;
     }
-
 
     /**
      * Exposed for manual / JMX invocation

@@ -34,7 +34,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -160,6 +163,9 @@ public class Query implements QueryMBean {
         logger.trace("Query {} returned {}", objectName, matchingObjectNames);
 
         for (ObjectName matchingObjectName : matchingObjectNames) {
+            if (Thread.interrupted()) {
+                throw new RuntimeException(new InterruptedException());
+            }
             long epochInMillis = System.currentTimeMillis();
             try {
                 AttributeList jmxAttributes = embeddedJmxTrans.getMbeanServer().getAttributes(matchingObjectName, this.attributeNames);
@@ -189,11 +195,11 @@ public class Query implements QueryMBean {
      */
     @Override
     public int exportCollectedMetrics() {
-        if(queryResults.isEmpty()) {
+        if (queryResults.isEmpty()) {
             return 0;
         }
 
-        int totalExportedMetricsCount = 0;
+        int successfullyExportedMetricsCount = 0;
         long nanosBefore = System.nanoTime();
 
         List<OutputWriter> effectiveOutputWriters = getEffectiveOutputWriters();
@@ -202,16 +208,19 @@ public class Query implements QueryMBean {
 
         int size;
         while ((size = queryResults.drainTo(availableQueryResults, exportBatchSize)) > 0) {
-            totalExportedMetricsCount += size;
-            exportedMetricsCount.addAndGet(size);
             for (OutputWriter outputWriter : effectiveOutputWriters) {
+                if (Thread.interrupted()) {
+                    throw new RuntimeException(new InterruptedException());
+                }
                 outputWriter.write(availableQueryResults);
             }
+            successfullyExportedMetricsCount += size;
+            exportedMetricsCount.addAndGet(size);
             availableQueryResults.clear();
         }
         exportDurationInNanos.addAndGet(System.nanoTime() - nanosBefore);
         exportCount.incrementAndGet();
-        return totalExportedMetricsCount;
+        return successfullyExportedMetricsCount;
     }
 
     /**
