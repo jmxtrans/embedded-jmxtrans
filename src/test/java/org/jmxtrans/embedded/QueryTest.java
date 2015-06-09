@@ -25,6 +25,7 @@ package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.AbstractOutputWriter;
 import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.output.OutputWriterSet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -131,6 +132,9 @@ public class QueryTest {
 
             time += TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS);
         }
+
+        embeddedJmxTrans.getOutputWriters().startAll();
+        query.getOutputWriters().startAll();
 
         // TEST
         int actualExportResultCount = query.exportCollectedMetrics();

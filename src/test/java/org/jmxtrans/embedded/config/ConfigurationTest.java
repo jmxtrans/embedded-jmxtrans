@@ -203,7 +203,7 @@ public class ConfigurationTest {
         assertThat(queryAttribute.getName(), is("CollectionUsageThresholdCount"));
         assertThat(query.getOutputWriters().size(), is(1));
         assertThat(query.getEffectiveOutputWriters().size(), is(5));
-        OutputWriter outputWriter = query.getOutputWriters().get(0);
+        OutputWriter outputWriter = query.getOutputWriters().iterator().next();
         assertThat(outputWriter, instanceOf(NoOpWriter.class));
     }
 

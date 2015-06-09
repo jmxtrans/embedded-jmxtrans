@@ -158,7 +158,7 @@ public class ConfigurationMergeTest {
         QueryAttribute queryAttribute = query.getQueryAttributes().iterator().next();
         assertThat(queryAttribute.getName(), is("CollectionUsageThresholdCount"));
         assertThat(query.getOutputWriters().size(), is(1));
-        OutputWriter outputWriter = query.getOutputWriters().get(0);
+        OutputWriter outputWriter = query.getOutputWriters().iterator().next();
         assertThat(outputWriter, instanceOf(NoOpWriter.class));
     }
 

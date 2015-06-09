@@ -24,6 +24,7 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.output.OutputWriterSet;
 import org.jmxtrans.embedded.util.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,6 @@ import javax.annotation.PreDestroy;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -119,9 +119,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 }
 
                 try {
-                    for (OutputWriter outputWriter : outputWriters) {
-                        outputWriter.stop();
-                    }
+                    outputWriters.stopAll();
                 } catch (Exception e) {
                     logger.warn("Failure while stopping outputWriters", e);
                 }
@@ -179,9 +177,9 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     private final List<Query> queries = new ArrayList<Query>();
 
     /**
-     * Use to {@linkplain Set} to deduplicate during configuration merger
+     * Use of {@linkplain Set} to deduplicate during configuration merger
      */
-    private Set<OutputWriter> outputWriters = new HashSet<OutputWriter>();
+    private final OutputWriterSet outputWriters = new OutputWriterSet();
 
     private int numQueryThreads = 1;
 
@@ -208,9 +206,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         for (Query query : queries) {
             query.start();
         }
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.start();
-        }
+        outputWriters.startAll();
 
         collectScheduledExecutor = Executors.newScheduledThreadPool(getNumQueryThreads(), new NamedThreadFactory("jmxtrans-collect-", true));
         exportScheduledExecutor = Executors.newScheduledThreadPool(getNumExportThreads(), new NamedThreadFactory("jmxtrans-export-", true));
@@ -336,7 +332,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     }
 
     @Nonnull
-    public Set<OutputWriter> getOutputWriters() {
+    public OutputWriterSet getOutputWriters() {
         return outputWriters;
     }
 
