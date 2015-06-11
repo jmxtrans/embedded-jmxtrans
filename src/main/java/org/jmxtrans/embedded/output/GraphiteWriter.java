@@ -23,6 +23,7 @@
  */
 package org.jmxtrans.embedded.output;
 
+import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
@@ -30,6 +31,9 @@ import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
+import org.jmxtrans.embedded.util.socket.PlainSocketFactory;
+import org.jmxtrans.embedded.util.socket.SocketFactory;
+import org.jmxtrans.embedded.util.socket.SslSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +103,65 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             metricPathPrefix = metricPathPrefix + ".";
         }
 
+        socketWriterPool = createPool();
+
+        if (isEnabled()) {
+            try {
+                SocketWriter socketWriter = socketWriterPool.borrowObject(graphiteServerHostAndPort);
+                socketWriterPool.returnObject(graphiteServerHostAndPort, socketWriter);
+            } catch (Exception e) {
+                logger.warn("Test Connection: FAILURE to connect to Graphite server '{}'", graphiteServerHostAndPort, e);
+            }
+        }
+    }
+
+    private KeyedPooledObjectFactory<HostAndPort, SocketWriter> createSocketWriterFactory(String protocol, int socketConnectTimeoutInMillis) {
+        if (protocol == null) {
+            // protocol not specified, use default one
+            logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
+            protocol = PROTOCOL_TCP;
+        }
+        if (protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
+            return new UDPSocketWriterPoolFactory(UTF_8);
+        }
+        if (!protocol.equalsIgnoreCase(PROTOCOL_TCP)) {
+            // unknown protocol, use default one
+            logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.", protocol, PROTOCOL_TCP);
+            protocol = PROTOCOL_TCP;
+        }
+        final String socketFactoryClassName = getStringSetting("graphite.socketFactoryClassName", null);
+        logger.info("socketFactoryClassName = {}", socketFactoryClassName);
+
+        final SocketFactory socketFactory;
+
+        if (socketFactoryClassName == null) {
+            final boolean secure = getBooleanSetting("graphite.useTLS", false);
+            logger.info("secure = {}", secure);
+            if (secure) {
+                final boolean allowSelfSignedCertificates = getBooleanSetting("graphite.allowSelfSignedCertificates", false);
+                socketFactory = new SslSocketFactory(allowSelfSignedCertificates);
+            } else {
+                socketFactory = new PlainSocketFactory();
+            }
+        } else {
+            try {
+                socketFactory = (SocketFactory) Class.forName(socketFactoryClassName).newInstance();
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        logger.info("socketFactory = {}", socketFactory);
+
+        return new SocketWriterPoolFactory(UTF_8, socketConnectTimeoutInMillis, socketFactory);
+
+    }
+
+    private GenericKeyedObjectPool<HostAndPort, SocketWriter> createPool() {
         GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
         config.setTestOnBorrow(getBooleanSetting("pool.testOnBorrow", true));
         config.setTestWhileIdle(getBooleanSetting("pool.testWhileIdle", true));
@@ -109,30 +172,11 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
         config.setJmxNameBase("org.jmxtrans.embedded:type=GenericKeyedObjectPool,writer=GraphiteWriter,name=");
         config.setJmxNamePrefix(graphiteServerHostAndPort.getHost() + "_" + graphiteServerHostAndPort.getPort());
 
+        String protocol = getStringSetting(SETTING_PROTOCOL, null);
+
         int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
-        String protocol = getStringSetting(SETTING_PROTOCOL, null);
-        if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory(UTF_8), config);
-        } else {
-            if (protocol == null) {
-                // protocol not specified, use default one
-                logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
-            } else if (PROTOCOL_TCP.equalsIgnoreCase(protocol) == false) {
-                // unknown or protocol, use default one
-                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
-            }
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(UTF_8, socketConnectTimeoutInMillis), config);
-        }
-
-        if (isEnabled()) {
-            try {
-                SocketWriter socketWriter = socketWriterPool.borrowObject(graphiteServerHostAndPort);
-                socketWriterPool.returnObject(graphiteServerHostAndPort, socketWriter);
-            } catch (Exception e) {
-                logger.warn("Test Connection: FAILURE to connect to Graphite server '{}'", graphiteServerHostAndPort, e);
-            }
-        }
+        return new GenericKeyedObjectPool<HostAndPort, SocketWriter>(createSocketWriterFactory(protocol, socketConnectTimeoutInMillis), config);
     }
 
     /**

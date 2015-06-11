@@ -29,8 +29,8 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
+import org.jmxtrans.embedded.util.socket.SocketFactory;
 
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
@@ -44,21 +44,17 @@ public class SocketWriterPoolFactory extends BaseKeyedPooledObjectFactory<HostAn
     public static final int DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS = 500;
     private final Charset charset;
     private final int socketConnectTimeoutInMillis;
+    private final SocketFactory socketFactory;
 
-    public SocketWriterPoolFactory(String charset, int socketConnectTimeoutInMillis) {
-        this(Charset.forName(charset), socketConnectTimeoutInMillis);
-    }
-
-    public SocketWriterPoolFactory(Charset charset, int socketConnectTimeoutInMillis) {
+    public SocketWriterPoolFactory(Charset charset, int socketConnectTimeoutInMillis, SocketFactory socketFactory) {
         this.charset = charset;
         this.socketConnectTimeoutInMillis = socketConnectTimeoutInMillis;
+        this.socketFactory = socketFactory;
     }
 
     @Override
     public SocketWriter create(HostAndPort hostAndPort) throws Exception {
-        Socket socket = new Socket();
-        socket.setKeepAlive(true);
-        socket.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), socketConnectTimeoutInMillis);
+        Socket socket = socketFactory.createSocket(hostAndPort.getHost(), hostAndPort.getPort(), socketConnectTimeoutInMillis);
 
         return new SocketWriter(socket, charset);
     }
