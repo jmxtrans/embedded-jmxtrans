@@ -102,6 +102,8 @@ public class Query implements QueryMBean {
     @Nonnull
     private BlockingQueue<QueryResult> queryResults = new DiscardingBlockingQueue<QueryResult>(200);
 
+    private final QueryResultsExporter queryResultsExporter = new QueryResultsExporter(this);
+
     @Nonnull
     private final AtomicInteger collectedMetricsCount = new AtomicInteger();
 
@@ -110,15 +112,6 @@ public class Query implements QueryMBean {
 
     @Nonnull
     private final AtomicInteger collectionCount = new AtomicInteger();
-
-    @Nonnull
-    private final AtomicInteger exportedMetricsCount = new AtomicInteger();
-
-    @Nonnull
-    private final AtomicLong exportDurationInNanos = new AtomicLong();
-
-    @Nonnull
-    private final AtomicInteger exportCount = new AtomicInteger();
 
     /**
      * {@link ObjectName} of this {@link QueryMBean}
@@ -188,38 +181,15 @@ public class Query implements QueryMBean {
 
     /**
      * Export the collected metrics to the {@linkplain OutputWriter}s associated with this {@linkplain Query}
-     * (see {@link #getEffectiveOutputWriters()}).
-     *
      * Metrics are batched according to {@link EmbeddedJmxTrans#getExportBatchSize()}
      *
      * @return the number of exported {@linkplain QueryResult}
      */
     @Override
     public int exportCollectedMetrics() {
-        if (queryResults.isEmpty()) {
-            return 0;
-        }
-
-        int successfullyExportedMetricsCount = 0;
-        long nanosBefore = System.nanoTime();
-
-        int exportBatchSize = getEmbeddedJmxTrans().getExportBatchSize();
-        List<QueryResult> availableQueryResults = new ArrayList<QueryResult>(exportBatchSize);
-
-        int size;
-        while ((size = queryResults.drainTo(availableQueryResults, exportBatchSize)) > 0) {
-            if (Thread.interrupted()) {
-                throw new RuntimeException(new InterruptedException());
-            }
-            OutputWriterSet.tryToWriteQueryResultsBatchToAll(availableQueryResults, getEmbeddedJmxTrans().getOutputWriters(), getOutputWriters());
-            successfullyExportedMetricsCount += size;
-            exportedMetricsCount.addAndGet(size);
-            availableQueryResults.clear();
-        }
-        exportDurationInNanos.addAndGet(System.nanoTime() - nanosBefore);
-        exportCount.incrementAndGet();
-        return successfullyExportedMetricsCount;
+        return queryResultsExporter.exportCollectedMetrics();
     }
+
 
     /**
      * Start all the {@linkplain OutputWriter}s attached to this {@linkplain Query}
@@ -358,17 +328,17 @@ public class Query implements QueryMBean {
 
     @Override
     public int getExportedMetricsCount() {
-        return exportedMetricsCount.get();
+        return queryResultsExporter.getExportedMetricsCount();
     }
 
     @Override
     public long getExportDurationInNanos() {
-        return exportDurationInNanos.get();
+        return queryResultsExporter.getExportDurationInNanos();
     }
 
     @Override
     public int getExportCount() {
-        return exportCount.get();
+        return queryResultsExporter.getExportCount();
     }
 
     @Override
