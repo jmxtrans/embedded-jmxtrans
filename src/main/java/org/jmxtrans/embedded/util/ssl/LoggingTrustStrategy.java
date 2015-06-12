@@ -18,11 +18,13 @@ public class LoggingTrustStrategy implements TrustStrategy {
     public LoggingTrustStrategy(TrustStrategy delegate) {
         super();
         this.delegate = delegate;
-        logger.info("New instance created : " + getClass().getSimpleName());
     }
 
     @Override
     public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        if (!logger.isInfoEnabled()) {
+            return delegate.isTrusted(chain, authType);
+        }
         StringBuilder logBuilder = new StringBuilder();
         logBuilder.append("isTrusted() : ");
         logBuilder.append("authType = ").append(authType);
@@ -48,6 +50,7 @@ public class LoggingTrustStrategy implements TrustStrategy {
             trusted = delegate.isTrusted(chain, authType);
             return trusted;
         } finally {
+            logBuilder.append(" : trustStrategy = ").append(delegate).append(", ");
             logBuilder.append(" : result : trusted = ").append(trusted);
             logger.info(logBuilder.toString());
         }

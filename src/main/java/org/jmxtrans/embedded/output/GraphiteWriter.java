@@ -31,9 +31,10 @@ import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
+import org.jmxtrans.embedded.util.socket.DefaultSslSocketFactory;
 import org.jmxtrans.embedded.util.socket.PlainSocketFactory;
+import org.jmxtrans.embedded.util.socket.SelfSignedAcceptedApacheHCSslSocketFactory;
 import org.jmxtrans.embedded.util.socket.SocketFactory;
-import org.jmxtrans.embedded.util.socket.SslSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +43,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <a href="http://graphite.readthedocs.org/">Graphite</a> implementation of the {@linkplain OutputWriter}.
- *
+ * <p/>
  * This implementation uses <a href="http://graphite.readthedocs.org/en/0.9.10/feeding-carbon.html#the-plaintext-protocol">
  * Carbon Plan Text protocol</a> over TCP/IP.
- *
+ * <p/>
  * Settings:
  * <ul>
  * <li>"host": hostname or ip address of the Graphite server. Mandatory</li>
@@ -86,7 +87,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     /**
      * Load settings, initialize the {@link SocketWriter} pool and test the connection to the graphite server.
-     *
+     * <p/>
      * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
      */
     @Override
@@ -139,7 +140,11 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             logger.info("secure = {}", secure);
             if (secure) {
                 final boolean allowSelfSignedCertificates = getBooleanSetting("graphite.allowSelfSignedCertificates", false);
-                socketFactory = new SslSocketFactory(allowSelfSignedCertificates);
+                if (allowSelfSignedCertificates) {
+                    socketFactory = new SelfSignedAcceptedApacheHCSslSocketFactory();
+                } else {
+                    socketFactory = new DefaultSslSocketFactory();
+                }
             } else {
                 socketFactory = new PlainSocketFactory();
             }
