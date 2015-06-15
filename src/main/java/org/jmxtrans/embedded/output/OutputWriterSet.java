@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class OutputWriterSet implements Iterable {
 
@@ -68,100 +71,163 @@ public class OutputWriterSet implements Iterable {
 
     private final AtomicBoolean globallyStarted = new AtomicBoolean(false);
 
+    /**
+     * Write lock must be used when the state is changed. Read lock must be used when the state is unchanged.
+     * ReadWriteLock is better than using <code>synchronized methods</code>, because it allows multiple threads to invoke the <code>writeAll</code> method
+     */
+    private final ReadWriteLock readWriteLock;
+
+    private final Lock readLock;
+
+    private final Lock writeLock;
+
     public OutputWriterSet() {
+        readWriteLock = new ReentrantReadWriteLock(true);
+        readLock = readWriteLock.readLock();
+        writeLock = readWriteLock.writeLock();
+
         // Use of LinkedHashMap to deduplicate during configuration merger, while maintaining declaration order
         outputWritersWithState = new LinkedHashMap<OutputWriter, AtomicBoolean>();
     }
 
     public void addAll(Collection<OutputWriter> collection) {
-        for (OutputWriter ow : collection) {
-            add(ow);
+        writeLock.lock();
+        try {
+            for (OutputWriter ow : collection) {
+                innerAdd(ow);
+            }
+        } finally {
+            writeLock.unlock();
         }
     }
 
     public void add(OutputWriter outputWriter) {
+        writeLock.lock();
+        try {
+            innerAdd(outputWriter);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    private void innerAdd(OutputWriter outputWriter) {
         this.outputWritersWithState.put(outputWriter, new AtomicBoolean(false));
     }
 
     public void remove(OutputWriter outputWriter) {
-        this.outputWritersWithState.remove(outputWriter);
+        writeLock.lock();
+        try {
+            this.outputWritersWithState.remove(outputWriter);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public void clear() {
-        this.outputWritersWithState.clear();
+        writeLock.lock();
+        try {
+            this.outputWritersWithState.clear();
+        } finally {
+            writeLock.unlock();
+        }
     }
 
-    public synchronized void startAll() {
+    public void startAll() {
         int errorCount = 0;
-        for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
-            AtomicBoolean started = entry.getValue();
-            if (!started.get()) {
-                OutputWriter ow = entry.getKey();
-                boolean startSuccessful = tryStart(ow);
-                if (startSuccessful) {
-                    started.set(true);
-                } else {
-                    errorCount++;
+        writeLock.lock();
+        try {
+            for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
+                AtomicBoolean started = entry.getValue();
+                if (!started.get()) {
+                    OutputWriter ow = entry.getKey();
+                    boolean startSuccessful = tryStart(ow);
+                    if (startSuccessful) {
+                        started.set(true);
+                    } else {
+                        errorCount++;
+                    }
                 }
             }
+            globallyStarted.set(true);
+        } finally {
+            writeLock.unlock();
         }
-        globallyStarted.set(true);
         if (errorCount > 0) {
             throw new OutputWriterSetStartException("Failed to start all of the OutputWriters, got " + errorCount + " failures", errorCount);
         }
     }
 
-    public synchronized void stopAll() {
+    public void stopAll() {
         int errorCount = 0;
-        for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
-            AtomicBoolean started = entry.getValue();
-            if (started.get()) {
-                OutputWriter ow = entry.getKey();
-                boolean stopSuccessful = tryStop(ow);
-                if (stopSuccessful) {
-                    started.set(false);
-                } else {
-                    errorCount++;
+        writeLock.lock();
+        try {
+            for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
+                AtomicBoolean started = entry.getValue();
+                if (started.get()) {
+                    OutputWriter ow = entry.getKey();
+                    boolean stopSuccessful = tryStop(ow);
+                    if (stopSuccessful) {
+                        started.set(false);
+                    } else {
+                        errorCount++;
+                    }
                 }
             }
+            globallyStarted.set(false);
+        } finally {
+            writeLock.unlock();
         }
-        globallyStarted.set(false);
         if (errorCount > 0) {
             throw new OutputWriterSetStopException("Failed to stop all of the OutputWriters, got " + errorCount + " failures", errorCount);
         }
     }
 
     public int size() {
-        return this.outputWritersWithState.size();
+        readLock.lock();
+        try {
+            return this.outputWritersWithState.size();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public Collection<OutputWriter> findEnabled() {
-        // Google Guava predicates would be nicer but we don't include guava to ease embeddability
-        List<OutputWriter> result = new ArrayList<OutputWriter>();
-        for (OutputWriter ow : outputWritersWithState.keySet()) {
-            if (ow.isEnabled()) {
-                result.add(ow);
-            }
-        }
-        return result;
-    }
-
-    public synchronized void writeAll(Iterable<QueryResult> results) {
-        if (!globallyStarted.get()) {
-            // should we throw an Exception or just log a warning?
-            logger.warn("OutputWriters are stopped, QueryResult may not be written");
-            //throw new IllegalStateException("OutputWriters are stopped, should not write");
-        }
-        int errorCount = 0;
-        for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
-            OutputWriter ow = entry.getKey();
-            AtomicBoolean started = entry.getValue();
-            if (ow.isEnabled() && started.get()) {
-                boolean writeSuccessful = tryWrite(ow, results);
-                if (!writeSuccessful) {
-                    errorCount++;
+        readLock.lock();
+        try {
+            // Google Guava predicates would be nicer but we don't include guava to ease embeddability
+            List<OutputWriter> result = new ArrayList<OutputWriter>();
+            for (OutputWriter ow : outputWritersWithState.keySet()) {
+                if (ow.isEnabled()) {
+                    result.add(ow);
                 }
             }
+            return result;
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public void writeAll(Iterable<QueryResult> results) {
+        int errorCount = 0;
+        readLock.lock();
+        try {
+            if (!globallyStarted.get()) {
+                // should we throw an Exception or just log a warning?
+                logger.warn("OutputWriters are stopped, QueryResult may not be written");
+                //throw new IllegalStateException("OutputWriters are stopped, should not write");
+            }
+            for (Map.Entry<OutputWriter, AtomicBoolean> entry : outputWritersWithState.entrySet()) {
+                OutputWriter ow = entry.getKey();
+                AtomicBoolean started = entry.getValue();
+                if (ow.isEnabled() && started.get()) {
+                    boolean writeSuccessful = tryWrite(ow, results);
+                    if (!writeSuccessful) {
+                        errorCount++;
+                    }
+                }
+            }
+        } finally {
+            readLock.unlock();
         }
         if (errorCount > 0) {
             throw new OutputWriterSetWriteException("Failed to write to all of the OutputWriters, got " + errorCount + " failures", errorCount);
@@ -170,7 +236,12 @@ public class OutputWriterSet implements Iterable {
 
     @Override
     public Iterator<OutputWriter> iterator() {
-        return Collections.unmodifiableCollection(outputWritersWithState.keySet()).iterator();
+        readLock.lock();
+        try {
+            return Collections.unmodifiableCollection(outputWritersWithState.keySet()).iterator();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     private boolean tryStart(OutputWriter ow) {
