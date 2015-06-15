@@ -33,7 +33,7 @@ import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,6 +61,8 @@ import java.util.concurrent.TimeUnit;
 public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final int DEFAULT_GRAPHITE_SERVER_PORT = 2003;
+
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private static final String PROTOCOL_TCP = "TCP";
     private static final String PROTOCOL_UDP = "UDP";
@@ -111,7 +113,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
         String protocol = getStringSetting(SETTING_PROTOCOL, null);
         if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory(StandardCharsets.UTF_8), config);
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new UDPSocketWriterPoolFactory(UTF_8), config);
         } else {
             if (protocol == null) {
                 // protocol not specified, use default one
@@ -120,7 +122,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 // unknown or protocol, use default one
                 logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
             }
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(StandardCharsets.UTF_8, socketConnectTimeoutInMillis), config);
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(UTF_8, socketConnectTimeoutInMillis), config);
         }
 
         if (isEnabled()) {
