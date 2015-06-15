@@ -70,6 +70,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
  * 
  * @author <a href="mailto:eric@stackdriver.com">Eric Kilby</a>
  */
+@ExplicitEpoch
 public class StackdriverWriter extends AbstractOutputWriter implements OutputWriter {
 
 	public static final int STACKDRIVER_PROTOCOL_VERSION = 1;

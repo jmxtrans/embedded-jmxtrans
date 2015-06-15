@@ -55,6 +55,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:ryan.mango.larson@gmail.com">Ryan Larson</a>
  *
  */
+@ExplicitEpoch
 public class CsvWriter extends AbstractOutputWriter implements OutputWriter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

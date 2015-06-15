@@ -61,6 +61,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@ExplicitEpoch
 public class GraphitePickleWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final int DEFAULT_GRAPHITE_SERVER_PORT = 2004;

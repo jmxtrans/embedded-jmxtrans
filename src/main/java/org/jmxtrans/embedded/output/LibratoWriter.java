@@ -74,6 +74,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@ExplicitEpoch
 public class LibratoWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final String METRIC_TYPE_GAUGE = "gauge";

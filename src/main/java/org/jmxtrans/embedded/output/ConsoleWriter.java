@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ExplicitEpoch
 public class ConsoleWriter extends AbstractOutputWriter implements OutputWriter {
 
     /**

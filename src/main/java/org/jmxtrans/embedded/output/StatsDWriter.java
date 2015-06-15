@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  * @since 1.0.15
  */
+@ImplicitEpoch
 public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
 
     public final static String SETTING_BUFFER_SIZE = "bufferSize";
