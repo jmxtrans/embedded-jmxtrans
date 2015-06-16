@@ -41,6 +41,7 @@ import org.jmxtrans.embedded.QueryAttribute;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.util.Preconditions;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
+import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,7 @@ public class ConfigurationParser {
         }
         return embeddedJmxTrans;
     }
-    
+
     public EmbeddedJmxTrans newEmbeddedJmxTransWithCustomMBeanServer(@Nonnull List<String> configurationUrls, MBeanServer mbeanServer) throws EmbeddedJmxTransException {
         EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans(mbeanServer);
 
@@ -152,8 +153,10 @@ public class ConfigurationParser {
     private void mergeEmbeddedJmxTransConfiguration(@Nonnull JsonNode configurationRootNode, @Nonnull EmbeddedJmxTrans embeddedJmxTrans) {
         for (JsonNode queryNode : configurationRootNode.path("queries")) {
 
+            BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
+
             String objectName = queryNode.path("objectName").asText();
-            Query query = new Query(objectName);
+            Query query = new Query(objectName, sink, sink);
             embeddedJmxTrans.addQuery(query);
             JsonNode resultAliasNode = queryNode.path("resultAlias");
             if (resultAliasNode.isMissingNode()) {

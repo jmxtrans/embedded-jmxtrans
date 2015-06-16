@@ -25,9 +25,9 @@ package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.output.OutputWriterSet;
-import org.jmxtrans.embedded.util.Preconditions;
-import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
+import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,6 @@ import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -95,12 +94,9 @@ public class Query implements QueryMBean {
     @Nonnull
     private final OutputWriterSet outputWriters = new OutputWriterSet();
 
-    /**
-     * Store the metrics collected on this {@linkplain Query} (see {@link #collectMetrics()})
-     * until they are exported to the target {@linkplain OutputWriter}s (see {@link #exportCollectedMetrics()}.
-     */
-    @Nonnull
-    private BlockingQueue<QueryResult> queryResults = new DiscardingBlockingQueue<QueryResult>(200);
+    private final BlockingQueueQueryResultSink queryResultSink;
+
+    private final QueryResultSource queryResultSource;
 
     private final QueryResultsExporter queryResultsExporter = new QueryResultsExporter(this);
 
@@ -124,7 +120,9 @@ public class Query implements QueryMBean {
      *
      * @param objectName {@link ObjectName} to query, can contain wildcards ('*' or '?')
      */
-    public Query(@Nonnull String objectName) {
+    public Query(@Nonnull String objectName, BlockingQueueQueryResultSink queryResultSink, QueryResultSource queryResultSource) {
+        this.queryResultSink = queryResultSink;
+        this.queryResultSource = queryResultSource;
         try {
             this.objectName = new ObjectName(objectName);
         } catch (MalformedObjectNameException e) {
@@ -137,13 +135,15 @@ public class Query implements QueryMBean {
      *
      * @param objectName {@link ObjectName} to query, can contain wildcards ('*' or '?')
      */
-    public Query(@Nonnull ObjectName objectName) {
+    public Query(@Nonnull ObjectName objectName, BlockingQueueQueryResultSink queryResultSink, QueryResultSource queryResultSource) {
+        this.queryResultSink = queryResultSink;
+        this.queryResultSource = queryResultSource;
         this.objectName = objectName;
     }
 
 
     /**
-     * Collect the values for this query and store them as {@link QueryResult} in the {@linkplain Query#queryResults} queue
+     * Collect the values for this query and store them as {@link QueryResult} in the {@linkplain Query#queryResultSink} queue
      */
     @Override
     public void collectMetrics() {
@@ -167,7 +167,7 @@ public class Query implements QueryMBean {
                 for (Attribute jmxAttribute : jmxAttributes.asList()) {
                     QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
                     Object value = jmxAttribute.getValue();
-                    int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, this.queryResults);
+                    int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, queryResultSink);
                     collectedMetricsCount.addAndGet(count);
                 }
             } catch (Exception e) {
@@ -248,18 +248,6 @@ public class Query implements QueryMBean {
     @Nonnull
     public Query addAttribute(@Nonnull String attributeName) {
         return addAttribute(new QueryAttribute(attributeName, null, null));
-    }
-
-    @Nonnull
-    public BlockingQueue<QueryResult> getResults() {
-        return queryResults;
-    }
-
-    /**
-     * WARNING: {@linkplain #queryResults} queue should not be changed at runtime as the operation is not thread safe.
-     */
-    public void setResultsQueue(@Nonnull BlockingQueue<QueryResult> queryResultQueue) {
-        this.queryResults = Preconditions.checkNotNull(queryResultQueue);
     }
 
     public void setResultAlias(@Nullable String resultAlias) {
@@ -350,17 +338,17 @@ public class Query implements QueryMBean {
         this.id = id;
     }
 
-    /**
-     * Returns the number of discarded elements in the {@link #queryResults} queue
-     * or <code>-1</code> if the queue is not a {@link DiscardingBlockingQueue}.
-     */
     @Override
     public int getDiscardedResultsCount() {
-        if (queryResults instanceof DiscardingBlockingQueue) {
-            DiscardingBlockingQueue discardingBlockingQueue = (DiscardingBlockingQueue) queryResults;
-            return discardingBlockingQueue.getDiscardedElementCount();
-        } else {
-            return -1;
-        }
+        return queryResultSink.getDiscardedResultsCount();
     }
+
+    public QueryResultSource getQueryResultSource() {
+        return queryResultSource;
+    }
+
+    public BlockingQueueQueryResultSink getQueryResultSink() {
+        return queryResultSink;
+    }
+
 }

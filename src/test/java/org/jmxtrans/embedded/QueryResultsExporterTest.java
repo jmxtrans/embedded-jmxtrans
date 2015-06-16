@@ -1,14 +1,15 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriterSet;
+import org.jmxtrans.embedded.util.plumbing.ArrayListQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSink;
 import org.junit.Test;
 import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
@@ -60,15 +61,16 @@ public class QueryResultsExporterTest {
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
         doReturn(embeddedJmxTransOutputWriters).when(embeddedJmxTrans).getOutputWriters();
 
-        BlockingQueue<QueryResult> queueResults = mock(BlockingQueue.class, defaultMockAnswer);
-        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(anyListOf(QueryResult.class), anyInt());
+        BlockingQueueQueryResultSink queueResults = mock(BlockingQueueQueryResultSink.class, defaultMockAnswer);
+        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(any(QueryResultSink.class), anyInt());
 
         OutputWriterSet queryOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
         doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
-        doReturn(queueResults).when(query).getResults();
+        doReturn(queueResults).when(query).getQueryResultSink();
+        doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
         QueryResultsExporter target = new QueryResultsExporter(query);
@@ -94,15 +96,16 @@ public class QueryResultsExporterTest {
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
         doReturn(embeddedJmxTransOutputWriters).when(embeddedJmxTrans).getOutputWriters();
 
-        BlockingQueue<QueryResult> queueResults = mock(BlockingQueue.class, defaultMockAnswer);
-        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(anyListOf(QueryResult.class), anyInt());
+        BlockingQueueQueryResultSink queueResults = mock(BlockingQueueQueryResultSink.class, defaultMockAnswer);
+        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(any(QueryResultSink.class), anyInt());
 
         OutputWriterSet queryOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
         doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
-        doReturn(queueResults).when(query).getResults();
+        doReturn(queueResults).when(query).getQueryResultSink();
+        doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
         QueryResultsExporter target = new QueryResultsExporter(query);
@@ -137,8 +140,8 @@ public class QueryResultsExporterTest {
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
         doReturn(embeddedJmxTransOutputWriters).when(embeddedJmxTrans).getOutputWriters();
 
-        BlockingQueue<QueryResult> queueResults = mock(BlockingQueue.class, defaultMockAnswer);
-        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(anyListOf(QueryResult.class), anyInt());
+        BlockingQueueQueryResultSink queueResults = mock(BlockingQueueQueryResultSink.class, defaultMockAnswer);
+        doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(any(QueryResultSink.class), anyInt());
 
         OutputWriterSet.OutputWriterSetWriteException expectedException = new OutputWriterSet.OutputWriterSetWriteException("this is a fake Exception when writing", 1);
 
@@ -148,7 +151,8 @@ public class QueryResultsExporterTest {
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
-        doReturn(queueResults).when(query).getResults();
+        doReturn(queueResults).when(query).getQueryResultSink();
+        doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
         QueryResultsExporter target = new QueryResultsExporter(query);
@@ -185,7 +189,7 @@ public class QueryResultsExporterTest {
 
         @Override
         public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-            List<QueryResult> buffer = (List<QueryResult>) invocationOnMock.getArguments()[0];
+            ArrayListQueryResultSink buffer = (ArrayListQueryResultSink) invocationOnMock.getArguments()[0];
             Integer batchSize = (Integer) invocationOnMock.getArguments()[1];
             assertNotNull(buffer);
             assertTrue(buffer.isEmpty());
@@ -194,7 +198,7 @@ public class QueryResultsExporterTest {
             invocationCount.incrementAndGet();
             if (invocationCount.get() <= maxInvocationCount) {
                 for (int i = 0; i < numberOfResultsToAddPerInvocation; i++) {
-                    buffer.add(new QueryResult("foo-" + i, "bar", 12345));
+                    buffer.accept(new QueryResult("foo-" + i, "bar", 12345));
                 }
             }
             return buffer.size();

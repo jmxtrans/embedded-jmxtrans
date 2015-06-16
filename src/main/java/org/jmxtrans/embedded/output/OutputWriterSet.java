@@ -51,7 +51,7 @@ public class OutputWriterSet implements Iterable {
         }
     }
 
-    public static void tryToWriteQueryResultsBatchToAll(List<QueryResult> queryResults, OutputWriterSet... outputWriterSets) {
+    public static void tryToWriteQueryResultsBatchToAll(Collection<QueryResult> queryResults, OutputWriterSet... outputWriterSets) {
         int totalErrorCount = 0;
         for (OutputWriterSet owSet : outputWriterSets) {
             try {

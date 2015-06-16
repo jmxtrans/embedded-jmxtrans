@@ -24,6 +24,7 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.util.Preconditions;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,11 +139,11 @@ public class QueryAttribute {
      * @param value         value of the given attribute. A 'simple' value (String, Number, Date)
      *                      or a {@link javax.management.openmbean.CompositeData}
      * @param epochInMillis time at which the metric was collected
-     * @param results       queue to which the the computed result(s) must be added
+     * @param queryResultSink       sink to which the the computed result(s) must be added
      * @return collected metrics count
      */
     public int collectMetrics(@Nonnull ObjectName objectName, @Nonnull Object value, long epochInMillis,
-                              @Nonnull Queue<QueryResult> results) {
+                              @Nonnull QueryResultSink queryResultSink) {
 
         int metricsCounter = 0;
 
@@ -161,7 +162,7 @@ public class QueryAttribute {
                 if (compositeValue instanceof Number || compositeValue instanceof String || compositeValue instanceof Date) {
                     QueryResult result = new QueryResult(resultName, getType(), compositeValue, epochInMillis);
                     logger.debug("Collect {}", result);
-                    results.add(result);
+                    queryResultSink.accept(result);
                     metricsCounter++;
                 } else {
                     logger.debug("Skip non supported value {}:{}:{}:{}={}", getQuery(), objectName, this, key, compositeValue);
@@ -174,7 +175,7 @@ public class QueryAttribute {
             String resultName = resultNameStrategy.getResultName(getQuery(), objectName, this);
             QueryResult result = new QueryResult(resultName, getType(), value, epochInMillis);
             logger.debug("Collect {}", result);
-            results.add(result);
+            queryResultSink.accept(result);
             metricsCounter++;
         } else {
             logger.info("Ignore non CompositeData attribute value {}:{}:{}={}", getQuery(), objectName, this, value);

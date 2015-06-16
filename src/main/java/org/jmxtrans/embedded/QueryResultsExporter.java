@@ -2,10 +2,9 @@ package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.output.OutputWriterSet;
+import org.jmxtrans.embedded.util.plumbing.ArrayListQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +24,7 @@ public class QueryResultsExporter {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    private volatile List<QueryResult> lastQueueCheckout;
+    private volatile ArrayListQueryResultSink lastQueueCheckout;
 
     public QueryResultsExporter(Query query) {
         super();
@@ -62,21 +61,21 @@ public class QueryResultsExporter {
 
         final int exportBatchSize = query.getEmbeddedJmxTrans().getExportBatchSize();
 
-        List<QueryResult> queueCheckout = lastQueueCheckout;
+        ArrayListQueryResultSink queueCheckout = lastQueueCheckout;
         successfullyExportedMetricsCount += recoverLastExportIfNeeded(queueCheckout);
 
         // instantiate a new List in order to make sure the current Thread owns it, and in order to avoid making it a long-live Object
-        queueCheckout = new ArrayList<QueryResult>(exportBatchSize);
+        queueCheckout = new ArrayListQueryResultSink(exportBatchSize);
         lastQueueCheckout = queueCheckout;
 
-        final BlockingQueue<QueryResult> localQueryResults = query.getResults();
+        final QueryResultSource localQueryResultSource = query.getQueryResultSource();
 
         int size;
-        while ((size = localQueryResults.drainTo(queueCheckout, exportBatchSize)) > 0) {
+        while ((size = localQueryResultSource.drainTo(queueCheckout, exportBatchSize)) > 0) {
             if (Thread.interrupted()) {
                 throw new RuntimeException(new InterruptedException());
             }
-            OutputWriterSet.tryToWriteQueryResultsBatchToAll(queueCheckout, query.getEmbeddedJmxTrans().getOutputWriters(), query.getOutputWriters());
+            OutputWriterSet.tryToWriteQueryResultsBatchToAll(queueCheckout.toCollection(), query.getEmbeddedJmxTrans().getOutputWriters(), query.getOutputWriters());
             successfullyExportedMetricsCount += size;
             exportedMetricsCount.addAndGet(size);
             queueCheckout.clear();
@@ -87,14 +86,14 @@ public class QueryResultsExporter {
         return successfullyExportedMetricsCount;
     }
 
-    protected int recoverLastExportIfNeeded(List<QueryResult> queueCheckout) {
+    protected int recoverLastExportIfNeeded(ArrayListQueryResultSink queueCheckout) {
         // if the last invocation failed for any reason, then we should retry the latest export attempt
         // this ensure we do not lose the content of the buffer that was already drain out of the queryResults Queue
         // in the worse case, we may send again the metrics to OutputWriter, we assume it's ok  
         if (queueCheckout != null) {
             final int size = queueCheckout.size();
             if (size > 0) {
-                OutputWriterSet.tryToWriteQueryResultsBatchToAll(queueCheckout, query.getEmbeddedJmxTrans().getOutputWriters(), query.getOutputWriters());
+                OutputWriterSet.tryToWriteQueryResultsBatchToAll(queueCheckout.toCollection(), query.getEmbeddedJmxTrans().getOutputWriters(), query.getOutputWriters());
                 exportedMetricsCount.addAndGet(size);
                 return size;
             }

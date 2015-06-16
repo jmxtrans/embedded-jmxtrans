@@ -25,7 +25,7 @@ package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.AbstractOutputWriter;
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.output.OutputWriterSet;
+import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,8 +37,9 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -68,12 +69,15 @@ public class QueryTest {
     public void basic_jmx_attribute_return_simple_result() throws Exception {
         EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
 
-        Query query = new Query("test:type=MemoryPool,name=PS Eden Space").addAttribute("CollectionUsageThreshold");
+        BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
+
+        Query query = new Query("test:type=MemoryPool,name=PS Eden Space", sink, sink).addAttribute("CollectionUsageThreshold");
+
         embeddedJmxTrans.addQuery(query);
         query.collectMetrics();
-        assertThat(query.getResults().size(), is(1));
+        assertThat(sink.size(), is(1));
 
-        QueryResult result = query.getResults().poll();
+        QueryResult result = sink.poll();
         assertThat(result.getValue(), instanceOf(Number.class));
     }
 
@@ -81,16 +85,18 @@ public class QueryTest {
     public void test_composite_jmx_attribute() throws Exception {
         EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
 
-        Query query = new Query("test:type=MemoryPool,name=PS Perm Gen");
+        BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
+
+        Query query = new Query("test:type=MemoryPool,name=PS Perm Gen", sink, sink);
         embeddedJmxTrans.addQuery(query);
         query.addAttribute(new QueryAttribute("Usage", null, null, Arrays.asList("committed", "init", "max", "used")));
         query.collectMetrics();
-        assertThat(query.getResults().size(), is(4));
+        assertThat(sink.size(), is(4));
 
-        QueryResult result1 = query.getResults().poll();
+        QueryResult result1 = sink.poll();
         assertThat(result1.getValue(), instanceOf(Number.class));
 
-        QueryResult result2 = query.getResults().poll();
+        QueryResult result2 = sink.poll();
         assertThat(result2.getValue(), instanceOf(Number.class));
     }
 
@@ -98,8 +104,10 @@ public class QueryTest {
     public void testExportResults() {
         EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
 
+        BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
+
         // CONFIGURE
-        Query query = new Query("test:type=GarbageCollector,name=PS Scavenge");
+        Query query = new Query("test:type=GarbageCollector,name=PS Scavenge", sink, sink);
         embeddedJmxTrans.addQuery(query);
         query.addAttribute("CollectionCount").addAttribute("CollectionTime");
         embeddedJmxTrans.addQuery(query);
@@ -125,9 +133,9 @@ public class QueryTest {
         long time = System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES);
         for (int i = 0; i < 100; i++) {
             QueryResult result = new QueryResult("PS_Scavenge.GarbageCollector.CollectionTime", 5 * i, time);
-            query.getResults().add(result);
+            sink.accept(result);
 
-            assertThat(query.getResults().size(), is(i + 1));
+            assertThat(sink.size(), is(i + 1));
 
 
             time += TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS);
@@ -144,11 +152,13 @@ public class QueryTest {
     }
 
     @Test
-    public void testDisabledOutputWriter(){
+    public void testDisabledOutputWriter() {
         EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
 
+        BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
+
         // CONFIGURE
-        Query query = new Query("test:type=GarbageCollector,name=PS Scavenge");
+        Query query = new Query("test:type=GarbageCollector,name=PS Scavenge", sink, sink);
         embeddedJmxTrans.addQuery(query);
         query.addAttribute("CollectionCount").addAttribute("CollectionTime");
         embeddedJmxTrans.addQuery(query);
