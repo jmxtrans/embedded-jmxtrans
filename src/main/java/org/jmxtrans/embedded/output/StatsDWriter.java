@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +26,8 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     public final static String SETTING_BUFFER_SIZE = "bufferSize";
     private final static int SETTING_DEFAULT_BUFFER_SIZE = 1024;
     public static final String DEFAULT_NAME_PREFIX = "servers.#escaped_hostname#.";
+
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private ByteBuffer sendBuffer;
     /**
@@ -82,7 +84,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             String stat = metricPathPrefix + result.getName() + ":" + result.getValue() + "|" + getStatsdMetricType(result) + "\n";
 
             logger.debug("Export '{}'", stat);
-            final byte[] data = stat.getBytes(StandardCharsets.UTF_8);
+            final byte[] data = stat.getBytes(UTF_8);
 
             // If we're going to go past the threshold of the buffer then flush.
             // the +1 is for the potential '\n' in multi_metrics below
