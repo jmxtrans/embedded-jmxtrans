@@ -9,6 +9,7 @@ import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,7 +56,7 @@ public class QueryResultsExporterTest {
         final Integer configuredBatchSize = 10;
 
         OutputWriterSet embeddedJmxTransOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Collection.class));
 
         EmbeddedJmxTrans embeddedJmxTrans = mock(EmbeddedJmxTrans.class, defaultMockAnswer);
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
@@ -65,7 +66,7 @@ public class QueryResultsExporterTest {
         doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(any(QueryResultSink.class), anyInt());
 
         OutputWriterSet queryOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(queryOutputWriters).writeAll(any(Collection.class));
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
@@ -73,7 +74,7 @@ public class QueryResultsExporterTest {
         doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
-        QueryResultsExporter target = new QueryResultsExporter(query);
+        QueryResultsExporter target = new QuerySpecificQueryResultsExporter(query, true);
         int exportedCount = target.exportCollectedMetrics();
         assertEquals(maxQueueDrainResponse * numberOfResultsToAddPerInvocation, exportedCount);
 
@@ -90,7 +91,7 @@ public class QueryResultsExporterTest {
         OutputWriterSet.OutputWriterSetWriteException expectedException = new OutputWriterSet.OutputWriterSetWriteException("this is a fake Exception when writing", 1);
 
         OutputWriterSet embeddedJmxTransOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doThrow(expectedException).when(embeddedJmxTransOutputWriters).writeAll(any(Iterable.class));
+        doThrow(expectedException).when(embeddedJmxTransOutputWriters).writeAll(any(Collection.class));
 
         EmbeddedJmxTrans embeddedJmxTrans = mock(EmbeddedJmxTrans.class, defaultMockAnswer);
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
@@ -100,7 +101,7 @@ public class QueryResultsExporterTest {
         doAnswer(new DrainToAnswer(configuredBatchSize, numberOfResultsToAddPerInvocation, maxQueueDrainResponse)).when(queueResults).drainTo(any(QueryResultSink.class), anyInt());
 
         OutputWriterSet queryOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(queryOutputWriters).writeAll(any(Collection.class));
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
@@ -108,7 +109,7 @@ public class QueryResultsExporterTest {
         doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
-        QueryResultsExporter target = new QueryResultsExporter(query);
+        QueryResultsExporter target = new QuerySpecificQueryResultsExporter(query, true);
         try {
             target.exportCollectedMetrics();
             fail();
@@ -117,7 +118,7 @@ public class QueryResultsExporterTest {
             assertEquals("Failed to write to all of the OutputWriters, got 1 failures", e.getMessage());
         }
 
-        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Collection.class));
 
         int exportedCount = target.exportCollectedMetrics();
         assertEquals(maxQueueDrainResponse * numberOfResultsToAddPerInvocation, exportedCount);
@@ -134,7 +135,7 @@ public class QueryResultsExporterTest {
         final int maxQueueDrainResponse = 1 + new Random().nextInt(9); // whatever value > 1
 
         OutputWriterSet embeddedJmxTransOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(embeddedJmxTransOutputWriters).writeAll(any(Collection.class));
 
         EmbeddedJmxTrans embeddedJmxTrans = mock(EmbeddedJmxTrans.class, defaultMockAnswer);
         doReturn(configuredBatchSize).when(embeddedJmxTrans).getExportBatchSize();
@@ -146,8 +147,8 @@ public class QueryResultsExporterTest {
         OutputWriterSet.OutputWriterSetWriteException expectedException = new OutputWriterSet.OutputWriterSetWriteException("this is a fake Exception when writing", 1);
 
         OutputWriterSet queryOutputWriters = mock(OutputWriterSet.class, defaultMockAnswer);
-        doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
-        doThrow(expectedException).when(queryOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(queryOutputWriters).writeAll(any(Collection.class));
+        doThrow(expectedException).when(queryOutputWriters).writeAll(any(Collection.class));
 
         Query query = mock(Query.class, defaultMockAnswer);
         doReturn(embeddedJmxTrans).when(query).getEmbeddedJmxTrans();
@@ -155,7 +156,7 @@ public class QueryResultsExporterTest {
         doReturn(queueResults).when(query).getQueryResultSource();
         doReturn(queryOutputWriters).when(query).getOutputWriters();
 
-        QueryResultsExporter target = new QueryResultsExporter(query);
+        QueryResultsExporter target = new QuerySpecificQueryResultsExporter(query, true);
         try {
             target.exportCollectedMetrics();
             fail();
@@ -164,7 +165,7 @@ public class QueryResultsExporterTest {
             assertEquals("Failed to write to all of the OutputWriters, got 1 failures", e.getMessage());
         }
 
-        doNothing().when(queryOutputWriters).writeAll(any(Iterable.class));
+        doNothing().when(queryOutputWriters).writeAll(any(Collection.class));
 
         int exportedCount = target.exportCollectedMetrics();
         assertEquals(maxQueueDrainResponse * numberOfResultsToAddPerInvocation, exportedCount);

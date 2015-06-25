@@ -1,0 +1,8 @@
+{
+  "queries": [
+    {
+      "objectName": "java.lang:type=MemoryPool,name=PS Eden Space",
+      "attribute": "CollectionUsageThreshold"
+    }
+  ]
+}

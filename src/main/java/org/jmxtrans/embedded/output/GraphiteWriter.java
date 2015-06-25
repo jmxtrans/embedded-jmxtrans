@@ -150,7 +150,8 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             socketWriter.flush();
             socketWriterPool.returnObject(graphiteServerHostAndPort, socketWriter);
         } catch (Exception e) {
-            logger.warn("Failure to send result to graphite server '{}' with {}", graphiteServerHostAndPort, socketWriter, e);
+            final String errorMessage = String.format("Failure to send result to graphite server %s with %s", graphiteServerHostAndPort, socketWriter);
+            logger.warn(errorMessage, e);
             if (socketWriter != null) {
                 try {
                     socketWriterPool.invalidateObject(graphiteServerHostAndPort, socketWriter);
@@ -158,6 +159,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                     logger.warn("Exception invalidating socketWriter connected to graphite server '{}': {}", graphiteServerHostAndPort, socketWriter, e2);
                 }
             }
+            throw new RuntimeException(errorMessage, e);
         }
     }
 

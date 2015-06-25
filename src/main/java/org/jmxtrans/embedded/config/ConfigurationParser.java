@@ -23,6 +23,19 @@
  */
 package org.jmxtrans.embedded.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jmxtrans.embedded.*;
+import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.util.Preconditions;
+import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
+import org.jmxtrans.embedded.util.plumbing.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.management.MBeanServer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,30 +44,108 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.management.MBeanServer;
-
-import org.jmxtrans.embedded.EmbeddedJmxTrans;
-import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.Query;
-import org.jmxtrans.embedded.QueryAttribute;
-import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.util.Preconditions;
-import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
-import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * JSON Configuration parser to build {@link org.jmxtrans.embedded.EmbeddedJmxTrans}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
 public class ConfigurationParser {
+
+    public static class QueryBuilder {
+
+        private static final Logger logger = LoggerFactory.getLogger(QueryBuilder.class);
+
+        private String objectName;
+        private String resultAlias;
+        private List<String> attributesNames;
+        private List<QueryAttribute> queryAttributesList;
+        private List<OutputWriter> outputWriters;
+
+        protected QueryBuilder validate() {
+            if (objectName == null) {
+                throw new IllegalStateException();
+            }
+            //if (resultAlias == null) {
+            //    throw new IllegalStateException();
+            //}
+            if (attributesNames == null) {
+                throw new IllegalStateException();
+            }
+            if (queryAttributesList == null) {
+                throw new IllegalStateException();
+            }
+            if (outputWriters == null) {
+                throw new IllegalStateException();
+            }
+            return this;
+        }
+
+        public void buildAndAddToEmbeddedJmxTrans(EmbeddedJmxTrans embeddedJmxTrans) {
+            final QueryResultSink querySink;
+            final QueryResultSource querySource;
+
+            final BlockingQueueQueryResultSink querySinkAndSourceForGlobalOutputWriters = new BlockingQueueQueryResultSink();
+
+            if (outputWriters.isEmpty()) {
+                // if the Query does not have any specific OutputWriter
+                // then we just need to export to the global OutputWriters
+                querySink = querySinkAndSourceForGlobalOutputWriters;
+                // and getting the collected metrics values will never return anything 
+                querySource = new NullQueryResultSource();
+            } else {
+                // if the Query does have one or more OutputWriter(s)
+                // then we need a sink to hold the values for them
+                // in this case the metrics will be stored twice, both in the global Sink and the specific Sink
+                final BlockingQueueQueryResultSink querySinkAndSourceForPrivateOutputWriters = new BlockingQueueQueryResultSink();
+                querySink = new DemuxQueryResultSink(querySinkAndSourceForPrivateOutputWriters, querySinkAndSourceForGlobalOutputWriters);
+                // and getting the collected metrics values will only return the values collected by the specific Sink
+                querySource = querySinkAndSourceForPrivateOutputWriters;
+            }
+
+            Query query = new Query(objectName, querySink, querySource);
+            QuerySpecificQueryResultsExporter queryResultsExporter = (QuerySpecificQueryResultsExporter) query.getQueryResultsExporter();
+            queryResultsExporter.setExportToGlobalOutputWriters(false);
+
+            query.getOutputWriters().addAll(outputWriters);
+
+            query.setResultAlias(resultAlias);
+
+            for (String attribute : attributesNames) {
+                query.addAttribute(attribute);
+            }
+            for (QueryAttribute attribute : queryAttributesList) {
+                query.addAttribute(attribute);
+            }
+
+            logger.trace("Add {}", query);
+            embeddedJmxTrans.addQuery(query, querySinkAndSourceForGlobalOutputWriters);
+        }
+
+        public QueryBuilder setObjectName(String objectName) {
+            this.objectName = objectName;
+            return this;
+        }
+
+        public QueryBuilder setOutputWriters(List<OutputWriter> outputWriters) {
+            this.outputWriters = outputWriters;
+            return this;
+        }
+
+        public QueryBuilder setResultAlias(String resultAlias) {
+            this.resultAlias = resultAlias;
+            return this;
+        }
+
+        public QueryBuilder setAttributesNames(List<String> attributesNames) {
+            this.attributesNames = attributesNames;
+            return this;
+        }
+
+        public QueryBuilder setQueryAttributesList(List<QueryAttribute> queryAttributesList) {
+            this.queryAttributesList = queryAttributesList;
+            return this;
+        }
+    }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -150,21 +241,25 @@ public class ConfigurationParser {
         mergeEmbeddedJmxTransConfiguration(configurationRootNode, embeddedJmxTrans);
     }
 
-    private void mergeEmbeddedJmxTransConfiguration(@Nonnull JsonNode configurationRootNode, @Nonnull EmbeddedJmxTrans embeddedJmxTrans) {
+
+    private void mergeEmbeddedJmxTransConfiguration(@Nonnull JsonNode configurationRootNode, @Nonnull final EmbeddedJmxTrans embeddedJmxTrans) {
         for (JsonNode queryNode : configurationRootNode.path("queries")) {
+            final List<OutputWriter> outputWriters = parseOutputWritersNode(queryNode);
+            final String objectName = queryNode.path("objectName").asText();
 
-            BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
-
-            String objectName = queryNode.path("objectName").asText();
-            Query query = new Query(objectName, sink, sink);
-            embeddedJmxTrans.addQuery(query);
             JsonNode resultAliasNode = queryNode.path("resultAlias");
+            final String resultAlias;
             if (resultAliasNode.isMissingNode()) {
+                resultAlias = null;
             } else if (resultAliasNode.isValueNode()) {
-                query.setResultAlias(resultAliasNode.asText());
+                resultAlias = resultAliasNode.asText();
             } else {
+                resultAlias = null;
                 logger.warn("Ignore invalid node {}", resultAliasNode);
             }
+
+            List<String> attributesNames = new ArrayList<String>();
+            List<QueryAttribute> queryAttributesList = new ArrayList<QueryAttribute>();
 
             JsonNode attributesNode = queryNode.path("attributes");
             if (attributesNode.isMissingNode()) {
@@ -172,21 +267,22 @@ public class ConfigurationParser {
                 Iterator<JsonNode> itAttributeNode = attributesNode.elements();
                 while (itAttributeNode.hasNext()) {
                     JsonNode attributeNode = itAttributeNode.next();
-                    parseQueryAttributeNode(query, attributeNode);
+                    parseQueryAttributeNode(attributeNode, attributesNames, queryAttributesList);
                 }
             } else {
                 logger.warn("Ignore invalid node {}", resultAliasNode);
             }
 
             JsonNode attributeNode = queryNode.path("attribute");
-            parseQueryAttributeNode(query, attributeNode);
-            List<OutputWriter> outputWriters = parseOutputWritersNode(queryNode);
-            query.getOutputWriters().addAll(outputWriters);
-            logger.trace("Add {}", query);
+            parseQueryAttributeNode(attributeNode, attributesNames, queryAttributesList);
+
+            new QueryBuilder().setObjectName(objectName).setOutputWriters(outputWriters).setResultAlias(resultAlias).setAttributesNames(attributesNames).setQueryAttributesList(queryAttributesList).validate().buildAndAddToEmbeddedJmxTrans(embeddedJmxTrans);
         }
 
         List<OutputWriter> outputWriters = parseOutputWritersNode(configurationRootNode);
-        embeddedJmxTrans.getOutputWriters().addAll(outputWriters);
+        if (!outputWriters.isEmpty()) {
+            embeddedJmxTrans.getOutputWriters().addAll(outputWriters);
+        }
         logger.trace("Add global output writers: {}", outputWriters);
 
         JsonNode queryIntervalInSecondsNode = configurationRootNode.path("queryIntervalInSeconds");
@@ -256,10 +352,10 @@ public class ConfigurationParser {
         return outputWriters;
     }
 
-    protected void parseQueryAttributeNode(@Nonnull Query query, @Nonnull JsonNode attributeNode) {
+    protected void parseQueryAttributeNode(@Nonnull JsonNode attributeNode, @Nonnull List<String> attributesNames, @Nonnull List<QueryAttribute> queryAttributesList) {
         if (attributeNode.isMissingNode()) {
         } else if (attributeNode.isValueNode()) {
-            query.addAttribute(attributeNode.asText());
+            attributesNames.add(attributeNode.asText());
         } else if (attributeNode.isObject()) {
             List<String> keys = null;
 
@@ -299,9 +395,9 @@ public class ConfigurationParser {
             JsonNode typeNode = attributeNode.path("type");
             String type = typeNode.isMissingNode() ? null : typeNode.asText();
             if (keys == null) {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias));
+                queryAttributesList.add(new QueryAttribute(name, type, resultAlias));
             } else {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias, keys));
+                queryAttributesList.add(new QueryAttribute(name, type, resultAlias, keys));
             }
         } else {
             logger.warn("Ignore invalid node {}", attributeNode);

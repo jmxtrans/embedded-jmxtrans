@@ -26,7 +26,7 @@ package org.jmxtrans.embedded;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.output.OutputWriterSet;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
-import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSink;
 import org.jmxtrans.embedded.util.plumbing.QueryResultSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +48,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Jon Stevens
  */
 public class Query implements QueryMBean {
+
+    private static ObjectName parseObjectName(@Nonnull String objectName) {
+        try {
+            return new ObjectName(objectName);
+        } catch (MalformedObjectNameException e) {
+            throw new RuntimeException("Exception parsing '" + objectName + "'", e);
+        }
+    }
 
     private static final AtomicInteger queryIdSequence = new AtomicInteger();
 
@@ -94,11 +99,11 @@ public class Query implements QueryMBean {
     @Nonnull
     private final OutputWriterSet outputWriters = new OutputWriterSet();
 
-    private final BlockingQueueQueryResultSink queryResultSink;
+    private final QueryResultSink queryResultSink;
 
     private final QueryResultSource queryResultSource;
 
-    private final QueryResultsExporter queryResultsExporter = new QueryResultsExporter(this);
+    private QueryResultsExporter queryResultsExporter = new QuerySpecificQueryResultsExporter(this, true);
 
     @Nonnull
     private final AtomicInteger collectedMetricsCount = new AtomicInteger();
@@ -120,14 +125,8 @@ public class Query implements QueryMBean {
      *
      * @param objectName {@link ObjectName} to query, can contain wildcards ('*' or '?')
      */
-    public Query(@Nonnull String objectName, BlockingQueueQueryResultSink queryResultSink, QueryResultSource queryResultSource) {
-        this.queryResultSink = queryResultSink;
-        this.queryResultSource = queryResultSource;
-        try {
-            this.objectName = new ObjectName(objectName);
-        } catch (MalformedObjectNameException e) {
-            throw new RuntimeException("Exception parsing '" + objectName + "'", e);
-        }
+    public Query(@Nonnull String objectName, QueryResultSink queryResultSink, QueryResultSource queryResultSource) {
+        this(parseObjectName(objectName), queryResultSink, queryResultSource);
     }
 
     /**
@@ -135,7 +134,7 @@ public class Query implements QueryMBean {
      *
      * @param objectName {@link ObjectName} to query, can contain wildcards ('*' or '?')
      */
-    public Query(@Nonnull ObjectName objectName, BlockingQueueQueryResultSink queryResultSink, QueryResultSource queryResultSource) {
+    public Query(@Nonnull ObjectName objectName, QueryResultSink queryResultSink, QueryResultSource queryResultSource) {
         this.queryResultSink = queryResultSink;
         this.queryResultSource = queryResultSource;
         this.objectName = objectName;
@@ -147,13 +146,19 @@ public class Query implements QueryMBean {
      */
     @Override
     public void collectMetrics() {
+        MBeanServer mbeanServer = embeddedJmxTrans.getMbeanServer();
+        collectMetrics(this.queryResultSink, mbeanServer);
+    }
+
+    public void collectMetrics(final QueryResultSink sink, final MBeanServer mbeanServer) {
         long nanosBefore = System.nanoTime();
         /*
          * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
          * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
          * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
          */
-        Set<ObjectName> matchingObjectNames = embeddedJmxTrans.getMbeanServer().queryNames(this.objectName, null);
+
+        Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(objectName, null);
         logger.trace("Query {} returned {}", objectName, matchingObjectNames);
 
         for (ObjectName matchingObjectName : matchingObjectNames) {
@@ -162,12 +167,12 @@ public class Query implements QueryMBean {
             }
             long epochInMillis = System.currentTimeMillis();
             try {
-                AttributeList jmxAttributes = embeddedJmxTrans.getMbeanServer().getAttributes(matchingObjectName, this.attributeNames);
+                AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, attributeNames);
                 logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
                 for (Attribute jmxAttribute : jmxAttributes.asList()) {
-                    QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
+                    QueryAttribute queryAttribute = attributesByName.get(jmxAttribute.getName());
                     Object value = jmxAttribute.getValue();
-                    int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, queryResultSink);
+                    int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, sink);
                     collectedMetricsCount.addAndGet(count);
                 }
             } catch (Exception e) {
@@ -347,8 +352,16 @@ public class Query implements QueryMBean {
         return queryResultSource;
     }
 
-    public BlockingQueueQueryResultSink getQueryResultSink() {
+    public QueryResultSink getQueryResultSink() {
         return queryResultSink;
+    }
+
+    public QueryResultsExporter getQueryResultsExporter() {
+        return queryResultsExporter;
+    }
+    
+    public void setQueryResultsExporter(QueryResultsExporter queryResultsExporter) {
+        this.queryResultsExporter = queryResultsExporter;
     }
 
 }

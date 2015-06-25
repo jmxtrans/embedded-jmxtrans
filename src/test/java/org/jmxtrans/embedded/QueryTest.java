@@ -26,6 +26,7 @@ package org.jmxtrans.embedded;
 import org.jmxtrans.embedded.output.AbstractOutputWriter;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.util.plumbing.BlockingQueueQueryResultSink;
+import org.jmxtrans.embedded.util.plumbing.NullQueryResultSource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class QueryTest {
 
         Query query = new Query("test:type=MemoryPool,name=PS Eden Space", sink, sink).addAttribute("CollectionUsageThreshold");
 
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
         query.collectMetrics();
         assertThat(sink.size(), is(1));
 
@@ -88,7 +89,7 @@ public class QueryTest {
         BlockingQueueQueryResultSink sink = new BlockingQueueQueryResultSink();
 
         Query query = new Query("test:type=MemoryPool,name=PS Perm Gen", sink, sink);
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
         query.addAttribute(new QueryAttribute("Usage", null, null, Arrays.asList("committed", "init", "max", "used")));
         query.collectMetrics();
         assertThat(sink.size(), is(4));
@@ -108,9 +109,9 @@ public class QueryTest {
 
         // CONFIGURE
         Query query = new Query("test:type=GarbageCollector,name=PS Scavenge", sink, sink);
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
         query.addAttribute("CollectionCount").addAttribute("CollectionTime");
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
 
         final AtomicInteger exportCount = new AtomicInteger();
         final AtomicInteger exportResultCount = new AtomicInteger();
@@ -159,9 +160,9 @@ public class QueryTest {
 
         // CONFIGURE
         Query query = new Query("test:type=GarbageCollector,name=PS Scavenge", sink, sink);
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
         query.addAttribute("CollectionCount").addAttribute("CollectionTime");
-        embeddedJmxTrans.addQuery(query);
+        embeddedJmxTrans.addQuery(query, new NullQueryResultSource());
 
         final AtomicInteger exportCount = new AtomicInteger();
         final AtomicInteger exportResultCount = new AtomicInteger();
@@ -179,6 +180,7 @@ public class QueryTest {
         outputWriter.setEnabled(false);
 
         embeddedJmxTrans.getOutputWriters().add(outputWriter);
+        assertThat(embeddedJmxTrans.getOutputWriters().size(), is(1));
         assertThat(query.getOutputWriters().size(), is(0));
         assertThat(query.getEffectiveOutputWriters().size(), is(0));
     }

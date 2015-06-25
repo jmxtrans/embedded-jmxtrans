@@ -26,6 +26,8 @@ package org.jmxtrans.embedded;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.output.OutputWriterSet;
 import org.jmxtrans.embedded.util.concurrent.NamedThreadFactory;
+import org.jmxtrans.embedded.util.plumbing.MultiSourcesQueryResultSource;
+import org.jmxtrans.embedded.util.plumbing.QueryResultSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,47 +45,42 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- *
  * <strong>JMX Queries</strong>
- *
+ * <p/>
  * If the JMX query returns several mbeans (thanks to '*' or '?' wildcards),
  * then the configured attributes are collected on all the returned mbeans.
- *
- *
+ * <p/>
+ * <p/>
  * <strong>Output Writers</strong>
- *
+ * <p/>
  * {@linkplain OutputWriter}s can be defined at the query level or globally at the {@link EmbeddedJmxTrans} level.
- * The {@linkplain OutputWriter}s that are effective for a {@linkplain Query} are accessible
- * via {@link Query#getEffectiveOutputWriters()}
- *
- *
+ * <p/>
+ * <p/>
  * <strong>Collected Metrics / Query Results</strong>
- *
- * Default behavior is to store the query results at the query level (see {@linkplain Query#queryResults}) to resolve the
- * effective {@linkplain OutputWriter}s at result export time ({@linkplain org.jmxtrans.embedded.Query#getEffectiveOutputWriters()}).
- *
- * The drawback is to limit the benefits of batching result
- * to a backend (see {@link org.jmxtrans.embedded.Query#exportCollectedMetrics()}) and the size limit of the results list to prevent
- * {@linkplain OutOfMemoryError} in case of export slowness.
- *
- * An optimization would be, if only one {@linkplain OutputWriter} is defined in the whole {@linkplain EmbeddedJmxTrans}, to
- * replace all the query-local result queues by one global result-queue.
+ * <p/>
+ * A global QueryResultSink - that is also a QueryResultSource - is maintained by the EmbeddedJmxTrans instance. It gathers the metrics for all of the Queries.
+ * We only need a single Thread to managed to export those metrics to the global OutputWriters. It permits to batch the export of multiple metrics in a single export query.
+ * In case the underlying OutputWriter supports batch export (for instance using HTTP POST), it significantly reduces the number of HTTP requests needed. (for instance 1 request of 10 metrics, instead of 10 requests of 1 metric).
+ * In case the underlying OutputWriter do not support batch export, we still benefit from this Single-Thread export : in case the backend it unavailable, the export will fail and the export will not retry before the next schedule (after waiting for exportIntervalInSeconds).
+ * In case a Query has additional specific OutputWriter(s) attached, the Query then maintain an additional QueryResultSink - that is also a QueryResultSource - and the export process will try to export to those OutputWriters.
+ * <p/>
+ * This significantly reduces the number of Exceptions in case a backend in unavailable for a long while. The number of Exceptions do not depends on the number of metrics, but only depends on the export frequency to each failing backend, with at most 1 failure per exportIntervalInSeconds and per OutputWriter).
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
  */
 public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
-	public EmbeddedJmxTrans() {
-		super();
-	}
-	
-    public EmbeddedJmxTrans(MBeanServer mbeanServer) {
-		super();
-		this.mbeanServer = mbeanServer;
-	}
+    public EmbeddedJmxTrans() {
+        super();
+    }
 
-	/**
+    public EmbeddedJmxTrans(MBeanServer mbeanServer) {
+        super();
+        this.mbeanServer = mbeanServer;
+    }
+
+    /**
      * Shutdown hook to collect and export metrics a last time if {@link EmbeddedJmxTrans#stop()} was not called.
      */
     private class EmbeddedJmxTransShutdownHook extends Thread {
@@ -181,6 +178,10 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     private final OutputWriterSet outputWriters = new OutputWriterSet();
 
+    private final MultiSourcesQueryResultSource globalQueryResultSource = new MultiSourcesQueryResultSource();
+
+    private final QueryResultsExporter globalQueryResultsExporter = new GlobalQueryResultsExporter(this);
+
     private int numQueryThreads = 1;
 
     private int numExportThreads = 1;
@@ -198,7 +199,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     @PostConstruct
     public synchronized void start() throws Exception {
-        if(running) {
+        if (running) {
             logger.debug("Ignore start() command for already running instance");
             return;
         }
@@ -215,17 +216,40 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             collectScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    query.collectMetrics();
+                    try {
+                        query.collectMetrics();
+                    } catch (RuntimeException e) {
+                        // we need to catch Exception, otherwise the scheduler will suppress subsequent executions
+                        logger.warn("Exception while collecting metric", e);
+                    }
                 }
             }, 0, getQueryIntervalInSeconds(), TimeUnit.SECONDS);
+
             // start export just after first collect
             exportScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    query.exportCollectedMetrics();
+                    try {
+                        query.exportCollectedMetrics();
+                    } catch (RuntimeException e) {
+                        // we need to catch Exception, otherwise the scheduler will suppress subsequent executions
+                        logger.warn("Exception while exporting collected metrics to global OutputWriters", e);
+                    }
                 }
             }, getQueryIntervalInSeconds() + 1, getExportIntervalInSeconds(), TimeUnit.SECONDS);
         }
+
+        exportScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    globalQueryResultsExporter.exportCollectedMetrics();
+                } catch (RuntimeException e) {
+                    // we need to catch Exception, otherwise the scheduler will suppress subsequent executions
+                    logger.warn("Exception while exporting collected metrics to global OutputWriters", e);
+                }
+            }
+        }, getQueryIntervalInSeconds() + 1, getExportIntervalInSeconds(), TimeUnit.SECONDS);
 
         shutdownHook = new EmbeddedJmxTransShutdownHook();
         shutdownHook.registerToRuntime();
@@ -239,7 +263,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     @PreDestroy
     public synchronized void stop() throws Exception {
-        if(!running) {
+        if (!running) {
             logger.debug("Ignore stop() command for not running instance");
             return;
         }
@@ -268,9 +292,12 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     @Override
     public void exportCollectedMetrics() {
+        // first try to export to the specific OutputWriters ...
         for (Query query : getQueries()) {
             query.exportCollectedMetrics();
         }
+        // then try to export to the global OutputWriters ...
+        globalQueryResultsExporter.exportCollectedMetrics();
     }
 
     @Nonnull
@@ -278,9 +305,10 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         return queries;
     }
 
-    public void addQuery(@Nonnull Query query) {
+    public void addQuery(@Nonnull Query query, QueryResultSource querySinkAndSourceForGlobalOutputWriters) {
         query.setEmbeddedJmxTrans(this);
         this.queries.add(query);
+        this.globalQueryResultSource.addSource(querySinkAndSourceForGlobalOutputWriters);
     }
 
     @Override
@@ -350,6 +378,10 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     @Nonnull
     public MBeanServer getMbeanServer() {
         return mbeanServer;
+    }
+
+    public QueryResultSource getGlobalQueryResultSource() {
+        return globalQueryResultSource;
     }
 
     @Override

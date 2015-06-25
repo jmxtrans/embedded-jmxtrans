@@ -6,6 +6,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -85,7 +86,7 @@ public class OutputWriterSetTest {
         verify(ow2, times(1)).start();
         verify(ow2, times(1)).start();
 
-        Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        Collection<QueryResult> resultsToWrite = mock(Collection.class);
 
         target.writeAll(resultsToWrite);
 
@@ -124,7 +125,7 @@ public class OutputWriterSetTest {
         verify(ow2, times(1)).start();
         verify(ow2, times(1)).start();
 
-        Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        Collection<QueryResult> resultsToWrite = mock(Collection.class);
 
         target.writeAll(resultsToWrite);
 
@@ -160,7 +161,7 @@ public class OutputWriterSetTest {
         verify(ow2, times(1)).stop();
         verify(ow2, times(1)).stop();
 
-        Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        Collection<QueryResult> resultsToWrite = mock(Collection.class);
 
         target.writeAll(resultsToWrite);
 
@@ -189,7 +190,7 @@ public class OutputWriterSetTest {
 
         target.startAll();
 
-        Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        Collection<QueryResult> resultsToWrite = mock(Collection.class);
         try {
             target.writeAll(resultsToWrite);
             fail("Expected to throw an Exception");
@@ -215,7 +216,7 @@ public class OutputWriterSetTest {
 
         verify(ow1, times(1)).start();
 
-        final Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        final Collection<QueryResult> resultsToWrite = mock(Collection.class);
 
         final CountDownLatch countDownLatch = new CountDownLatch(2);
 
@@ -267,7 +268,7 @@ public class OutputWriterSetTest {
 
         verify(ow1, times(1)).start();
 
-        final Iterable<QueryResult> resultsToWrite = mock(Iterable.class);
+        final Collection<QueryResult> resultsToWrite = mock(Collection.class);
         doReturn(new ArrayList<QueryResult>().iterator()).when(resultsToWrite).iterator();
 
         final CountDownLatch countDownLatch = new CountDownLatch(2);

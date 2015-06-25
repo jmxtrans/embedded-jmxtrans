@@ -207,7 +207,7 @@ public class OutputWriterSet implements Iterable {
         }
     }
 
-    public void writeAll(Iterable<QueryResult> results) {
+    public void writeAll(Collection<QueryResult> results) {
         int errorCount = 0;
         readLock.lock();
         try {
@@ -264,8 +264,9 @@ public class OutputWriterSet implements Iterable {
         }
     }
 
-    private boolean tryWrite(OutputWriter ow, Iterable<QueryResult> results) {
+    private boolean tryWrite(OutputWriter ow, Collection<QueryResult> results) {
         try {
+            logger.debug("tryWrite {} values to {}", results.size(), ow.getClass().getName());
             ow.write(results);
             return true;
         } catch (RuntimeException e) {

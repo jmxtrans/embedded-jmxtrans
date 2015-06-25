@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:patrick.bruehlmann@gmail.com">Patrick Brühlmann</a>
  */
-public class GraphiteWriterIntegrationUDPTest {
+public class GraphiteWriterIntegrationUDPIntegrationTest {
 
     GraphiteWriter graphiteWriter;
 
