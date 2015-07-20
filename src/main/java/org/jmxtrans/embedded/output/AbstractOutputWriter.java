@@ -44,8 +44,6 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     public final static String SETTING_TOKEN = "token";
     public final static String SETTING_PORT = "port";
     public final static String SETTING_HOST = "host";
-    public final static String SETTING_USE_TLS = "useTls";
-    public final static String SETTING_TLS_INSECURE = "tlsInsecure";
     public final static String SETTING_PROXY_PORT = "proxyPort";
     public final static String SETTING_PROXY_HOST = "proxyHost";
     public final static String SETTING_NAME_PREFIX = "namePrefix";
