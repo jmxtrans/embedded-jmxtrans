@@ -28,11 +28,14 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
+import org.jmxtrans.embedded.util.net.ssl.TrustAllSSLSocketFactory;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
@@ -122,7 +125,19 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 // unknown or protocol, use default one
                 logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
             }
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(UTF_8, socketConnectTimeoutInMillis), config);
+            boolean useTls = getBooleanSetting(SETTING_USE_TLS, false);
+            SocketFactory socketFactory;
+            if (useTls) {
+                boolean tlsInsecure = getBooleanSetting(SETTING_TLS_INSECURE, false);
+                if (tlsInsecure) {
+                    socketFactory = new TrustAllSSLSocketFactory();
+                } else {
+                    socketFactory = SSLSocketFactory.getDefault();
+                }
+            } else {
+                socketFactory = SocketFactory.getDefault();
+            }
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(socketFactory, UTF_8, socketConnectTimeoutInMillis), config);
         }
 
         if (isEnabled()) {
