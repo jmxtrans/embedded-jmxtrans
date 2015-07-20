@@ -15,7 +15,7 @@ import java.net.URLConnection;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class TrustAllSSLSocketFactoryTest {
+public class TrustAllSSLSocketFactoryIntegrationTest {
 
     @Test
     public void test_trust_invalid_ssl_certificate_with_google_ip() throws Exception {
