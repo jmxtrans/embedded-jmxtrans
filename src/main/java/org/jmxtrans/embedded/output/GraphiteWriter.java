@@ -28,23 +28,26 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
-import org.jmxtrans.embedded.util.net.ssl.TrustAllSSLSocketFactory;
+import org.jmxtrans.embedded.util.net.ssl.TrustAllX509TrustManager;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <a href="http://graphite.readthedocs.org/">Graphite</a> implementation of the {@linkplain OutputWriter}.
- *
+ * <p/>
  * This implementation uses <a href="http://graphite.readthedocs.org/en/0.9.10/feeding-carbon.html#the-plaintext-protocol">
  * Carbon Plan Text protocol</a> over TCP/IP.
- *
+ * <p/>
  * Settings:
  * <ul>
  * <li>"host": hostname or ip address of the Graphite server. Mandatory</li>
@@ -85,7 +88,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
 
     /**
      * Load settings, initialize the {@link SocketWriter} pool and test the connection to the graphite server.
-     *
+     * <p/>
      * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
      */
     @Override
@@ -123,16 +126,24 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
             } else if (PROTOCOL_TCP.equalsIgnoreCase(protocol) == false) {
                 // unknown or protocol, use default one
-                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
+                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.", protocol, PROTOCOL_TCP);
             }
             boolean useTls = getBooleanSetting(SETTING_USE_TLS, false);
-            SocketFactory socketFactory;
+            final SocketFactory socketFactory;
             if (useTls) {
                 boolean tlsInsecure = getBooleanSetting(SETTING_TLS_INSECURE, false);
-                if (tlsInsecure) {
-                    socketFactory = new TrustAllSSLSocketFactory();
-                } else {
-                    socketFactory = SSLSocketFactory.getDefault();
+                try {
+                    SSLContext sslContext = SSLContext.getInstance("SSL");
+                    if (tlsInsecure) {
+                        sslContext.init(null, new TrustManager[]{new TrustAllX509TrustManager()}, null);
+                    }
+                    socketFactory = sslContext.getSocketFactory();
+                } catch (NoSuchAlgorithmException e) {
+                    // that should never occur
+                    throw new RuntimeException("Unable to create the TLS SocketFactory", e);
+                } catch (KeyManagementException e) {
+                    // that should never occur
+                    throw new RuntimeException("Unable to create the TLS SocketFactory", e);
                 }
             } else {
                 socketFactory = SocketFactory.getDefault();
