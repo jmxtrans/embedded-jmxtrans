@@ -73,8 +73,9 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
     private static final String PROTOCOL_TCP = "TCP";
     private static final String PROTOCOL_UDP = "UDP";
 
-    private static final String SETTING_USE_TLS = "useTls";
-    private static final String SETTING_TLS_INSECURE = "tlsInsecure";
+    private static final String SETTING_USE_TLS = "graphite.useTls";
+    private static final String SETTING_TLS_INSECURE = "graphite.tlsInsecure";
+    private static final String SETTINGS_SOCKET_CONNECT_TIMEOUT = "graphite.socketConnectTimeoutInMillis";
 
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";
 
@@ -118,7 +119,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
         config.setJmxNameBase("org.jmxtrans.embedded:type=GenericKeyedObjectPool,writer=GraphiteWriter,name=");
         config.setJmxNamePrefix(graphiteServerHostAndPort.getHost() + "_" + graphiteServerHostAndPort.getPort());
 
-        int socketConnectTimeoutInMillis = getIntSetting("graphite.socketConnectTimeoutInMillis", SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
+        int socketConnectTimeoutInMillis = getIntSetting(SETTINGS_SOCKET_CONNECT_TIMEOUT, SocketWriterPoolFactory.DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS);
 
         String protocol = getStringSetting(SETTING_PROTOCOL, null);
         if (protocol != null && protocol.equalsIgnoreCase(PROTOCOL_UDP)) {
