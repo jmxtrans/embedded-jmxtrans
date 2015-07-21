@@ -26,6 +26,7 @@ package org.jmxtrans.embedded.output;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.embedded.util.StringUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.net.ssl.SslUtils;
@@ -56,6 +57,7 @@ import java.util.concurrent.TimeUnit;
  * <li>"graphite.socketConnectTimeoutInMillis": timeout for the socketConnect in millis.
  * Optional, default value: {@link SocketWriterPoolFactory#DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS}
  * </li>
+ * <li>"socketFactory": name of a custom javax.net.SocketFactory to customize the SocketFactory used to connect to the Graphite server</li>
  * <li>"protocol": "TCP" or "UDP". Optional, the default value is "TCP"</li>
  * <li>"useTls": for "TCP", boolean to use TLS/SSL. Optional, default is "false"</li>
  * <li>"tls.insecure": please don't. For TLS/SSL, disable x509 certificate checks. Optional, default is "false"</li>
@@ -132,9 +134,17 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 // unknown or protocol, use default one
                 logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.", protocol, PROTOCOL_TCP);
             }
+            String socketFactoryClassName = getStringSetting(SETTING_SOCKET_FACTORY, null);
             boolean useTls = getBooleanSetting(SETTING_USE_TLS, false);
             SocketFactory socketFactory;
-            if (useTls) {
+
+            if (!StringUtils2.isNullOrEmpty(socketFactoryClassName)) {
+                try {
+                    socketFactory = (SocketFactory) Class.forName(socketFactoryClassName, true, Thread.currentThread().getContextClassLoader()).newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException("Exception instantiating SocketFactory '" + socketFactoryClassName + "'");
+                }
+            } else if (useTls) {
                 boolean tlsInsecure = getBooleanSetting(SETTING_TLS_INSECURE, false);
                 if (tlsInsecure) {
                     socketFactory = new TrustAllSSLSocketFactory();
