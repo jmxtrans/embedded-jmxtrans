@@ -26,13 +26,17 @@ package org.jmxtrans.embedded.output;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.embedded.util.StringUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
+import org.jmxtrans.embedded.util.net.ssl.SslUtils;
+import org.jmxtrans.embedded.util.net.ssl.TrustAllSSLSocketFactory;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.SocketFactory;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +57,14 @@ import java.util.concurrent.TimeUnit;
  * <li>"graphite.socketConnectTimeoutInMillis": timeout for the socketConnect in millis.
  * Optional, default value: {@link SocketWriterPoolFactory#DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS}
  * </li>
+ * <li>"socketFactory": name of a custom javax.net.SocketFactory to customize the SocketFactory used to connect to the Graphite server</li>
+ * <li>"protocol": "TCP" or "UDP". Optional, the default value is "TCP"</li>
+ * <li>"useTls": for "TCP", boolean to use TLS/SSL. Optional, default is "false"</li>
+ * <li>"tls.insecure": please don't. For TLS/SSL, disable x509 certificate checks. Optional, default is "false"</li>
+ * <li>"tls.keyStore": path to the given JKS key store. Can be a classpath resource ("classpath:com/example/keystore.jks") of file system related. Optional, if {code null}, then the JVM key store is used.</li>
+ * <li>"tls.keyStorePassword": password to open the key store.</li>
+ * <li>"tls.trustStore": path to the given JKS trust store. Can be a classpath resource ("classpath:com/example/truststore.jks") of file system related. Optional, if {code null}, then the JVM key store is used.</li>
+ * <li>"tls.trustStorePassword": password to open the trust store.</li>
  * </ul>
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -83,7 +95,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
     /**
      * Load settings, initialize the {@link SocketWriter} pool and test the connection to the graphite server.
      *
-     * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
+     * A {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
      */
     @Override
     public void start() {
@@ -120,9 +132,33 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                 logger.info("Protocol unspecified, default protocol '{}' will be used.", PROTOCOL_TCP);
             } else if (PROTOCOL_TCP.equalsIgnoreCase(protocol) == false) {
                 // unknown or protocol, use default one
-                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.",protocol, PROTOCOL_TCP);
+                logger.warn("Unknown protocol specified '{}', default protocol '{}' will be used instead.", protocol, PROTOCOL_TCP);
             }
-            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(UTF_8, socketConnectTimeoutInMillis), config);
+            String socketFactoryClassName = getStringSetting(SETTING_SOCKET_FACTORY, null);
+            boolean useTls = getBooleanSetting(SETTING_USE_TLS, false);
+            SocketFactory socketFactory;
+
+            if (!StringUtils2.isNullOrEmpty(socketFactoryClassName)) {
+                try {
+                    socketFactory = (SocketFactory) Class.forName(socketFactoryClassName, true, Thread.currentThread().getContextClassLoader()).newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException("Exception instantiating SocketFactory '" + socketFactoryClassName + "'");
+                }
+            } else if (useTls) {
+                boolean tlsInsecure = getBooleanSetting(SETTING_TLS_INSECURE, false);
+                if (tlsInsecure) {
+                    socketFactory = new TrustAllSSLSocketFactory();
+                } else {
+                    String keyStore = getStringSetting(SETTING_TLS_KEY_STORE, null);
+                    String keyStorePassword = getStringSetting(SETTING_TLS_KEY_STORE_PASSWORD, null);
+                    String trustStore = getStringSetting(SETTING_TLS_TRUST_STORE, null);
+                    String trustStorePassword = getStringSetting(SETTING_TLS_TRUST_STORE_PASSWORD, null);
+                    socketFactory = SslUtils.getSSLSocketFactory(keyStore, keyStorePassword, trustStore, trustStorePassword);
+                }
+            } else {
+                socketFactory = SocketFactory.getDefault();
+            }
+            socketWriterPool = new GenericKeyedObjectPool<HostAndPort, SocketWriter>(new SocketWriterPoolFactory(socketFactory, UTF_8, socketConnectTimeoutInMillis), config);
         }
 
         if (isEnabled()) {

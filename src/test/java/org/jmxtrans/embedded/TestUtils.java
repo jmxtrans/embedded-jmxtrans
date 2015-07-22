@@ -24,9 +24,14 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
+import org.junit.Assert;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -58,5 +63,19 @@ public class TestUtils {
             results.put(outputWriter.getClass(), outputWriter);
         }
         return results;
+    }
+
+    @Nonnull
+    public static Map<String, Object> loadSettingsFromClasspath(@Nonnull String filePath) {
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+        Assert.assertNotNull("File " + filePath + " was not found in the classpath.", in);
+        Properties config = new Properties();
+        try {
+            config.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Exception loading '" + filePath + "'", e);
+        }
+
+        return new HashMap<String, Object>((Map) config);
     }
 }
