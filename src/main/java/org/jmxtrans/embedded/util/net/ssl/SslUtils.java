@@ -1,12 +1,19 @@
 package org.jmxtrans.embedded.util.net.ssl;
 
 import org.jmxtrans.embedded.util.io.IoUtils2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.net.ssl.*;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -45,7 +52,7 @@ public class SslUtils {
                 keyManagers = null;
             } else {
                 char[] password = keyStorePassword == null ? null : keyStorePassword.toCharArray();
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
                 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
                 InputStream in = IoUtils2.getInputStream(keyStore);
                 try {
@@ -78,15 +85,73 @@ public class SslUtils {
 
             sslContext.init(keyManagers, trustManagers, null);
             return sslContext;
+        } catch(NoSuchAlgorithmException e) {
+            throw new IllegalStateException("NoSuchAlgorithmException loading SSLSocketFactory with " +
+                    "keyStore=" + keyStore + ", keyStorePassword=" + (keyStorePassword == null ? "<null>" : "***") + "," +
+                    "trustStore=" + trustStore + ", trustStorePassword=" + (trustStorePassword == null ? "<null>" : "***")+ ": " + e, e);
+        } catch(FileNotFoundException e) {
+            throw new IllegalStateException("FileNotFoundException loading SSLSocketFactory with " +
+                    "keyStore=" + keyStore + ", keyStorePassword=" + (keyStorePassword == null ? "<null>" : "***") + "," +
+                    "trustStore=" + trustStore + ", trustStorePassword=" + (trustStorePassword == null ? "<null>" : "***")+ ": " + e, e);
         } catch (Exception e) {
             throw new RuntimeException("Exception loading SSLSocketFactory with " +
                     "keyStore=" + keyStore + ", keyStorePassword=" + (keyStorePassword == null ? "<null>" : "***") + "," +
-                    "trustStore=" + trustStore + ", trustStorePassword=" + (trustStorePassword == null ? "<null>" : "***"), e);
+                    "trustStore=" + trustStore + ", trustStorePassword=" + (trustStorePassword == null ? "<null>" : "***") + ": " + e, e);
         }
     }
 
+    /**
+     * Build an {@link SSLSocketFactory} that trusts all the X509 certificates.
+     *
+     * @return the created {@link SSLSocketFactory}
+     */
+    @Nonnull
+    public static SSLSocketFactory getTrustAllSSLSocketFactory() {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+
+            sslContext.init(null, new TrustManager[]{new TrustAllX509TrustManager()}, null);
+            return sslContext.getSocketFactory();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        } catch (KeyManagementException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
     private SslUtils() {
 
+    }
+
+    /**
+     * Trust all {@link X509Certificate}. Not for production use.
+     */
+    public static class TrustAllX509TrustManager implements X509TrustManager {
+        protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String authType) throws CertificateException {
+            if (logger.isDebugEnabled()) {
+                logger.debug("checkClientTrusted(authType=" + authType + ")");
+                for (X509Certificate x509Certificate : x509Certificates) {
+                    logger.debug(x509Certificate.toString());
+                }
+            }
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String authType) throws CertificateException {
+            if (logger.isDebugEnabled()) {
+                logger.debug("checkServerTrusted(authType=" + authType + ")");
+                for (X509Certificate x509Certificate : x509Certificates) {
+                    logger.debug(x509Certificate.toString());
+                }
+            }
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
     }
 }

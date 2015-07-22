@@ -30,7 +30,6 @@ import org.jmxtrans.embedded.util.StringUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.net.ssl.SslUtils;
-import org.jmxtrans.embedded.util.net.ssl.TrustAllSSLSocketFactory;
 import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 import org.jmxtrans.embedded.util.pool.UDPSocketWriterPoolFactory;
 import org.slf4j.Logger;
@@ -147,7 +146,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
             } else if (useTls) {
                 boolean tlsInsecure = getBooleanSetting(SETTING_TLS_INSECURE, false);
                 if (tlsInsecure) {
-                    socketFactory = new TrustAllSSLSocketFactory();
+                    socketFactory = SslUtils.getTrustAllSSLSocketFactory();
                 } else {
                     String keyStore = getStringSetting(SETTING_TLS_KEY_STORE, null);
                     String keyStorePassword = getStringSetting(SETTING_TLS_KEY_STORE_PASSWORD, null);

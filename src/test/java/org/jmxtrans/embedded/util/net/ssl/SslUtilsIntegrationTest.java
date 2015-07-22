@@ -1,6 +1,5 @@
 package org.jmxtrans.embedded.util.net.ssl;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.net.ssl.HostnameVerifier;
@@ -12,14 +11,13 @@ import java.net.URL;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class TrustAllSSLSocketFactoryTest {
+public class SslUtilsIntegrationTest {
 
-    @Ignore
     @Test
     public void test_trust_invalid_ssl_certificate_with_google_ip() throws Exception {
         String url = "https://216.58.211.68"; // 216.58.211.68 is google.com
         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-        SSLSocketFactory socketFactory = new TrustAllSSLSocketFactory();
+        SSLSocketFactory socketFactory = SslUtils.getTrustAllSSLSocketFactory();
 
         connection.setSSLSocketFactory(socketFactory);
 
