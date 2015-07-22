@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class GraphiteWriterIntegrationTcpTlsTest {
+public class GraphiteWriterTcpTlsIntegrationTest {
 
     GraphiteWriter graphiteWriter;
 

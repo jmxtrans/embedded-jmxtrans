@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class GraphiteWriterIntegrationUdpTest {
+public class GraphiteWriterUdpIntegrationTest {
 
     GraphiteWriter graphiteWriter;
 
