@@ -25,6 +25,7 @@ package org.jmxtrans.embedded.output;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
@@ -159,7 +160,7 @@ public class GraphiteWriter extends AbstractOutputWriter implements OutputWriter
                     logger.warn("Exception invalidating socketWriter connected to graphite server '{}': {}", graphiteServerHostAndPort, socketWriter, e2);
                 }
             }
-            throw new RuntimeException(errorMessage, e);
+            throw new EmbeddedJmxTransException(errorMessage, e);
         }
     }
 
