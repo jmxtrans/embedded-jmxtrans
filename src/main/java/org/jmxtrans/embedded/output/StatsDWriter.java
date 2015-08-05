@@ -119,9 +119,6 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             // send and reset the buffer
             sendBuffer.flip();
             final int nbSentBytes = channel.send(sendBuffer, address);
-            // why do we need redefine the limit?
-            sendBuffer.limit(sendBuffer.capacity());
-            sendBuffer.rewind();
 
             if (sizeOfBuffer != nbSentBytes) {
                 logger.warn("Could not send entirely stat {} to host {}:{}. Only sent {} bytes out of {} bytes",
@@ -130,6 +127,10 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
         } catch (IOException e) {
             addressReference.purge();
             logger.warn("Could not send stat {} to host {}:{}", sendBuffer, address.getHostName(), address.getPort(), e);
+        } finally {
+            // why do we need redefine the limit?
+            sendBuffer.limit(sendBuffer.capacity());
+            sendBuffer.rewind();
         }
     }
 
