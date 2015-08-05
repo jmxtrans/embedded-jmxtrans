@@ -6,9 +6,7 @@ import org.jmxtrans.embedded.util.StringUtils2;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.charset.Charset;
@@ -71,7 +69,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void stop() throws Exception {
+    public synchronized void stop() throws Exception {
         super.stop();
         channel.close();
     }
@@ -93,8 +91,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             }
 
             if (sendBuffer.remaining() < (data.length + 1)) {
-                logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
-                        + StringUtils2.abbreviate(stat, 20));
+                notifyDataTooBig(stat, data);
                 continue;
             }
 
@@ -102,6 +99,11 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
 
         }
         flush();
+    }
+
+    protected void notifyDataTooBig(String stat, byte[] data) {
+        logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
+                + StringUtils2.abbreviate(stat, 20));
     }
 
     public synchronized void flush() {
@@ -162,5 +164,9 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
                 ", metricPathPrefix='" + metricPathPrefix + '\'' +
                 ", sendBuffer=" + sendBuffer +
                 '}';
+    }
+
+    public synchronized void setChannel(DatagramChannel channel) {
+        this.channel = channel;
     }
 }
