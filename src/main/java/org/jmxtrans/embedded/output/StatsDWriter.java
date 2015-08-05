@@ -6,9 +6,7 @@ import org.jmxtrans.embedded.util.StringUtils2;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.charset.Charset;
@@ -71,7 +69,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void stop() throws Exception {
+    public synchronized void stop() throws Exception {
         super.stop();
         channel.close();
     }
@@ -93,8 +91,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             }
 
             if (sendBuffer.remaining() < (data.length + 1)) {
-                logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
-                        + StringUtils2.abbreviate(stat, 20));
+                notifyDataTooBig(stat, data);
                 continue;
             }
 
@@ -104,22 +101,22 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
         flush();
     }
 
+    protected void notifyDataTooBig(String stat, byte[] data) {
+        logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
+                + StringUtils2.abbreviate(stat, 20));
+    }
+
     public synchronized void flush() {
+        final int sizeOfBuffer = sendBuffer.position();
+        if (sizeOfBuffer == 0) {
+            // empty buffer
+            return;
+        }
         InetSocketAddress address = addressReference.get();
         try {
-            if (sendBuffer.position() == 0) {
-                // empty buffer
-                return;
-            }
-
-            final int sizeOfBuffer = sendBuffer.position();
-
             // send and reset the buffer
             sendBuffer.flip();
             final int nbSentBytes = channel.send(sendBuffer, address);
-            // why do we need redefine the limit?
-            sendBuffer.limit(sendBuffer.capacity());
-            sendBuffer.rewind();
 
             if (sizeOfBuffer != nbSentBytes) {
                 logger.warn("Could not send entirely stat {} to host {}:{}. Only sent {} bytes out of {} bytes",
@@ -128,6 +125,10 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
         } catch (IOException e) {
             addressReference.purge();
             logger.warn("Could not send stat {} to host {}:{}", sendBuffer, address.getHostName(), address.getPort(), e);
+        } finally {
+            // why do we need redefine the limit?
+            sendBuffer.limit(sendBuffer.capacity());
+            sendBuffer.rewind();
         }
     }
 
@@ -162,5 +163,9 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
                 ", metricPathPrefix='" + metricPathPrefix + '\'' +
                 ", sendBuffer=" + sendBuffer +
                 '}';
+    }
+
+    public synchronized void setChannel(DatagramChannel channel) {
+        this.channel = channel;
     }
 }
