@@ -107,15 +107,13 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     }
 
     public synchronized void flush() {
+        final int sizeOfBuffer = sendBuffer.position();
+        if (sizeOfBuffer == 0) {
+            // empty buffer
+            return;
+        }
         InetSocketAddress address = addressReference.get();
         try {
-            if (sendBuffer.position() == 0) {
-                // empty buffer
-                return;
-            }
-
-            final int sizeOfBuffer = sendBuffer.position();
-
             // send and reset the buffer
             sendBuffer.flip();
             final int nbSentBytes = channel.send(sendBuffer, address);
