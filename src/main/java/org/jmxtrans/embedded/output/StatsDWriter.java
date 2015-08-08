@@ -126,9 +126,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             addressReference.purge();
             logger.warn("Could not send stat {} to host {}:{}", sendBuffer, address.getHostName(), address.getPort(), e);
         } finally {
-            // why do we need redefine the limit?
-            sendBuffer.limit(sendBuffer.capacity());
-            sendBuffer.rewind();
+            sendBuffer.clear();
         }
     }
 
