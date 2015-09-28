@@ -66,6 +66,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven-bundle-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <supportedProjectTypes>
@@ -303,6 +304,7 @@
             </activation>
             <properties>
                 <findbugs.plugin.version>2.5.5</findbugs.plugin.version>
+                <maven-bundle-plugin.version>2.5.4</maven-bundle-plugin.version>
             </properties>
         </profile>
         <profile>
@@ -312,6 +314,7 @@
             </activation>
             <properties>
                 <findbugs.plugin.version>2.5.5</findbugs.plugin.version>
+                <maven-bundle-plugin.version>3.0.0</maven-bundle-plugin.version>
             </properties>
         </profile>
         <profile>
@@ -321,6 +324,7 @@
             </activation>
             <properties>
                 <findbugs.plugin.version>3.0.1</findbugs.plugin.version>
+                <maven-bundle-plugin.version>3.0.0</maven-bundle-plugin.version>
             </properties>
         </profile>
     </profiles>
