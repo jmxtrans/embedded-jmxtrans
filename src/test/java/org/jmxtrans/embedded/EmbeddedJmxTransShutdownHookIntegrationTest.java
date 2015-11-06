@@ -23,42 +23,34 @@
  */
 package org.jmxtrans.embedded;
 
+import org.hamcrest.Matchers;
+import org.jmxtrans.embedded.config.ConfigurationParser;
+import org.junit.Assert;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 /**
- * JMX MBean interface of the {@link EmbeddedJmxTrans}.
- *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public interface EmbeddedJmxTransMBean {
+public class EmbeddedJmxTransShutdownHookIntegrationTest {
 
-    int getNumQueryThreads();
+    public static void main(String[] args) throws Exception {
+        EmbeddedJmxTransShutdownHookIntegrationTest integrationTest = new EmbeddedJmxTransShutdownHookIntegrationTest();
+        integrationTest.integrationTest();
+    }
 
-    int getQueryIntervalInSeconds();
+    public void integrationTest() throws Exception {
 
-    int getExportIntervalInSeconds();
+        EmbeddedJmxTrans embeddedJmxTrans = new ConfigurationParser().newEmbeddedJmxTrans("classpath:org/jmxtrans/embedded/jmxtrans-integ-test.json");
+        embeddedJmxTrans.start();
+        Assert.assertThat(embeddedJmxTrans.getState(), Matchers.equalTo(EmbeddedJmxTrans.State.STARTED.toString()));
 
-    int getNumExportThreads();
+        TestUtils.generateJvmActivity();
 
-    void collectMetrics();
+        System.out.println("bye");
+    }
 
-    void exportCollectedMetrics();
 
-    int getCollectedMetricsCount();
 
-    long getCollectionDurationInNanos();
-
-    long getCollectionDurationInMillis();
-
-    int getCollectionCount();
-
-    int getExportedMetricsCount();
-
-    long getExportDurationInNanos();
-
-    long getExportDurationInMillis();
-
-    int getExportCount();
-
-    int getDiscardedResultsCount();
-
-    String getState();
 }

@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -77,5 +79,27 @@ public class TestUtils {
         }
 
         return new HashMap<String, Object>((Map) config);
+    }
+
+    public static void generateJvmActivity() throws Exception {
+        Random random = new Random();
+
+        for (int i = 0; i < 10; i++) {
+
+            String msg = "";
+            for (int j = 0; j < 100; j++) {
+                int[] buffer = new int[2048];
+                for (int bufferIdx = 0; bufferIdx < buffer.length; bufferIdx++) {
+                    buffer[bufferIdx] = random.nextInt();
+                }
+                int total = 0;
+                for (int aBuffer : buffer) {
+                    total += aBuffer;
+                }
+                msg += total + " ";
+                TimeUnit.MILLISECONDS.sleep(10);
+            }
+            System.out.println(msg);
+        }
     }
 }

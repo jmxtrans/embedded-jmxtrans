@@ -42,14 +42,15 @@
     ],
     "outputWriters": [
         {
-            "@class": "org.jmxtrans.embedded.output.NoOpWriter"
+            "@class": "org.jmxtrans.embedded.output.ConsoleWriter"
         },
         {
             "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
             "settings": {
                 "host": "${graphite.host:localhost}",
                 "port": "${graphite.port:2003}",
-                "namePrefix": "servers.${server.name:localhost}."
+                "namePrefix": "servers.${server.name:localhost}.",
+                "enabled": false
             }
         }
     ],
