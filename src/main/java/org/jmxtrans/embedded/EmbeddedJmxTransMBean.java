@@ -61,4 +61,8 @@ public interface EmbeddedJmxTransMBean {
     int getDiscardedResultsCount();
 
     String getState();
+
+    void stop() throws Exception;
+
+    void start() throws Exception;
 }
