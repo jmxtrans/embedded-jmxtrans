@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2010-2015 the original author or authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 package org.jmxtrans.embedded.output;
 
 import org.jmxtrans.embedded.QueryResult;
@@ -6,12 +29,10 @@ import org.jmxtrans.embedded.util.StringUtils2;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +47,8 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     public final static String SETTING_BUFFER_SIZE = "bufferSize";
     private final static int SETTING_DEFAULT_BUFFER_SIZE = 1024;
     public static final String DEFAULT_NAME_PREFIX = "servers.#escaped_hostname#.";
+
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private ByteBuffer sendBuffer;
     /**
@@ -69,7 +92,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void stop() throws Exception {
+    public synchronized void stop() throws Exception {
         super.stop();
         channel.close();
     }
@@ -82,7 +105,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             String stat = metricPathPrefix + result.getName() + ":" + result.getValue() + "|" + getStatsdMetricType(result) + "\n";
 
             logger.debug("Export '{}'", stat);
-            final byte[] data = stat.getBytes(StandardCharsets.UTF_8);
+            final byte[] data = stat.getBytes(UTF_8);
 
             // If we're going to go past the threshold of the buffer then flush.
             // the +1 is for the potential '\n' in multi_metrics below
@@ -91,8 +114,7 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
             }
 
             if (sendBuffer.remaining() < (data.length + 1)) {
-                logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
-                        + StringUtils2.abbreviate(stat, 20));
+                notifyDataTooBig(stat, data);
                 continue;
             }
 
@@ -102,22 +124,22 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
         flush();
     }
 
+    protected void notifyDataTooBig(String stat, byte[] data) {
+        logger.warn("Given data too big (" + data.length + "bytes) for the buffer size (" + sendBuffer.remaining() + "bytes), skip it: "
+                + StringUtils2.abbreviate(stat, 20));
+    }
+
     public synchronized void flush() {
+        final int sizeOfBuffer = sendBuffer.position();
+        if (sizeOfBuffer == 0) {
+            // empty buffer
+            return;
+        }
         InetSocketAddress address = addressReference.get();
         try {
-            if (sendBuffer.position() == 0) {
-                // empty buffer
-                return;
-            }
-
-            final int sizeOfBuffer = sendBuffer.position();
-
             // send and reset the buffer
             sendBuffer.flip();
             final int nbSentBytes = channel.send(sendBuffer, address);
-            // why do we need redefine the limit?
-            sendBuffer.limit(sendBuffer.capacity());
-            sendBuffer.rewind();
 
             if (sizeOfBuffer != nbSentBytes) {
                 logger.warn("Could not send entirely stat {} to host {}:{}. Only sent {} bytes out of {} bytes",
@@ -126,6 +148,8 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
         } catch (IOException e) {
             addressReference.purge();
             logger.warn("Could not send stat {} to host {}:{}", sendBuffer, address.getHostName(), address.getPort(), e);
+        } finally {
+            sendBuffer.clear();
         }
     }
 
@@ -160,5 +184,9 @@ public class StatsDWriter extends AbstractOutputWriter implements OutputWriter {
                 ", metricPathPrefix='" + metricPathPrefix + '\'' +
                 ", sendBuffer=" + sendBuffer +
                 '}';
+    }
+
+    public synchronized void setChannel(DatagramChannel channel) {
+        this.channel = channel;
     }
 }

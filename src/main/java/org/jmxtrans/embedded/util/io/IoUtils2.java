@@ -26,10 +26,8 @@ package org.jmxtrans.embedded.util.io;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.annotation.Nonnull;
+import java.io.*;
 
 /**
  * IO utils.
@@ -63,6 +61,18 @@ public class IoUtils2 {
             closeable.close();
         } catch (IOException e) {
             logger.debug("Exception closing quietly", e);
+        }
+    }
+
+    public static InputStream getInputStream(@Nonnull String url) throws FileNotFoundException {
+
+        if (url.startsWith("classpath:")) {
+            InputStream result = Thread.currentThread().getContextClassLoader().getResourceAsStream(url.substring("classpath:".length()));
+            if (result == null)
+                throw new FileNotFoundException("File '" + url + "' not found");
+            return result;
+        } else {
+            return new FileInputStream(url);
         }
     }
 }

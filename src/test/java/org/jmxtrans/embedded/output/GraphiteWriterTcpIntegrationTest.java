@@ -24,26 +24,26 @@
 package org.jmxtrans.embedded.output;
 
 import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.embedded.TestUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.*;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class GraphiteWriterIntegrationTest {
+public class GraphiteWriterTcpIntegrationTest {
 
     GraphiteWriter graphiteWriter;
 
     @Before
-    public void before() {
+    public void before() throws Exception {
+        Map<String, Object> settings = TestUtils.loadSettingsFromClasspath("my-graphite-tcp-config.properties");
         graphiteWriter = new GraphiteWriter();
-        Map<String, Object> settings = new HashMap<String, Object>();
-        settings.put(AbstractOutputWriter.SETTING_HOST, "localhost");
-        settings.put(AbstractOutputWriter.SETTING_PORT, 2003);
-
         graphiteWriter.setSettings(settings);
         graphiteWriter.start();
     }
@@ -55,15 +55,15 @@ public class GraphiteWriterIntegrationTest {
 
     @Test
     public void testWithOneResult() throws Exception {
-        QueryResult queryResult = new QueryResult("testwithoneresult.singleresult", 10, System.currentTimeMillis());
+        QueryResult queryResult = new QueryResult("tcp_no_tls.testwithoneresult.singleresult", 10, System.currentTimeMillis());
         graphiteWriter.write(Collections.singleton(queryResult));
     }
 
     @Test
     public void testWithTwoResult() throws Exception {
 
-        QueryResult queryResult1 = new QueryResult("testwithtworesult.first", 10, System.currentTimeMillis());
-        QueryResult queryResult2 = new QueryResult("testwithtworesult.second", 20, System.currentTimeMillis());
+        QueryResult queryResult1 = new QueryResult("tcp_no_tls.testwithtworesult.first", 10, System.currentTimeMillis());
+        QueryResult queryResult2 = new QueryResult("tcp_no_tls.testwithtworesult.second", 20, System.currentTimeMillis());
         List<QueryResult> results = Arrays.asList(queryResult1, queryResult2);
 
         graphiteWriter.write(results);

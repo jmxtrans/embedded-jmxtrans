@@ -30,7 +30,7 @@
     </parent>
     <groupId>org.jmxtrans.embedded</groupId>
     <artifactId>embedded-jmxtrans</artifactId>
-    <version>1.0.16-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>embedded-jmxtrans</name>
     <description>In process JMX metrics exporter</description>
@@ -66,6 +66,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven-bundle-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <supportedProjectTypes>
@@ -104,7 +105,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${findbugs.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>verify</phase>
@@ -295,4 +296,36 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <github.global.server>github</github.global.server>
     </properties>
+    <profiles>
+        <profile>
+            <id>jdk16</id>
+            <activation>
+                <jdk>1.6</jdk>
+            </activation>
+            <properties>
+                <findbugs.plugin.version>2.5.5</findbugs.plugin.version>
+                <maven-bundle-plugin.version>2.5.4</maven-bundle-plugin.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk7</id>
+            <activation>
+                <jdk>1.7</jdk>
+            </activation>
+            <properties>
+                <findbugs.plugin.version>2.5.5</findbugs.plugin.version>
+                <maven-bundle-plugin.version>3.0.0</maven-bundle-plugin.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <findbugs.plugin.version>3.0.1</findbugs.plugin.version>
+                <maven-bundle-plugin.version>3.0.0</maven-bundle-plugin.version>
+            </properties>
+        </profile>
+    </profiles>
 </project>

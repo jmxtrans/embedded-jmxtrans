@@ -48,7 +48,7 @@ public class EmbeddedJmxTransBeanDefinitionParser2Test {
     @Test
     public void test() {
         Map<String,Query> queries = TestUtils.indexQueriesByAliasOrName(embeddedJmxTrans.getQueries());
-        Query tomcatProcessorQuery = queries.get("tomcat.global-request-processor.%name%");
+        Query tomcatProcessorQuery = queries.get("tomcat.global-request-processor.http-nio");
         assertNotNull(tomcatProcessorQuery);
     }
 }
