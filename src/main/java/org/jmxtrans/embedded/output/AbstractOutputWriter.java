@@ -200,7 +200,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     @Override
     public String toString() {
-        return getClass() + "{" +
+        return getClass().getName() + "{" +
                 "enabled=" + enabled +
                 ", settings=" + settings +
                 '}';
