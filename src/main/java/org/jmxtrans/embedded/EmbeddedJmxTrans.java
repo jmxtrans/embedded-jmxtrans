@@ -240,6 +240,12 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             shutdownHook.registerToRuntime();
             state = State.STARTED;
             logger.info("EmbeddedJmxTrans started");
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
+                logger.warn("Exception starting EmbeddedJmxTrans", e);
+            }
+            throw e;
         } finally {
             lifecycleLock.writeLock().unlock();
         }
@@ -283,7 +289,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                         logger.warn("collectScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
                     }
                 } catch (InterruptedException e) {
-                    logger.warn("Ignore InterruptedException shutting down exportScheduledExecutor", e);
+                    logger.warn("InterruptedException shutting down collectScheduledExecutor in stop()", e);
+                    throw e;
                 }
             } catch (RuntimeException e) {
                 logger.warn("Exception shutting down exportScheduledExecutor", e);
@@ -300,8 +307,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                         logger.warn("exportScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
                     }
                 } catch (InterruptedException e) {
-                    logger.warn("Ignore InterruptedException shutting down exportScheduledExecutor", e);
-                }
+                    logger.warn("InterruptedException shutting down exportScheduledExecutor in stop()", e);
+                    throw e;                }
             } catch (RuntimeException e) {
                 logger.warn("Exception shutting down exportScheduledExecutor", e);
             }
@@ -326,6 +333,12 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
             state = State.STOPPED;
             logger.info("Set state to {}", state);
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
+                logger.warn("Exception stopping EmbeddedJmxTrans", e);
+            }
+            throw e;
         } finally {
             lifecycleLock.writeLock().unlock();
         }
@@ -527,6 +540,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         return result;
     }
 
+    // return a String and not an embedded-jmxtrans class/enum to be portable and usable in JMX tools such as VisualVM
     @Nullable
     public String getState() {
         lifecycleLock.readLock().lock();
