@@ -149,7 +149,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     private final List<Query> queries = new ArrayList<Query>();
 
     /**
-     * Use to {@linkplain Set} to deduplicate during configuration merger
+     * Use a {@linkplain Set} to deduplicate during configuration merger
      */
     private Set<OutputWriter> outputWriters = new HashSet<OutputWriter>();
 
@@ -253,9 +253,16 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     /**
      * Stop scheduled executors and collect-and-export metrics one last time.
+     *
+     * @throws InterruptedException method call was interrupted. We prefer to rethrow the {@link InterruptedException} rather than handling it because:
+     *  <ul>
+     *      <li>Handling {@code InterruptedException} is hard and rethrowing the exception is a common pattern</li>
+     *      <li>The main cause of these {@code InterruptedException} would be someone invoking {@code Thread.interrupt()} and then we accept to be in an invalid state</li>
+     *      <li>The key steps of the {@code stop()}: {@code collectMetrics()} and {@code exportMetrics()} would have already been called</li>
+     *  </ul>
      */
     @PreDestroy
-    public void stop() throws Exception {
+    public void stop() throws InterruptedException {
         logger.info("Stop...");
         lifecycleLock.writeLock().lock();
         try {
@@ -272,45 +279,30 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 logger.info("Export metrics...");
                 exportCollectedMetrics();
             } catch (RuntimeException e) {
-                logger.warn("Failure to collect and export metrics during stop", e);
+                logger.warn("Ignore failure collecting and exporting metrics during stop", e);
             }
 
             state = State.STOPPING;
             logger.info("Set state to {}", state);
+
             logger.info("Shutdown collectScheduledExecutor ...");
-            try {
-                collectScheduledExecutor.shutdown();
-                try {
-                    boolean terminated = collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
-                    if (terminated) {
-                        logger.info("collectScheduledExecutor successfully shutdown");
-                    } else {
-                        List<Runnable> tasks = collectScheduledExecutor.shutdownNow();
-                        logger.warn("collectScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
-                    }
-                } catch (InterruptedException e) {
-                    logger.warn("InterruptedException shutting down collectScheduledExecutor in stop()", e);
-                    throw e;
-                }
-            } catch (RuntimeException e) {
-                logger.warn("Exception shutting down exportScheduledExecutor", e);
+            collectScheduledExecutor.shutdown();
+            boolean terminated1 = collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
+            if (terminated1) {
+                logger.info("collectScheduledExecutor successfully shutdown");
+            } else {
+                List<Runnable> tasks = collectScheduledExecutor.shutdownNow();
+                logger.warn("collectScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
             }
-            try {
-                logger.info("Shutdown exportScheduledExecutor ...");
-                exportScheduledExecutor.shutdown();
-                try {
-                    boolean terminated = exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
-                    if (terminated) {
-                        logger.info("exportScheduledExecutor successfully shutdown");
-                    } else {
-                        List<Runnable> tasks = exportScheduledExecutor.shutdownNow();
-                        logger.warn("exportScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
-                    }
-                } catch (InterruptedException e) {
-                    logger.warn("InterruptedException shutting down exportScheduledExecutor in stop()", e);
-                    throw e;                }
-            } catch (RuntimeException e) {
-                logger.warn("Exception shutting down exportScheduledExecutor", e);
+
+            logger.info("Shutdown exportScheduledExecutor ...");
+            exportScheduledExecutor.shutdown();
+            boolean terminated2 = exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
+            if (terminated2) {
+                logger.info("exportScheduledExecutor successfully shutdown");
+            } else {
+                List<Runnable> tasks = exportScheduledExecutor.shutdownNow();
+                logger.warn("exportScheduledExecutor could not shutdown in time. Abort tasks " + tasks);
             }
 
             logger.info("Stop queries...");
@@ -318,7 +310,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 try {
                     query.stop();
                 } catch (Exception e) {
-                    logger.warn("Exception stopping query {}", query, e);
+                    logger.warn("Ignore exception stopping query {}", query, e);
                 }
             }
 
@@ -327,13 +319,19 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 try {
                     outputWriter.stop();
                 } catch (Exception e) {
-                    logger.warn("Exception while stopping outputWriters", e);
+                    logger.warn("Ignore exception stopping outputWriters", e);
                 }
             }
 
             state = State.STOPPED;
             logger.info("Set state to {}", state);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            if (logger.isDebugEnabled()) {
+                // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
+                logger.warn("Exception stopping EmbeddedJmxTrans", e);
+            }
+            throw e;
+        } catch (InterruptedException e) {
             if (logger.isDebugEnabled()) {
                 // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
                 logger.warn("Exception stopping EmbeddedJmxTrans", e);
