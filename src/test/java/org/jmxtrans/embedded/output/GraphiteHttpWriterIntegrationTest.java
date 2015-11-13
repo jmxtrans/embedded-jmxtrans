@@ -52,13 +52,13 @@ public class GraphiteHttpWriterIntegrationTest {
         graphiteHttpWriter.stop();
     }
 
-    @Test
+    @Test(timeout = 5000)
     public void testWithOneResult() throws Exception {
         QueryResult queryResult = new QueryResult("testwithoneresult.singleresult", 10, System.currentTimeMillis());
         graphiteHttpWriter.write(Collections.singleton(queryResult));
     }
 
-    @Test
+    @Test(timeout = 5000)
     public void testWithTwoResult() throws Exception {
 
         QueryResult queryResult1 = new QueryResult("testwithtworesult.first", 10, System.currentTimeMillis());
