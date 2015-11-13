@@ -24,6 +24,7 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.output.OutputWriterSet;
 import org.jmxtrans.embedded.util.Preconditions;
 import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
@@ -34,7 +35,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,7 +79,7 @@ public class Query implements QueryMBean {
      * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
      */
     @Nonnull
-    private Map<String, QueryAttribute> attributesByName = new HashMap<String, QueryAttribute>();
+    private final Map<String, QueryAttribute> attributesByName = new HashMap<String, QueryAttribute>();
     /**
      * Copy of {@link #attributesByName}'s {@link java.util.Map#entrySet()} for performance optimization
      */
@@ -89,7 +93,7 @@ public class Query implements QueryMBean {
      * @see #getEffectiveOutputWriters()
      */
     @Nonnull
-    private List<OutputWriter> outputWriters = new ArrayList<OutputWriter>();
+    private final OutputWriterSet outputWriters = new OutputWriterSet();
 
     /**
      * Store the metrics collected on this {@linkplain Query} (see {@link #collectMetrics()})
@@ -160,6 +164,9 @@ public class Query implements QueryMBean {
         logger.trace("Query {} returned {}", objectName, matchingObjectNames);
 
         for (ObjectName matchingObjectName : matchingObjectNames) {
+            if (Thread.interrupted()) {
+                throw new RuntimeException(new InterruptedException());
+            }
             long epochInMillis = System.currentTimeMillis();
             try {
                 AttributeList jmxAttributes = embeddedJmxTrans.getMbeanServer().getAttributes(matchingObjectName, this.attributeNames);
@@ -189,29 +196,29 @@ public class Query implements QueryMBean {
      */
     @Override
     public int exportCollectedMetrics() {
-        if(queryResults.isEmpty()) {
+        if (queryResults.isEmpty()) {
             return 0;
         }
 
-        int totalExportedMetricsCount = 0;
+        int successfullyExportedMetricsCount = 0;
         long nanosBefore = System.nanoTime();
 
-        List<OutputWriter> effectiveOutputWriters = getEffectiveOutputWriters();
         int exportBatchSize = getEmbeddedJmxTrans().getExportBatchSize();
         List<QueryResult> availableQueryResults = new ArrayList<QueryResult>(exportBatchSize);
 
         int size;
         while ((size = queryResults.drainTo(availableQueryResults, exportBatchSize)) > 0) {
-            totalExportedMetricsCount += size;
-            exportedMetricsCount.addAndGet(size);
-            for (OutputWriter outputWriter : effectiveOutputWriters) {
-                outputWriter.write(availableQueryResults);
+            if (Thread.interrupted()) {
+                throw new RuntimeException(new InterruptedException());
             }
+            OutputWriterSet.tryToWriteQueryResultsBatchToAll(availableQueryResults, getEmbeddedJmxTrans().getOutputWriters(), getOutputWriters());
+            successfullyExportedMetricsCount += size;
+            exportedMetricsCount.addAndGet(size);
             availableQueryResults.clear();
         }
         exportDurationInNanos.addAndGet(System.nanoTime() - nanosBefore);
         exportCount.incrementAndGet();
-        return totalExportedMetricsCount;
+        return successfullyExportedMetricsCount;
     }
 
     /**
@@ -221,10 +228,7 @@ public class Query implements QueryMBean {
     public void start() throws Exception {
         queryMbeanObjectName = JmxUtils2.registerObject(this, "org.jmxtrans.embedded:Type=Query,id=" + id, getEmbeddedJmxTrans().getMbeanServer());
 
-
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.start();
-        }
+        outputWriters.startAll();
     }
 
     /**
@@ -234,9 +238,7 @@ public class Query implements QueryMBean {
     public void stop() throws Exception {
         JmxUtils2.unregisterObject(queryMbeanObjectName, embeddedJmxTrans.getMbeanServer());
 
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.stop();
-        }
+        outputWriters.stopAll();
     }
 
     @Override
@@ -313,21 +315,13 @@ public class Query implements QueryMBean {
     public List<OutputWriter> getEffectiveOutputWriters() {
         // Google Guava predicates would be nicer but we don't include guava to ease embeddability
         List<OutputWriter> result = new ArrayList<OutputWriter>(embeddedJmxTrans.getOutputWriters().size() + outputWriters.size());
-        for (OutputWriter outputWriter : embeddedJmxTrans.getOutputWriters()) {
-            if (outputWriter.isEnabled()) {
-                result.add(outputWriter);
-            }
-        }
-        for (OutputWriter outputWriter : outputWriters) {
-            if (outputWriter.isEnabled()) {
-                result.add(outputWriter);
-            }
-        }
+        result.addAll(embeddedJmxTrans.getOutputWriters().findEnabled());
+        result.addAll(this.getOutputWriters().findEnabled());
         return result;
     }
 
     @Nonnull
-    public List<OutputWriter> getOutputWriters() {
+    public OutputWriterSet getOutputWriters() {
         return outputWriters;
     }
 
