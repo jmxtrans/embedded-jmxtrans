@@ -132,7 +132,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    enum State {STOPPED, STARTING, STARTED, STOPPING}
+    enum State {STOPPED, STARTED, ERROR}
 
     private State state = State.STOPPED;
 
@@ -177,7 +177,6 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 return;
             }
             logger.info("Start...");
-            state = State.STARTING;
 
             for (Query query : queries) {
                 query.start();
@@ -240,7 +239,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             shutdownHook.registerToRuntime();
             state = State.STARTED;
             logger.info("EmbeddedJmxTrans started");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            this.state = State.ERROR;
             if (logger.isDebugEnabled()) {
                 // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
                 logger.warn("Exception starting EmbeddedJmxTrans", e);
@@ -281,9 +281,6 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 logger.warn("Ignore failure collecting and exporting metrics during stop", e);
             }
 
-            state = State.STOPPING;
-            logger.info("Set state to {}", state);
-
             // queries and outputwriters can be stopped even if exports threads are running thanks to the lifecycleLock
             logger.info("Stop queries...");
             for (Query query : queries) {
@@ -306,6 +303,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             state = State.STOPPED;
             logger.info("Set state to {}", state);
         } catch (RuntimeException e) {
+            state = State.ERROR;
             if (logger.isDebugEnabled()) {
                 // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
                 logger.warn("Exception stopping EmbeddedJmxTrans", e);
