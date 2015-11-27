@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.management.MBeanServer;
@@ -40,8 +41,6 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -89,7 +88,9 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     private class EmbeddedJmxTransShutdownHook extends Thread {
 
-        private final AtomicBoolean alreadyExecuted = new AtomicBoolean(false);
+        private boolean removed = false;
+
+        private final Logger logger = LoggerFactory.getLogger(getClass());
 
         public EmbeddedJmxTransShutdownHook() {
             setName(getClass().getSimpleName() + "-" + getName());
@@ -97,40 +98,11 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
         @Override
         public void run() {
-            // this method will be executed by the Runtime as a Shutdown Hook
-            execute("EmbeddedJmxTransShutdownHook");
-        }
-
-        private void execute(String invokerName) {
-            if (alreadyExecuted.compareAndSet(false, true)) {
-                try {
-                    collectMetrics();
-                    exportCollectedMetrics();
-                    logger.info("{} successfully collected and exported metrics one last time", invokerName);
-                } catch (RuntimeException e) {
-                    logger.warn("{} failed to collect and export metrics one last time", invokerName);
-                }
-
-                try {
-                    for (Query query : queries) {
-                        query.stop();
-                    }
-                } catch (Exception e) {
-                    logger.warn("Failure while stopping queries", e);
-                }
-
-                try {
-                    for (OutputWriter outputWriter : outputWriters) {
-                        outputWriter.stop();
-                    }
-                } catch (Exception e) {
-                    logger.warn("Failure while stopping outputWriters", e);
-                }
+            try {
+                EmbeddedJmxTrans.this.stop();
+            } catch(Exception e) {
+                logger.warn("Exception shutting down", e);
             }
-        }
-
-        public boolean isAlreadyExecuted() {
-            return alreadyExecuted.get();
         }
 
         public void registerToRuntime() {
@@ -138,28 +110,21 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         }
 
         public void unregisterFromRuntime() {
+            if (removed) {
+                logger.debug("Shutdown hook already removed");
+            }
             try {
                 boolean shutdownHookRemoved = Runtime.getRuntime().removeShutdownHook(this);
                 if (shutdownHookRemoved) {
+                    removed = true;
                     logger.debug("ShutdownHook successfully removed");
                 } else {
                     logger.warn("Failure to remove ShutdownHook");
                 }
+            } catch (IllegalStateException e) {
+                logger.debug("Failure to remove ShutdownHook, probably 'Shutdown in progress'", e);
             } catch (RuntimeException e) {
                 logger.warn("Failure to remove ShutdownHook", e);
-            }
-        }
-
-        public void onStop() {
-            // if the shutdown hook was already executed by the Runtime
-            // then we should not try to remove it from the Runtime otherwise we would get an IllegalStateException: Shutdown in progress
-
-            if (!isAlreadyExecuted()) {
-                unregisterFromRuntime();
-
-                // as the shutdownHook was not already executed
-                // we want to execute it in order to trigger the last collection and export
-                execute("EmbeddedJmxTrans Stop Handler");
             }
         }
 
@@ -167,11 +132,11 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    enum State {STOPPED, STARTING, STARTED, STOPPING}
+    enum State {STOPPED, STARTED, ERROR}
 
-    private AtomicReference<State> state = new AtomicReference(State.STOPPED);
+    private State state = State.STOPPED;
 
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private final ReadWriteLock lifecycleLock = new ReentrantReadWriteLock();
 
     private ScheduledExecutorService collectScheduledExecutor;
 
@@ -184,7 +149,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     private final List<Query> queries = new ArrayList<Query>();
 
     /**
-     * Use to {@linkplain Set} to deduplicate during configuration merger
+     * Use a {@linkplain Set} to deduplicate during configuration merger
      */
     private Set<OutputWriter> outputWriters = new HashSet<OutputWriter>();
 
@@ -204,15 +169,14 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      * Start the exporter: initialize underlying queries, start scheduled executors, register shutdown hook
      */
     @PostConstruct
-    public synchronized void start() throws Exception {
-        readWriteLock.writeLock().lock();
+    public void start() throws Exception {
+        lifecycleLock.writeLock().lock();
         try {
-            State state = this.state.get();
             if (!State.STOPPED.equals(state)) {
                 logger.warn("Ignore start() command for {} instance", state);
                 return;
             }
-            this.state.set(State.STARTING);
+            logger.info("Start...");
 
             for (Query query : queries) {
                 query.start();
@@ -224,20 +188,20 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             collectScheduledExecutor = Executors.newScheduledThreadPool(getNumQueryThreads(), new NamedThreadFactory("jmxtrans-collect-", true));
             exportScheduledExecutor = Executors.newScheduledThreadPool(getNumExportThreads(), new NamedThreadFactory("jmxtrans-export-", true));
 
+            logger.info("Start queries and output writers...");
             for (final Query query : getQueries()) {
                 collectScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                     @Override
                     public void run() {
-                        readWriteLock.readLock().lock();
+                        lifecycleLock.readLock().lock();
                         try {
-                            State state = EmbeddedJmxTrans.this.state.get();
                             if (!State.STARTED.equals(state)) {
                                 logger.debug("Ignore query.collectMetrics() command for {} instance", state);
                                 return;
                             }
                             query.collectMetrics();
                         } finally {
-                            readWriteLock.readLock().unlock();
+                            lifecycleLock.readLock().unlock();
                         }
                     }
 
@@ -251,9 +215,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 exportScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                     @Override
                     public void run() {
-                        readWriteLock.readLock().lock();
+                        lifecycleLock.readLock().lock();
                         try {
-                            State state = EmbeddedJmxTrans.this.state.get();
                             if (!State.STARTED.equals(state)) {
                                 logger.debug("Ignore query.exportCollectedMetrics() command for {} instance", state);
                                 return;
@@ -261,7 +224,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
                             query.exportCollectedMetrics();
                         } finally {
-                            readWriteLock.readLock().unlock();
+                            lifecycleLock.readLock().unlock();
                         }
                     }
 
@@ -274,56 +237,82 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
             shutdownHook = new EmbeddedJmxTransShutdownHook();
             shutdownHook.registerToRuntime();
-            this.state.set(State.STARTED);
+            state = State.STARTED;
             logger.info("EmbeddedJmxTrans started");
+        } catch (RuntimeException e) {
+            this.state = State.ERROR;
+            if (logger.isDebugEnabled()) {
+                // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
+                logger.warn("Exception starting EmbeddedJmxTrans", e);
+            }
+            throw e;
         } finally {
-            readWriteLock.writeLock().unlock();
+            lifecycleLock.writeLock().unlock();
         }
     }
-
 
     /**
      * Stop scheduled executors and collect-and-export metrics one last time.
      */
     @PreDestroy
-    public synchronized void stop() throws Exception {
-        readWriteLock.writeLock().lock();
+    public void stop() {
+        logger.info("Stop...");
+        lifecycleLock.writeLock().lock();
         try {
-            State state = this.state.get();
             if (!State.STARTED.equals(state)) {
                 logger.debug("Ignore stop() command for " + state + " instance");
                 return;
             }
-            this.state.set(State.STOPPING);
+            logger.info("Unregister shutdown hook");
+            this.shutdownHook.unregisterFromRuntime();
+
+            logger.info("Shutdown collectScheduledExecutor and exportScheduledExecutor...");
+            // no need to `shutdown()` and `awaitTermination()` before `shutdownNow()` as we invoke `collectMetrics()` and `exportCollectedMetrics()`
+            // `shutdownNow()` can be invoked before `collectMetrics()` and `exportCollectedMetrics()`
+            collectScheduledExecutor.shutdownNow();
+            exportScheduledExecutor.shutdownNow();
+
             try {
-                collectScheduledExecutor.shutdown();
-                try {
-                    boolean terminated = collectScheduledExecutor.awaitTermination(getQueryIntervalInSeconds(), TimeUnit.SECONDS);
-                    if (!terminated) {
-                        List<Runnable> tasks = collectScheduledExecutor.shutdownNow();
-                        logger.warn("Collect executor could not shutdown in time. Abort tasks " + tasks);
-                    }
-                } catch (InterruptedException e) {
-                    logger.warn("Ignore InterruptedException stopping", e);
-                }
-                exportScheduledExecutor.shutdown();
-                try {
-                    boolean terminated = exportScheduledExecutor.awaitTermination(getExportIntervalInSeconds(), TimeUnit.SECONDS);
-                    if (!terminated) {
-                        List<Runnable> tasks = exportScheduledExecutor.shutdownNow();
-                        logger.warn("Export executor could not shutdown in time. Abort tasks " + tasks);
-                    }
-                } catch (InterruptedException e) {
-                    logger.warn("Ignore InterruptedException stopping", e);
-                }
+                logger.info("Collect metrics...");
+                collectMetrics();
+                logger.info("Export metrics...");
+                exportCollectedMetrics();
             } catch (RuntimeException e) {
-                logger.warn("Failure while shutting down ExecutorServices", e);
+                logger.warn("Ignore failure collecting and exporting metrics during stop", e);
             }
-            shutdownHook.onStop();
-            this.state.set(State.STOPPED);
+
+            // queries and outputwriters can be stopped even if exports threads are running thanks to the lifecycleLock
+            logger.info("Stop queries...");
+            for (Query query : queries) {
+                try {
+                    query.stop();
+                } catch (Exception e) {
+                    logger.warn("Ignore exception stopping query {}", query, e);
+                }
+            }
+
+            logger.info("Stop output writers...");
+            for (OutputWriter outputWriter : outputWriters) {
+                try {
+                    outputWriter.stop();
+                } catch (Exception e) {
+                    logger.warn("Ignore exception stopping outputWriters", e);
+                }
+            }
+
+            state = State.STOPPED;
+            logger.info("Set state to {}", state);
+        } catch (RuntimeException e) {
+            state = State.ERROR;
+            if (logger.isDebugEnabled()) {
+                // to troubleshoot JMX call errors or equivalent, it may be useful to log and rethrow
+                logger.warn("Exception stopping EmbeddedJmxTrans", e);
+            }
+            throw e;
         } finally {
-            readWriteLock.writeLock().unlock();
+            lifecycleLock.writeLock().unlock();
         }
+        logger.info("Stopped");
     }
 
 
@@ -332,9 +321,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     @Override
     public void collectMetrics() {
-        readWriteLock.readLock().lock();
+        lifecycleLock.readLock().lock();
         try {
-            State state = this.state.get();
             if (!State.STARTED.equals(state)) {
                 logger.debug("Ignore collectMetrics() command for " + state + " instance");
                 return;
@@ -343,7 +331,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 query.collectMetrics();
             }
         } finally {
-            readWriteLock.readLock().unlock();
+            lifecycleLock.readLock().unlock();
         }
     }
 
@@ -352,18 +340,17 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
      */
     @Override
     public void exportCollectedMetrics() {
-        readWriteLock.readLock().lock();
+        lifecycleLock.readLock().lock();
         try {
-            State state = this.state.get();
             if (!State.STARTED.equals(state)) {
-                logger.debug("Ignore collectMetrics() command for not running instance");
+                logger.debug("Ignore collectMetrics() command for " + state + " instance");
                 return;
             }
             for (Query query : getQueries()) {
                 query.exportCollectedMetrics();
             }
         } finally {
-            readWriteLock.readLock().unlock();
+            lifecycleLock.readLock().unlock();
         }
     }
 
@@ -380,7 +367,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     @Override
     public String toString() {
         return "EmbeddedJmxTrans{" +
-                "state=" + state +
+                "state=" + getState() +
                 ", queries=" + queries +
                 ", outputWriters=" + outputWriters +
                 ", numQueryThreads=" + numQueryThreads +
@@ -521,5 +508,16 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             }
         }
         return result;
+    }
+
+    // return a String and not an embedded-jmxtrans class/enum to be portable and usable in JMX tools such as VisualVM
+    @Nullable
+    public String getState() {
+        lifecycleLock.readLock().lock();
+        try {
+            return state == null ? null : state.toString();
+        } finally {
+            lifecycleLock.readLock().unlock();
+        }
     }
 }
