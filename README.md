@@ -1,5 +1,3 @@
-[![Build Status](https://buildhive.cloudbees.com/job/jmxtrans/job/embedded-jmxtrans/badge/icon)](https://buildhive.cloudbees.com/job/jmxtrans/job/embedded-jmxtrans/)
-
 # embedded-jmxtrans
 
 In process JMX metrics exporter. Inspired by the standalone version of jmxtrans but embedded inside your java process (e.g. Tomcat).
