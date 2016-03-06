@@ -23,6 +23,7 @@
  */
 package org.jmxtrans.embedded.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -109,9 +110,16 @@ public class ConfigurationParser {
                 InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
                 Preconditions.checkNotNull(in, "No file found for '" + configurationUrl + "'");
                 mergeEmbeddedJmxTransConfiguration(in, embeddedJmxTrans);
+            } else if (configurationUrl.startsWith("etcd:")) {
+                KVStore kvs = new EtcdKVStore();
+                String jsonConf = kvs.getKeyValue(configurationUrl).getValue();
+                Preconditions.checkNotNull(jsonConf, "No value found for '" + configurationUrl + "'");
+                InputStream in = new ByteArrayInputStream(jsonConf.getBytes("UTF-8"));
+                mergeEmbeddedJmxTransConfiguration(in, embeddedJmxTrans);
             } else {
                 mergeEmbeddedJmxTransConfiguration(new URL(configurationUrl), embeddedJmxTrans);
             }
+
         } catch (JsonProcessingException e) {
             throw new EmbeddedJmxTransException("Exception loading configuration'" + configurationUrl + "': " + e.getMessage(), e);
         } catch (Exception e) {
