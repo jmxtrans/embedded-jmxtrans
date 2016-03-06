@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 the original author or authors
+ * Copyright (c) 2016 the original author or authors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,7 @@ package org.jmxtrans.embedded.config;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.StringTokenizer;
 
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 
@@ -40,14 +41,15 @@ public class EtcdKVStore implements KVStore {
    *
    */
   public EtcdKVStore() {
-    // TODO Auto-generated constructor stub
+    super();
   }
 
   /**
-   * Questo metodo
+   * Get a key value from etcd. Returns the key value and the etcd modification index as version
    *
-   * @param KeyURI
-   * @return
+   * @param KeyURI URI of the key in the form etcd://ipaddr:port/path for an etcd cluster you can
+   *        use etcd://[ipaddr1:port1, ipaddr:port2,...]:/path
+   * @return a KeyValue object
    * @throws EmbeddedJmxTransException
    *
    * @see org.jmxtrans.embedded.config.KVStore#getKeyValue(java.lang.String)
@@ -58,7 +60,7 @@ public class EtcdKVStore implements KVStore {
     String key = KeyURI.substring(KeyURI.indexOf("/", 7));
     EtcdClient etcd = null;
     try {
-      etcd = new EtcdClient(URI.create(etcdURI));
+      etcd = new EtcdClient(makeEtcdUris(etcdURI));
       EtcdResponsePromise<EtcdKeysResponse> conf = etcd.get(key).send();
       EtcdKeysResponse resp = conf.get();
       String keyVal = resp.node.value;
@@ -85,4 +87,28 @@ public class EtcdKVStore implements KVStore {
     }
   }
 
+  private URI[] makeEtcdUris(String etcdURI) throws EmbeddedJmxTransException {
+    String serverList = null;
+    try {
+      if (etcdURI.indexOf("[") > 0) {
+        serverList = etcdURI.substring(etcdURI.indexOf("[") + 1, etcdURI.indexOf("]"));
+      } else {
+        serverList = etcdURI.substring(7, etcdURI.indexOf("/"));
+      }
+
+      StringTokenizer st = new StringTokenizer(serverList, ",");
+      URI[] result = new URI[st.countTokens()];
+      int k = 0;
+      while (st.hasMoreTokens()) {
+        result[k] = URI.create("etcd://" + st.nextToken().trim());
+        k++;
+      }
+
+      return result;
+
+    } catch (Exception e) {
+      throw new EmbeddedJmxTransException("Exception buildind etcd server list from: '" + etcdURI + "': " + e.getMessage(), e);
+    }
+
+  }
 }
