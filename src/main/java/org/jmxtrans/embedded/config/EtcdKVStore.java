@@ -20,15 +20,19 @@
 package org.jmxtrans.embedded.config;
 
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.IOUtils;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
+import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
 
-import mousio.etcd4j.EtcdClient;
-import mousio.etcd4j.promises.EtcdResponsePromise;
-import mousio.etcd4j.responses.EtcdException;
-import mousio.etcd4j.responses.EtcdKeysResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This is an etcd based KVStore implementation. The connection to etcd is estabilished and closed
@@ -36,6 +40,145 @@ import mousio.etcd4j.responses.EtcdKeysResponse;
  * it at relativly long interval times
  */
 public class EtcdKVStore implements KVStore {
+
+  private static final String HTTP_ERR = "ERR";
+
+  private final ObjectMapper mapper;
+  {
+    mapper = new ObjectMapper();
+    mapper.setNodeFactory(new PlaceholderEnabledJsonNodeFactory());
+  }
+
+  public static class EtcdNode {
+    private String key;
+    private long createdIndex;
+    private long modifiedIndex;
+    private String value;
+
+    // For TTL keys
+    private String expiration;
+    private Integer ttl;
+
+
+    public EtcdNode() {
+      super();
+    }
+
+    public String getKey() {
+      return key;
+    }
+
+    public void setKey(String key) {
+      this.key = key;
+    }
+
+    public long getCreatedIndex() {
+      return createdIndex;
+    }
+
+    public void setCreatedIndex(long createdIndex) {
+      this.createdIndex = createdIndex;
+    }
+
+    public long getModifiedIndex() {
+      return modifiedIndex;
+    }
+
+    public void setModifiedIndex(long modifiedIndex) {
+      this.modifiedIndex = modifiedIndex;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    public void setValue(String value) {
+      this.value = value;
+    }
+
+    public String getExpiration() {
+      return expiration;
+    }
+
+    public void setExpiration(String expiration) {
+      this.expiration = expiration;
+    }
+
+    public Integer getTtl() {
+      return ttl;
+    }
+
+    public void setTtl(Integer ttl) {
+      this.ttl = ttl;
+    }
+
+  }
+
+  public static class EtcdResult {
+    // General values
+    private String action;
+    private EtcdNode node;
+
+    // For errors
+    private Integer errorCode;
+    private String message;
+    private String cause;
+    private int errorIndex;
+
+    public EtcdResult() {
+      super();
+    }
+
+    public String getAction() {
+      return action;
+    }
+
+    public void setAction(String action) {
+      this.action = action;
+    }
+
+    public EtcdNode getNode() {
+      return node;
+    }
+
+    public void setNode(EtcdNode node) {
+      this.node = node;
+    }
+
+    public Integer getErrorCode() {
+      return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+      this.errorCode = errorCode;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
+    public void setMessage(String message) {
+      this.message = message;
+    }
+
+    public String getCause() {
+      return cause;
+    }
+
+    public void setCause(String cause) {
+      this.cause = cause;
+    }
+
+    public int getErrorIndex() {
+      return errorIndex;
+    }
+
+    public void setErrorIndex(int errorIndex) {
+      this.errorIndex = errorIndex;
+    }
+
+  }
+
 
   /**
    *
@@ -58,36 +201,16 @@ public class EtcdKVStore implements KVStore {
 
     String etcdURI = KeyURI.substring(0, KeyURI.indexOf("/", 7));
     String key = KeyURI.substring(KeyURI.indexOf("/", 7));
-    EtcdClient etcd = null;
     try {
-      etcd = new EtcdClient(makeEtcdUris(etcdURI));
-      EtcdResponsePromise<EtcdKeysResponse> conf = etcd.get(key).send();
-      EtcdKeysResponse resp = conf.get();
-      String keyVal = resp.node.value;
 
-      return new KeyValue(keyVal, Long.toString(resp.node.modifiedIndex));
-
-    } catch (EtcdException e) {
-      if (e.errorCode == 100) {
-        return null;
-      } else {
-        throw new EmbeddedJmxTransException("Exception reading etcd key '" + KeyURI + "': " + e.getMessage(), e);
-      }
+      return getFromEtcd(makeEtcdBaseUris(etcdURI), key);
 
     } catch (Throwable t) {
       throw new EmbeddedJmxTransException("Exception reading etcd key '" + KeyURI + "': " + t.getMessage(), t);
-    } finally {
-      try {
-        if (etcd != null) {
-          etcd.close();
-        }
-      } catch (IOException e) {
-        // Nothing to do closing
-      }
     }
   }
 
-  private URI[] makeEtcdUris(String etcdURI) throws EmbeddedJmxTransException {
+  private URL[] makeEtcdBaseUris(String etcdURI) throws EmbeddedJmxTransException {
     String serverList = null;
     try {
       if (etcdURI.indexOf("[") > 0) {
@@ -97,10 +220,10 @@ public class EtcdKVStore implements KVStore {
       }
 
       StringTokenizer st = new StringTokenizer(serverList, ",");
-      URI[] result = new URI[st.countTokens()];
+      URL[] result = new URL[st.countTokens()];
       int k = 0;
       while (st.hasMoreTokens()) {
-        result[k] = URI.create("etcd://" + st.nextToken().trim());
+        result[k] = new URL("http://" + st.nextToken().trim());
         k++;
       }
 
@@ -110,5 +233,96 @@ public class EtcdKVStore implements KVStore {
       throw new EmbeddedJmxTransException("Exception buildind etcd server list from: '" + etcdURI + "': " + e.getMessage(), e);
     }
 
+  }
+
+  private KeyValue getFromEtcd(URL[] baseUris, String key) throws EmbeddedJmxTransException {
+
+    String json = null;
+    int k = -1;
+    while (k < baseUris.length - 1) {
+      k++;
+      String httpResponse = httpGET(baseUris[k], key);
+      if (httpResponse == null) {
+        // key not found on etcd server; since it's a cluster no need to try another one
+        return null;
+      }
+      if (!HTTP_ERR.equals(httpResponse)) {
+        json = httpResponse;
+        break;
+      }
+
+    }
+
+    if (json == null) {
+      // couldn't get the key from etcd
+      return null;
+    }
+
+    EtcdResult res = null;
+    try {
+      res = mapper.readValue(json, EtcdResult.class);
+    } catch (Exception e) {
+      throw new EmbeddedJmxTransException("Exception parsing etcd response: '" + json + "': " + e.getMessage(), e);
+    }
+
+    if (res.errorCode == null) {
+      return new KeyValue(res.node.value, Long.toString(res.node.modifiedIndex));
+    } else if (res.errorCode == 100) {
+      // key not found
+      return null;
+    } else {
+      throw new EmbeddedJmxTransException("Etcd error reading etcd key '" + key + "': " + res.errorCode);
+    }
+
+  }
+
+  private String httpGET(URL base, String key) {
+
+    InputStream is = null;
+    HttpURLConnection conn = null;
+    String json = null;
+    try {
+      URL url = new URL(base + "/v2/keys/" + key);
+      conn = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
+      conn.setRequestMethod("GET");
+      conn.setConnectTimeout(2000);
+      conn.setReadTimeout(2000);
+
+      conn.connect();
+      int respCode = conn.getResponseCode();
+
+      if (respCode == 404) {
+        return null;
+      } else if (respCode > 400) {
+        return HTTP_ERR;
+      }
+
+      is = conn.getInputStream();
+      String contentEncoding = conn.getContentEncoding() != null ? conn.getContentEncoding() : "UTF-8";
+      json = IOUtils.toString(is, contentEncoding);
+      System.out.println("JSON: " + json);
+    } catch (MalformedURLException e) {
+      json = HTTP_ERR;
+      // nothing to do, try next server
+    } catch (ProtocolException e) {
+      // nothing to do, try next server
+      json = HTTP_ERR;
+    } catch (IOException e) {
+      // nothing to do, try next server
+      json = HTTP_ERR;
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException e) {
+          // nothing to do, try next server
+        }
+      }
+      if (conn != null) {
+        conn.disconnect();
+      }
+    }
+
+    return json;
   }
 }
