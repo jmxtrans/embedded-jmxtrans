@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2016 the original author or authors
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -38,6 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * This is an etcd based KVStore implementation. The connection to etcd is estabilished and closed
  * every time a key is read. This is by design since we don't need to read a lot of keys and we do
  * it at relativly long interval times
+ *
+ * @author Simone Zorzetti
  */
 public class EtcdKVStore implements KVStore {
 
@@ -49,6 +51,9 @@ public class EtcdKVStore implements KVStore {
     mapper.setNodeFactory(new PlaceholderEnabledJsonNodeFactory());
   }
 
+  /**
+   * Bean for a simplified etcd node
+   */
   public static class EtcdNode {
     private String key;
     private long createdIndex;
@@ -114,6 +119,9 @@ public class EtcdKVStore implements KVStore {
 
   }
 
+  /**
+   * Bean for a simplified etcd answer (just for GET)
+   */
   public static class EtcdResult {
     // General values
     private String action;

@@ -20,10 +20,12 @@
 package org.jmxtrans.embedded.config;
 
 /**
- * This class is a value retrieved from a key value store. Associated with the value comes the
- * version. The version is a unique id of the value of the key it can be used to determine if a key
- * has been changed. Etcd and Consul use an "index", a monotone incrementing number, Zookeeper uses
- * transaction ids
+ * This class represents a value retrieved from a key value store. Associated with the value comes
+ * the version. The version is a unique for the value of the key. It can be used to determine if a
+ * key has been changed. Etcd and Consul use an "index", a monotonically incrementing number,
+ * Zookeeper uses transaction ids
+ *
+ * @author Simone Zorzetti
  */
 public class KeyValue {
 
