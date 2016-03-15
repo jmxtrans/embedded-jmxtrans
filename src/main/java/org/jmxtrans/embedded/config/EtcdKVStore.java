@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * This is an etcd based KVStore implementation. The connection to etcd is estabilished and closed
  * every time a key is read. This is by design since we don't need to read a lot of keys and we do
  * it at relativly long interval times
- *
+ * 
  * @author Simone Zorzetti
  */
 public class EtcdKVStore implements KVStore {
@@ -197,12 +197,12 @@ public class EtcdKVStore implements KVStore {
 
   /**
    * Get a key value from etcd. Returns the key value and the etcd modification index as version
-   *
+   * 
    * @param KeyURI URI of the key in the form etcd://ipaddr:port/path for an etcd cluster you can
    *        use etcd://[ipaddr1:port1, ipaddr:port2,...]:/path
    * @return a KeyValue object
    * @throws EmbeddedJmxTransException
-   *
+   * 
    * @see org.jmxtrans.embedded.config.KVStore#getKeyValue(java.lang.String)
    */
   public KeyValue getKeyValue(String KeyURI) throws EmbeddedJmxTransException {
@@ -224,7 +224,7 @@ public class EtcdKVStore implements KVStore {
       if (etcdURI.indexOf("[") > 0) {
         serverList = etcdURI.substring(etcdURI.indexOf("[") + 1, etcdURI.indexOf("]"));
       } else {
-        serverList = etcdURI.substring(7, etcdURI.indexOf("/"));
+        serverList = etcdURI.substring(7, etcdURI.indexOf("/", 7));
       }
 
       StringTokenizer st = new StringTokenizer(serverList, ",");
@@ -308,7 +308,6 @@ public class EtcdKVStore implements KVStore {
       is = conn.getInputStream();
       String contentEncoding = conn.getContentEncoding() != null ? conn.getContentEncoding() : "UTF-8";
       json = IOUtils.toString(is, contentEncoding);
-      System.out.println("JSON: " + json);
     } catch (MalformedURLException e) {
       json = HTTP_ERR;
       // nothing to do, try next server
