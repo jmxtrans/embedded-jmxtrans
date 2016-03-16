@@ -434,49 +434,49 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                 logger.warn("parts return NULL!!!");
             }
         }
-        if(jvm_os_counters.size() > 0) {
+        if(!jvm_os_counters.isEmpty()) {
             sort_n_send(jvm_os_groupID, jvm_os_counters);
         }
-        if(jvm_gc_counters.size() > 0) {
+        if(!jvm_gc_counters.isEmpty()) {
             sort_n_send(jvm_gc_groupID, jvm_gc_counters);
         }
-        if(jvm_runtime_counters.size() > 0) {
+        if(!jvm_runtime_counters.isEmpty()) {
             sort_n_send(jvm_runtime_groupID, jvm_runtime_counters);
         }
-        if(jvm_class_counters.size() > 0) {
+        if(!jvm_class_counters.isEmpty()) {
             sort_n_send(jvm_class_groupID, jvm_class_counters);
         }
-        if(jvm_thread_counters.size() > 0) {
+        if(!jvm_thread_counters.isEmpty()) {
             sort_n_send(jvm_thread_groupID, jvm_thread_counters);
         }
-        if(heap_counters.size() > 0) {
+        if(!heap_counters.isEmpty()) {
             sort_n_send(heap_metric_groupID, heap_counters);
         }
-        if(nonheap_counters.size() > 0) {
+        if(!nonheap_counters.isEmpty()) {
             sort_n_send(nonheap_metric_groupID, nonheap_counters);
         }
-        if(tomcat_thread_pool_counters.size() > 0) {
+        if(!tomcat_thread_pool_counters.isEmpty()) {
             sort_n_send(tomcat_thread_pool_groupID, tomcat_thread_pool_counters);
         }
-        if(tomcat_grp_counters.size() > 0) {
+        if(!tomcat_grp_counters.isEmpty()) {
             sort_n_send(tomcat_grp_groupID,tomcat_grp_counters);
         }
-        if(tomcat_servlet_counters.size() > 0) {
+        if(!tomcat_servlet_counters.isEmpty()) {
             sort_n_send(tomcat_servlet_groupID, tomcat_servlet_counters);
         }
-        if(tomcat_manager_counters.size() > 0) {
+        if(!tomcat_manager_counters.isEmpty()) {
             sort_n_send(tomcat_manager_groupID, tomcat_manager_counters);
         }
-        if(tomcat_db_counters.size() > 0) {
+        if(!tomcat_db_counters.isEmpty()) {
             sort_n_send(tomcat_db_groupID, tomcat_db_counters);
         }
-        if(jmxtrans_counters.size() > 0) {
+        if(!jmxtrans_counters.isEmpty()) {
             sort_n_send(jmxtrans_metric_groupID, jmxtrans_counters);
         }
-        if(app_counters.size() > 0) {
+        if(!app_counters.isEmpty()) {
             sort_n_send(app_groupID, app_counters);
         }
-        if(app_sales_counters.size() > 0) {
+        if(!app_sales_counters.isEmpty()) {
             sort_n_send(app_sales_groupID, app_sales_counters);
         }
     }
