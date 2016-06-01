@@ -74,7 +74,7 @@
                     </supportedProjectTypes>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jmxtrans.embedded,org.jmxtrans.embedded.config,org.jmxtrans.embedded.servlet</Export-Package>
+                        <Export-Package>org.jmxtrans.embedded,org.jmxtrans.embedded.config,org.jmxtrans.embedded.servlet,org.jmxtrans.embedded.output</Export-Package>
                         <Private-Package>org.jmxtrans.embedded.util.*</Private-Package>
                     </instructions>
                 </configuration>
