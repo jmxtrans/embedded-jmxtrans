@@ -23,14 +23,15 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.util.StringUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.management.ObjectName;
-import java.net.InetAddress;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -99,28 +100,10 @@ public class ResultNameStrategy {
      * Function based evaluators for expressions like '#hostname#' or '#hostname_canonical#'
      */
     @Nonnull
-    private Map<String, Callable<String>> expressionEvaluators = new HashMap<String, Callable<String>>();
+    private Map<String, Callable<String>> expressionEvaluators;
 
     public ResultNameStrategy() {
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            String hostName = localHost.getHostName();
-            String reversedHostName = StringUtils2.reverseTokens(hostName, ".");
-            String canonicalHostName = localHost.getCanonicalHostName();
-            String reversedCanonicalHostName = StringUtils2.reverseTokens(canonicalHostName, ".");
-            String hostAddress = localHost.getHostAddress();
-
-            registerExpressionEvaluator("hostname", hostName);
-            registerExpressionEvaluator("reversed_hostname", reversedHostName);
-            registerExpressionEvaluator("escaped_hostname", hostName.replaceAll("\\.", "_"));
-            registerExpressionEvaluator("canonical_hostname", canonicalHostName);
-            registerExpressionEvaluator("reversed_canonical_hostname", reversedCanonicalHostName);
-            registerExpressionEvaluator("escaped_canonical_hostname", canonicalHostName.replaceAll("\\.", "_"));
-            registerExpressionEvaluator("hostaddress", hostAddress);
-            registerExpressionEvaluator("escaped_hostaddress", hostAddress.replaceAll("\\.", "_"));
-        } catch (Exception e) {
-            logger.error("Exception resolving localhost, expressions like #hostname#, #canonical_hostname# or #hostaddress# will not be available", e);
-        }
+        expressionEvaluators = new DeferredResultNameStrategyExpressionEvaluatorInitializer().createInitialExpressionEvaluatorsMap();
     }
 
     public String getResultName(Query query, ObjectName objectName, QueryAttribute queryAttribute) {
