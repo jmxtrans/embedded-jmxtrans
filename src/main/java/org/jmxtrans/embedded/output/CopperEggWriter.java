@@ -371,7 +371,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                         String fullID = pidHost + "." + connector;
                         QueryResult new_result = new QueryResult(myname, fullID, myval, epochInMillis);
                         tomcat_thread_pool_counters.add(new_result);
-                   } else if( (parts[1].equals("global-request-processor")) ) {
+                   } else if( parts[1].equals("global-request-processor") ) {
                         // tomcat.global-request-processor.http-bio-8080.bytesSent
                         String connector = parts[2];
                         myname = parts[0] + "." + parts[1] + "." + parts[3];
@@ -778,7 +778,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
             exceptionCounter.incrementAndGet();
             logger.warn("IOException "+ e);
         }
-        return(Result);
+        return Result;
     }
 
 
@@ -909,13 +909,13 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
         JsonToken current = jp.nextToken();
         if (current != JsonToken.START_ARRAY) {
           logger.warn("groupFind: Error: START_ARRAY expected, not found : quiting.");
-          return(Result);
+          return Result;
         }
         current = jp.nextToken();
         while (current != JsonToken.END_ARRAY) {
             if (current != JsonToken.START_OBJECT) {
                 logger.warn("groupFind: Error: START_OBJECT expected, not found : quiting.");
-                return(Result);
+                return Result;
             }
             current = jp.nextToken();
             JsonNode node = jp.readValueAsTree();
@@ -932,7 +932,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
             current = jp.nextToken();
             count = count + 1;
         }
-        return(Result);
+        return Result;
     }
 
     public String write_tostring(JsonNode json){
@@ -953,7 +953,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
             exceptionCounter.incrementAndGet();
             logger.warn("Exception in write_tostring: " + e); 
         }
-        return(null);
+        return null;
     }
 
     public String Send_Commmand(String command, String msgtype, String payload, Integer ExpectInt){
@@ -1016,7 +1016,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                 }
             }
         }
-        return(id);
+        return id;
     }
 }
 
