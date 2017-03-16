@@ -95,7 +95,12 @@ import java.util.concurrent.Callable;
  */
 public class ResultNameStrategy {
 
+    public static final String REPLACE_DOTS_IN_OBJECT_NAME = "replaceDotsInObjectName";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private boolean replaceDotsInObjectNames = true;
+
     /**
      * Function based evaluators for expressions like '#hostname#' or '#hostname_canonical#'
      */
@@ -207,7 +212,7 @@ public class ResultNameStrategy {
                 if (value == null) {
                     value = "null";
                 }
-                appendEscapedNonAlphaNumericChars(value, result);
+                appendEscapedNonAlphaNumericChars(value, replaceDotsInObjectNames, result);
                 position = endingSeparatorPosition + 1;
             } else if (c == '#') {
                 int beginningSeparatorPosition = position;
@@ -336,6 +341,31 @@ public class ResultNameStrategy {
             return "StaticStringCallable{" +
                     "value='" + value + '\'' +
                     '}';
+        }
+    }
+
+    public static Builder builder()
+    {
+        return new Builder();
+    }
+
+    public static class Builder {
+        ResultNameStrategy delegate;
+
+        public Builder()
+        {
+            delegate = new ResultNameStrategy(  );
+        }
+
+        public Builder replaceDotsInObjectNames(boolean replaceDots)
+        {
+            delegate.replaceDotsInObjectNames = replaceDots;
+            return this;
+        }
+
+        public ResultNameStrategy build()
+        {
+            return delegate;
         }
     }
 }

@@ -59,6 +59,14 @@ public class TestUtils {
         return results;
     }
 
+    public static Map<String, Query> indexQueriesByName(Iterable<Query> queries) {
+        Map<String, Query> results = new HashMap<String, Query>();
+        for (Query query : queries) {
+            results.put(query.getObjectName().toString() , query);
+        }
+        return results;
+    }
+
     public static Map<Class<? extends OutputWriter>, OutputWriter> indexOutputWritersByClass(Iterable<OutputWriter> outputWriters) {
         Map<Class<? extends OutputWriter>, OutputWriter> results = new HashMap<Class<? extends OutputWriter>, OutputWriter>();
         for (OutputWriter outputWriter : outputWriters) {

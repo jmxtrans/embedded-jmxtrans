@@ -26,12 +26,9 @@ package org.jmxtrans.embedded;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-
-import java.net.InetAddress;
-
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -74,6 +71,16 @@ public class ResultNameStrategyTest {
         String objectName = "java.lang:type=GarbageCollector,name=PS Scavenge";
         String actual = strategy.escapeObjectName(new ObjectName(objectName));
         assertThat(actual, is("java_lang.name__PS_Scavenge.type__GarbageCollector"));
+    }
+
+    @Test
+    public void testDontReplaceObjectNames()
+                    throws MalformedObjectNameException
+    {
+        String objectName = "java.lang:type=GarbageCollector,name=org.jmxtrans.embedded";
+        ResultNameStrategy strategy = ResultNameStrategy.builder().replaceDotsInObjectNames(false).build();
+        String actual = strategy.resolveExpression( "%name%",new ObjectName( objectName ) );
+        assertThat( actual, is ("org.jmxtrans.embedded") );
     }
 
     @Test

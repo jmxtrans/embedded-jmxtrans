@@ -39,6 +39,7 @@ import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.Query;
 import org.jmxtrans.embedded.QueryAttribute;
+import org.jmxtrans.embedded.ResultNameStrategy;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.util.Preconditions;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
@@ -177,14 +178,14 @@ public class ConfigurationParser {
                 Iterator<JsonNode> itAttributeNode = attributesNode.elements();
                 while (itAttributeNode.hasNext()) {
                     JsonNode attributeNode = itAttributeNode.next();
-                    parseQueryAttributeNode(query, attributeNode);
+                    parseQueryAttributeNode(query, attributeNode, queryNode);
                 }
             } else {
                 logger.warn("Ignore invalid node {}", resultAliasNode);
             }
 
             JsonNode attributeNode = queryNode.path("attribute");
-            parseQueryAttributeNode(query, attributeNode);
+            parseQueryAttributeNode(query, attributeNode, queryNode);
             List<OutputWriter> outputWriters = parseOutputWritersNode(queryNode);
             query.getOutputWriters().addAll(outputWriters);
             logger.trace("Add {}", query);
@@ -261,10 +262,10 @@ public class ConfigurationParser {
         return outputWriters;
     }
 
-    protected void parseQueryAttributeNode(@Nonnull Query query, @Nonnull JsonNode attributeNode) {
+    protected void parseQueryAttributeNode(@Nonnull Query query, @Nonnull JsonNode attributeNode,@Nonnull JsonNode queryNode) {
         if (attributeNode.isMissingNode()) {
         } else if (attributeNode.isValueNode()) {
-            query.addAttribute(attributeNode.asText());
+            query.addAttribute(configureResultNameStrategy(queryNode, new QueryAttribute(attributeNode.asText(), null, null)));
         } else if (attributeNode.isObject()) {
             List<String> keys = null;
 
@@ -303,13 +304,33 @@ public class ConfigurationParser {
             String resultAlias = resultAliasNode.isMissingNode() ? null : resultAliasNode.asText();
             JsonNode typeNode = attributeNode.path("type");
             String type = typeNode.isMissingNode() ? null : typeNode.asText();
-            if (keys == null) {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias));
-            } else {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias, keys));
-            }
+
+            QueryAttribute queryAttribute = keys == null? new QueryAttribute(name, type, resultAlias):
+                            new QueryAttribute(name, type, resultAlias, keys);
+
+            query.addAttribute( configureResultNameStrategy( queryNode, queryAttribute ) );
         } else {
             logger.warn("Ignore invalid node {}", attributeNode);
         }
+    }
+
+    private QueryAttribute configureResultNameStrategy(@Nonnull JsonNode queryNode, @Nonnull QueryAttribute queryAttribute) {
+        JsonNode resultNameStrategyNode = queryNode.path( "resultNameStrategy" );
+
+        if (resultNameStrategyNode.isObject()) {
+            ResultNameStrategy.Builder builder = ResultNameStrategy.builder();
+
+            JsonNode replaceDots =resultNameStrategyNode.get( ResultNameStrategy.REPLACE_DOTS_IN_OBJECT_NAME );
+            if (replaceDots != null) {
+                if (replaceDots.isBoolean())
+                {
+                    builder.replaceDotsInObjectNames( replaceDots.asBoolean() );
+                } else {
+                    logger.warn( "Ignoring non boolean replaceDots property, value was {}", replaceDots );
+                }
+            }
+            queryAttribute.withResultNameStrategy(builder.build());
+        }
+        return queryAttribute;
     }
 }

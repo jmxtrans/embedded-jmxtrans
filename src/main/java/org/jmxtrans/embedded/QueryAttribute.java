@@ -133,6 +133,11 @@ public class QueryAttribute {
         return type;
     }
 
+    public QueryAttribute withResultNameStrategy(ResultNameStrategy strategy) {
+        this.resultNameStrategy = strategy;
+        return this;
+    }
+
     /**
      * @param objectName    <code>objectName</code> on which the <code>attribute</code> was obtained.
      * @param value         value of the given attribute. A 'simple' value (String, Number, Date)

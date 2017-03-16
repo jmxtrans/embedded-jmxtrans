@@ -1,0 +1,26 @@
+{
+  "queries": [
+    {
+      "objectName": "org:name=org.jmxtrans.embedded.replace",
+      "attribute": "Value",
+      "resultAlias": "%name%",
+      "resultNameStrategy": {
+        "replaceDotsInObjectName": true
+      }
+
+    },
+    {
+      "objectName": "org:name=org.jmxtrans.embedded.noreplace",
+      "resultAlias": "%name%",
+      "attribute": "Value",
+      "resultNameStrategy": {
+        "replaceDotsInObjectName": false
+      }
+    },
+    {
+      "objectName": "org:name=org.jmxtrans.embedded.default",
+      "resultAlias": "%name%",
+      "attribute": "Value"
+    }
+  ]
+}
