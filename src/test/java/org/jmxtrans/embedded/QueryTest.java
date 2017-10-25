@@ -29,10 +29,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -91,6 +91,76 @@ public class QueryTest {
 
         QueryResult result2 = query.getResults().poll();
         assertThat(result2.getValue(), instanceOf(Number.class));
+    }
+
+    @Test
+    public void testDynamicAttributeSupport() throws Exception {
+        final int count = 42;
+        ObjectName objectName = new ObjectName("test:type=dynamic,category=metrics");
+        mbeanServer.registerMBean(new DynamicMBean() {
+            @Override
+            public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
+                if (attribute.equalsIgnoreCase("count1")) {
+                    return count;
+                }
+                if (attribute.equalsIgnoreCase("count2")) {
+                    return count + 1;
+                }
+                return 0;
+            }
+
+            @Override
+            public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public AttributeList getAttributes(String[] attributes) {
+                AttributeList list = new AttributeList();
+                list.add(new Attribute("count1", count));
+                list.add(new Attribute("count2", count + 1));
+                return list;
+            }
+
+            @Override
+            public AttributeList setAttributes(AttributeList attributes) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public MBeanInfo getMBeanInfo() {
+                MBeanAttributeInfo[] attrs = new MBeanAttributeInfo[2];
+                attrs[0] = new MBeanAttributeInfo("count1", "java.lang.Integer", "Test count 1", true, false, false);
+                attrs[1] = new MBeanAttributeInfo("count2", "java.lang.Integer", "Test count 2", true, false, false);
+                return new MBeanInfo(QueryTest.class.getCanonicalName(), "Provides access to test counts", attrs, null, null, null);
+            }
+        }, objectName);
+        try {
+            EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
+
+            Query query = new Query("test:type=dynamic,category=metrics");
+
+            embeddedJmxTrans.addQuery(query);
+            query.collectMetrics();
+            assertThat(query.getResults().size(), is(2));
+
+            QueryResult result1 = query.getResults().poll();
+            assertThat(result1.getValue(), instanceOf(Number.class));
+            assertEquals("test.category__metrics.type__dynamic.count1", String.valueOf(result1.getName()));
+            assertEquals(count, Integer.parseInt(String.valueOf(result1.getValue())));
+
+            QueryResult result2 = query.getResults().poll();
+            assertThat(result2.getValue(), instanceOf(Number.class));
+            assertEquals("test.category__metrics.type__dynamic.count2", String.valueOf(result2.getName()));
+            assertEquals(count + 1, Integer.parseInt(String.valueOf(result2.getValue())));
+        } finally {
+            mbeanServer.unregisterMBean(objectName);
+        }
     }
 
     @Test

@@ -84,6 +84,22 @@ Create `src/main/resources/jmxtrans.json`, add your mbeans and declare both `Con
 
 In this sample, Graphite host & port are defaulted to `localhost:2003` and can be overwritten with system properties or environment variables, for example in `$CATALINA_BASE/conf/catalina.properties`.
 
+#### Dynamic MBeans
+
+If metrics are provided by a Dynamic MBean all attributes can be collected by declaring an empty attributes array, for example :
+ 
+```json
+{
+  "queries": [
+    {
+      "objectName": "com.cocktail:type=CocktailService,name=cocktailService",
+      "resultAlias": "cocktail.controller",
+      "attributes": [ ]
+    }
+  ]
+}
+```
+
 ### Start application and check metrics
 
 #### Check metrics in the Console
