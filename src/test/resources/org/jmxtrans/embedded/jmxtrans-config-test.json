@@ -77,6 +77,12 @@
                     "@class": "org.jmxtrans.embedded.output.NoOpWriter"
                 }
             ]
+        },
+        {
+            "objectName": "java.lang:type=MemoryPool,name=*",
+            "resultAlias": "test-with-capacity.%name%",
+            "attribute": "CollectionUsageThresholdCount",
+            "capacity": 500
         }
     ],
     "outputWriters": [

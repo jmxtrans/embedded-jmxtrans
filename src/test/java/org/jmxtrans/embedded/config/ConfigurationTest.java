@@ -27,6 +27,7 @@ package org.jmxtrans.embedded.config;
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.Query;
 import org.jmxtrans.embedded.QueryAttribute;
+import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.TestUtils;
 import org.jmxtrans.embedded.output.*;
 import org.junit.BeforeClass;
@@ -35,6 +36,7 @@ import org.junit.Test;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -214,4 +216,14 @@ public class ConfigurationTest {
         assertThat(embeddedJmxTrans.getExportIntervalInSeconds(), is(10));
         assertThat(embeddedJmxTrans.getNumExportThreads(), is(2));
     }
+
+    @Test
+    public void validateQueryWithCapacity() throws MalformedObjectNameException {
+        ObjectName objectName = new ObjectName("java.lang:type=MemoryPool,name=*");
+        Query query = queriesByResultName.get("test-with-capacity.%name%");
+        assertThat(query.getObjectName(), is(objectName));
+        BlockingQueue<QueryResult> results = query.getResults();
+        assertThat(results.remainingCapacity(), is(500));
+    }
+
 }
