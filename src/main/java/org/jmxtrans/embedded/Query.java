@@ -75,7 +75,7 @@ public class Query implements QueryMBean {
      * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
      */
     @Nonnull
-    private Map<String, QueryAttribute> attributesByName = new HashMap<String, QueryAttribute>();
+    private final Map<String, QueryAttribute> attributesByName = new HashMap<String, QueryAttribute>();
     /**
      * Copy of {@link #attributesByName}'s {@link java.util.Map#entrySet()} for performance optimization
      */
@@ -166,6 +166,11 @@ public class Query implements QueryMBean {
                 logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
                 for (Attribute jmxAttribute : jmxAttributes.asList()) {
                     QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
+                    if (queryAttribute == null) { // support for dynamic attributes
+                        logger.trace("Creating query attribute for {}", jmxAttribute.getName());
+                        queryAttribute = new QueryAttribute(jmxAttribute.getName(), null, null);
+                        addAttribute(queryAttribute);
+                    }
                     Object value = jmxAttribute.getValue();
                     int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, this.queryResults);
                     collectedMetricsCount.addAndGet(count);
