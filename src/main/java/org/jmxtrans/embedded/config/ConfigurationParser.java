@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 import javax.annotation.Nonnull;
 import javax.management.MBeanServer;
@@ -39,9 +40,11 @@ import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.Query;
 import org.jmxtrans.embedded.QueryAttribute;
+import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.ResultNameStrategy;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.util.Preconditions;
+import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +173,16 @@ public class ConfigurationParser {
                 query.setResultAlias(resultAliasNode.asText());
             } else {
                 logger.warn("Ignore invalid node {}", resultAliasNode);
+            }
+
+            JsonNode capacityNode = queryNode.path("capacity");
+            if (capacityNode.isMissingNode()) {
+            } else if (capacityNode.isNumber()) {
+                Integer capacity = capacityNode.isMissingNode() ? null : capacityNode.asInt();
+                if (capacity != null && capacity > 0) {
+                    BlockingQueue<QueryResult> queryResults = new DiscardingBlockingQueue<QueryResult>(capacity);
+                    query.setResultsQueue(queryResults);
+                }
             }
 
             JsonNode attributesNode = queryNode.path("attributes");
