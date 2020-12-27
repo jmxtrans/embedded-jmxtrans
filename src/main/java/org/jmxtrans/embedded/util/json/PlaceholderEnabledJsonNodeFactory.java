@@ -28,6 +28,9 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 /**
  * Property placeholder / substitution enabled {@link JsonNodeFactory}.
  *
@@ -43,7 +46,7 @@ public class PlaceholderEnabledJsonNodeFactory extends JsonNodeFactory {
 
     private static final long serialVersionUID = 1L;
 
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private PropertyPlaceholderResolver resolver = new PropertyPlaceholderResolver();
 
@@ -96,5 +99,9 @@ public class PlaceholderEnabledJsonNodeFactory extends JsonNodeFactory {
             }
         }
         return super.textNode(resolvedText);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        this.logger = LoggerFactory.getLogger(getClass());
     }
 }
