@@ -219,7 +219,7 @@ public class EtcdKVStore implements KVStore {
   }
 
   private URL[] makeEtcdBaseUris(String etcdURI) throws EmbeddedJmxTransException {
-    String serverList = null;
+    String serverList;
     try {
       if (etcdURI.indexOf("[") > 0) {
         serverList = etcdURI.substring(etcdURI.indexOf("[") + 1, etcdURI.indexOf("]"));
@@ -266,7 +266,7 @@ public class EtcdKVStore implements KVStore {
       return null;
     }
 
-    EtcdResult res = null;
+    EtcdResult res;
     try {
       res = mapper.readValue(json, EtcdResult.class);
     } catch (Exception e) {

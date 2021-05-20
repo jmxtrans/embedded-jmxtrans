@@ -258,12 +258,12 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
         List<QueryResult> app_counters = new ArrayList<QueryResult>();
         List<QueryResult> app_sales_counters = new ArrayList<QueryResult>();
 
-        long epochInMillis = 0;
-        String myname =  null;
-        Object myval = null;
-        long thisPID = 0;
-        String tmp = null;
-        String pidHost = null;
+        long epochInMillis;
+        String myname;
+        Object myval;
+        long thisPID;
+        String tmp;
+        String pidHost;
 
         String delims = "[.]";
         for (QueryResult result : results) {
@@ -517,7 +517,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
     }
 
     public void one_set(String mg_name, List<QueryResult> counters)  {
-        HttpURLConnection urlCxn = null;
+        HttpURLConnection urlCxn;
         URL newurl = null;
         try {
             newurl = new URL(url_str + "/samples/" + mg_name + ".json");
@@ -568,8 +568,8 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
     }
     public void cue_serialize(@Nonnull Iterable<QueryResult> counters, @Nonnull OutputStream out) throws IOException {
         int first = 0;
-        long time = 0;
-        String myID = null;
+        long time;
+        String myID;
         JsonGenerator g = jsonFactory.createGenerator(out, JsonEncoding.UTF8);
 
         for (QueryResult counter : counters) {
@@ -903,7 +903,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
         JsonParser jp = f.createJsonParser(findIndex);
 
         int count = 0;
-        int foundit = 0;
+        int foundit;
         String Result = null;
 
         JsonToken current = jp.nextToken();
@@ -960,7 +960,7 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
         HttpURLConnection urlConnection = null;
         URL myurl = null;
         OutputStreamWriter wr = null;
-        int responseCode = 0;
+        int responseCode;
         String id = null;
         int error = 0;
 
