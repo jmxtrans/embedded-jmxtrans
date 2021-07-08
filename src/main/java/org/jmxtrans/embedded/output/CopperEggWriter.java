@@ -96,6 +96,7 @@ import java.lang.management.ManagementFactory;
  * CopperEggWriter.java was derived from LibratoWriter.java 
  * @author <a href="mailto:sjohnson@copperegg.com">Scott Johnson</a>
  */
+@ExplicitEpoch
 public class CopperEggWriter extends AbstractOutputWriter implements OutputWriter {
     public static final String METRIC_TYPE_GAUGE = "gauge";
     public static final String METRIC_TYPE_COUNTER = "counter";

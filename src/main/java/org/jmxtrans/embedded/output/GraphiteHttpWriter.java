@@ -56,6 +56,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="mailto:simon.mazas@gmail.com">Simon Mazas</a>
  */
+@ExplicitEpoch
 public class GraphiteHttpWriter extends AbstractOutputWriter implements OutputWriter {
 
     public static final String DEFAULT_NAME_PREFIX = "servers.#hostname#.";

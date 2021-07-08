@@ -39,6 +39,7 @@ import java.io.Writer;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ExplicitEpoch
 public class NoOpWriter extends AbstractOutputWriter {
 
     static class NullWriter extends Writer {
