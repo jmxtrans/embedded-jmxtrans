@@ -205,7 +205,7 @@
             <!-- used by the EmbeddedJmxTransFactory -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>3.1.4.RELEASE</version>
+            <version>5.2.20.RELEASE</version>
             <optional>true</optional>
         </dependency>
         <dependency>
